@@ -171,15 +171,23 @@ The application has three outcomes:
 
 ### PASS
 
-The prototype found the required evidence and deterministic checks matched.
+All implemented automated checks have sufficient evidence and pass.
+
+PASS means **pass within the prototype's supported automated scope**. It is not a complete legal-compliance determination.
 
 ### REVIEW
 
-The system encountered uncertainty, disagreement, unreadable evidence, unsupported visual-format checks, or another condition requiring human judgment.
+A supported automated check cannot be resolved reliably because evidence is uncertain, contradictory, unreadable, or missing.
 
 ### FAIL
 
-A deterministic check found a clear mismatch or missing required element within the prototype's supported scope.
+A deterministic check found a clear mismatch or supported requirement failure within the prototype's automated scope.
+
+### HUMAN REVIEW REQUIRED advisory
+
+Requirements intentionally outside reliable MVP automation—such as physical type size, font weight, true contrast, permit-record verification, or full physical-container geometry—are displayed separately as manual-review advisories.
+
+Standing manual-review advisories do not automatically convert an otherwise supported automated PASS into REVIEW.
 
 Every outcome should show the reason.
 
