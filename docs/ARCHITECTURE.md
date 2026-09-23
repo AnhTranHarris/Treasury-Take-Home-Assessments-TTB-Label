@@ -1,4 +1,4 @@
-# TTB Label Verification Prototype — Architecture v0.1
+# TTB Label Verification Prototype — Architecture v0.2
 
 **Status:** LOCKED DESIGN BASELINE  
 **Purpose:** Prevent architecture drift and provide a single source of truth for implementation.  
@@ -360,9 +360,22 @@ A concise explanation of the design:
 
 > The prototype uses OpenCV to improve label images and PaddleOCR as the primary local text-recognition engine. The extracted fields are compared with application data using ordinary Python validation rules, with RapidFuzz only where harmless formatting differences should be tolerated. If the local OCR cannot reliably read a difficult image, Gemini can be used as an optional last-resort text-extraction fallback. Gemini never determines compliance, and if the systems disagree or remain uncertain, the case is routed to human review.
 
-## 18. Current Decision State
+## 18. Accepted v0.2 Refinements
 
-**Locked for implementation v0.1:**
+The following additions are now part of the architecture:
+
+1. OpenCV image-quality triage before OCR.
+2. Targeted evidence crops for human review.
+3. RapidOCR as a deployment contingency only if the preferred PaddleOCR runtime does not fit free-hosting constraints.
+4. Synthetic test labels, pytest, and GitHub Actions for regression QA.
+
+Performance/concurrency decisions are documented in [Performance Architecture](PERFORMANCE_ARCHITECTURE.md).
+
+The supported regulatory scope is documented in [TTB Rule Scope](TTB_RULE_SCOPE.md).
+
+## 19. Current Decision State
+
+**Locked for implementation v0.2:**
 
 ```text
 Streamlit
