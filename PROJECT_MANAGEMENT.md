@@ -315,21 +315,33 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 | Establish project-management lifecycle record | Complete | this file |
 | Build TTB requirements matrix | **Complete** | `docs/REQUIREMENTS_MATRIX.md` |
 | Define first vertical slice | **Complete** | Locked in `docs/REQUIREMENTS_MATRIX.md` |
-| Implement first runnable slice | **NEXT / ACTIVE** | Streamlit → local OCR → core extraction → deterministic results |
-| Add automated regression suite | Planned | pending |
-| Deploy Streamlit prototype | Planned | pending |
-| Benchmark and document results | Planned | pending |
+| Implement first runnable slice | **Complete** | Current main implements Streamlit → local PaddleOCR → core extraction → deterministic PASS / REVIEW / FAIL |
+| Add automated regression suite | **Core suite complete / ongoing** | 27 fast tests + real OCR/full-pipeline integration workflow passing |
+| Deploy Streamlit prototype | **NEXT / ACTIVE** | public deployment and runtime-resource validation pending |
+| Benchmark and document results | **Partial** | GitHub Actions: first OCR call 18.093s; warm full pipeline 5.368s; deployed benchmark pending |
 | Submission readiness review | Planned — internal target Sep 26 | final QC + deployment + README + submission package |
 
 ## 16. Current Work / Next Decision Gate
 
 ### Current work
 
-Implement the first runnable vertical slice authorized by `docs/REQUIREMENTS_MATRIX.md`.
+Deploy and validate the current green first vertical slice without destabilizing it.
 
-### Active implementation gate
+### Current verified build
 
-The first slice is locked to:
+The current main head (`31b89e734cedf87992c6b785ed43dbe1cfc4a694`) has:
+
+- 27 fast tests passing;
+- successful Streamlit startup smoke coverage;
+- successful real PaddleOCR integration;
+- successful full controlled label-to-result pipeline;
+- controlled Paddle 3.3 CPU compatibility through `enable_mkldnn=False`;
+- government-warning capitalization routed to human-review advisory because OCR case proved unstable;
+- current GitHub Actions timing of 18.093 seconds for the first OCR call and 5.368 seconds for the warm full pipeline.
+
+### Active deployment gate
+
+The first slice remains locked to:
 
 - one Streamlit form;
 - one JPG/PNG label image;
@@ -348,7 +360,7 @@ Physical typography/container-geometry checks remain REVIEW. Product-composition
 - application starts successfully;
 - one representative happy-path label reaches a deterministic result;
 - clear ABV mismatch reaches FAIL;
-- warning capitalization defect reaches FAIL when extraction is reliable;
+- warning wording/numbering/punctuation are evaluated from OCR evidence, while warning capitalization remains a human-review advisory until a targeted case-verification path is proven reliable;
 - missing/unreadable supported evidence reaches REVIEW rather than guessed PASS/FAIL;
 - targeted tests and fast regression tests pass;
 - README setup instructions reflect the actual runnable application.
@@ -449,7 +461,7 @@ Completed:
 - first vertical slice definition;
 - conditional-rule deferral to protect the working core.
 
-Next gate: implement and continuously QC the first runnable vertical slice.
+Next gate: deploy the current green slice, verify runtime resource compatibility, and measure deployed latency before considering additional resilience work.
 
 ### 2026-09-23 — Compressed delivery controls
 
