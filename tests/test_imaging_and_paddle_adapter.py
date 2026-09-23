@@ -1,3 +1,5 @@
+import sys
+import types
 import cv2
 import numpy as np
 import pytest
@@ -88,3 +90,23 @@ def test_provider_uses_injected_engine_without_importing_or_downloading_models()
     lines = provider.recognize(image_bytes(width=60, height=30))
     assert engine.seen_shape[:2] == (15, 30)
     assert lines[0].text == "750 mL"
+
+
+def test_default_engine_disables_mkldnn_for_paddle_33_cpu_regression(monkeypatch):
+    captured = {}
+
+    class FakePaddleOCR:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+    fake_module = types.ModuleType("paddleocr")
+    fake_module.PaddleOCR = FakePaddleOCR
+    monkeypatch.setitem(sys.modules, "paddleocr", fake_module)
+
+    provider = PaddleOCRProvider()
+    engine = provider._get_engine()
+
+    assert isinstance(engine, FakePaddleOCR)
+    assert captured["enable_mkldnn"] is False
+    assert captured["text_detection_model_name"] == "PP-OCRv5_mobile_det"
+    assert captured["text_recognition_model_name"] == "PP-OCRv5_mobile_rec"
