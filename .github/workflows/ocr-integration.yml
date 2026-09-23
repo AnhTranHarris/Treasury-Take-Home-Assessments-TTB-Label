@@ -6,8 +6,13 @@ on:
     branches: [main]
     paths:
       - "requirements.txt"
+      - "streamlit_app.py"
       - "src/ocr/**"
       - "src/imaging/**"
+      - "src/extraction/**"
+      - "src/validation/**"
+      - "src/orchestration/**"
+      - "src/presentation.py"
       - "scripts/__init__.py"
       - "scripts/ocr_integration_smoke.py"
       - "scripts/generate_demo_label.py"
@@ -31,7 +36,21 @@ jobs:
           python -c "import streamlit; print('streamlit', streamlit.__version__)"
           python -c "import paddleocr; print('paddleocr', paddleocr.__version__)"
           python -c "import cv2; print('opencv', cv2.__version__)"
+      - name: Check Streamlit startup
+        shell: bash
+        run: |
+          python -m streamlit run streamlit_app.py --server.headless true --server.port 8501 > /tmp/streamlit.log 2>&1 &
+          app_pid=$!
+          trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:8501/_stcore/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/streamlit.log
+          exit 1
       - name: Generate demo label
         run: python -m scripts.generate_demo_label
-      - name: Run real PaddleOCR smoke test
+      - name: Run real PaddleOCR and full-pipeline smoke test
         run: python -m scripts.ocr_integration_smoke
