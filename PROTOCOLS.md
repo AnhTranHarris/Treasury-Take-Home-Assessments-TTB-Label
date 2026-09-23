@@ -329,6 +329,10 @@ ChatGPT must never merge project evidence into formal qualifying employment, con
 
 The interview guide is a private personal study artifact in the human's Google Drive.
 
+**Canonical private guide title:** `Treasury AI Interview Preparation Guide — Anh T. Tran (Harris)`
+
+The guide should be maintained in the human's private `ChatGPT` Google Drive folder when available. The document URL must not be committed to this public repository.
+
 Do not:
 
 - commit the private Google Doc link to this public repository;
@@ -613,7 +617,7 @@ The repository should make that process auditable without requiring a reviewer t
 **Date:** 2026-09-23  
 **Protocol version:** 1.3  
 **Architecture version:** v0.2  
-**Latest relevant commit before this snapshot update:** `27aec851d633a12208d25c17616a0740d9fcc6b2`
+**Latest relevant commit before this snapshot update:** `a6682cae79c2b61c2b28c3eea5f3c5ea3398b14c`
 
 ### Current phase
 
@@ -645,7 +649,8 @@ Requirements and regulatory-research refinement before application implementatio
 - vertical-slice viability rule added to the development protocol;
 - project-management lifecycle record added with PMI/OPM/Treasury alignment;
 - OPM and USAJOBS sources added to the government-source registry;
-- private interview-readiness protocol activated for the current application cycle.
+- private interview-readiness protocol activated for the current application cycle;
+- private Google Docs interview guide initialized under the canonical title recorded in this protocol.
 
 ### Unresolved / next research
 
