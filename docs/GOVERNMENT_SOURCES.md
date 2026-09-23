@@ -32,25 +32,13 @@ Government-source research should follow this order when possible:
 
 If two official sources appear to conflict, ChatGPT must not silently reconcile them. The conflict must be documented and resolved through higher-authority or more current official material before implementation.
 
-## 3. Treasury Take-Home Assignment
+## 3. Scope Exclusion: Non-Government-Domain Sources
 
-### U.S. Department of the Treasury — Take-Home Instructions
+This registry contains official government websites and publications only.
 
-**Agency / owner:** U.S. Department of the Treasury take-home assessment repository  
-**Role in project:** Primary assignment specification and stakeholder context  
-**Source:** https://github.com/treasurytakehome-rgb/instructions  
-**Reviewed:** 2026-09-23
+The Treasury take-home assignment is authoritative for this project but is hosted on GitHub rather than a government domain. It is therefore tracked in `PROTOCOLS.md` and the repository project documentation, not in this government-source registry.
 
-Although hosted on GitHub, this repository is treated as the project's supplied government-assignment source because it is the assessment provided by Treasury.
-
-Used for:
-
-- stakeholder requirements;
-- prototype scope;
-- sample distilled-spirits fields;
-- deliverables;
-- evaluation criteria;
-- explicit instruction to review TTB guidance.
+Third-party and non-government-domain sources must remain outside this file even when they are important to the project.
 
 ## 4. TTB — Distilled Spirits Labeling
 
@@ -216,7 +204,6 @@ Do not use general Treasury pages as substitutes for TTB-specific beverage-label
 
 Government sources used by this project should be classified as one of:
 
-- **ASSIGNMENT** — supplied take-home requirements;
 - **PRIMARY REGULATORY** — statute/regulation or direct authoritative regulatory text;
 - **AGENCY GUIDANCE** — official TTB guidance interpreting or operationalizing requirements;
 - **OFFICIAL CHECKLIST/FORM** — official workflow/checklist source;
