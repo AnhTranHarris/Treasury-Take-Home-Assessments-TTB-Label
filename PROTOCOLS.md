@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.0  
+**Protocol version:** 1.1  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -83,6 +83,7 @@ Current governing documents include:
 - `docs/ARCHITECTURE.md` — product architecture;
 - `docs/PERFORMANCE_ARCHITECTURE.md` — runtime/performance rules;
 - `docs/TTB_RULE_SCOPE.md` — supported regulatory scope;
+- `docs/GOVERNMENT_SOURCES.md` — official government-source registry;
 - future `docs/REQUIREMENTS_MATRIX.md` — machine-readable/implementation-oriented TTB requirement mapping.
 
 When chat memory and committed documentation differ, ChatGPT must inspect the repository and use the committed documentation unless the human explicitly changes it.
@@ -203,7 +204,81 @@ A feature is not complete because code exists.
 
 Completion requires appropriate tests and working behavior.
 
-## 11. Testing Protocol
+## 11. Vertical-Slice Viability Rule
+
+Horizontal coding and vertical coding both matter, but **vertical coding has priority for prototype viability**.
+
+For this project:
+
+- **horizontal coding** means building breadth across one technical layer, such as creating many validators, many OCR helpers, many UI controls, or many rule modules before an end-to-end workflow is proven;
+- **vertical coding** means completing a thin end-to-end path that starts with user input and finishes with a tested user-visible result.
+
+The project should prefer this sequence:
+
+```text
+small working vertical slice
+        ↓
+test it end to end
+        ↓
+measure it
+        ↓
+preserve the working path
+        ↓
+expand the next vertical slice
+        ↓
+only then broaden horizontally where useful
+```
+
+The first implementation target should therefore be a minimal but complete distilled-spirits path such as:
+
+```text
+Streamlit input
+   ↓
+one label image
+   ↓
+image preprocessing
+   ↓
+local OCR
+   ↓
+extract core fields
+   ↓
+one or more deterministic checks
+   ↓
+PASS / REVIEW / FAIL result
+   ↓
+tests
+```
+
+After that path works, additional capability should be added in vertical increments, for example:
+
+1. valid happy-path label;
+2. clear deterministic mismatch;
+3. unreadable/uncertain evidence routed to REVIEW;
+4. targeted OCR retry;
+5. optional Gemini fallback;
+6. additional TTB rules;
+7. conditional requirements;
+8. batch workflow.
+
+### Viability gate
+
+Before beginning substantial horizontal expansion, ChatGPT should ask:
+
+> **Does the repository still contain a runnable, testable end-to-end prototype path?**
+
+If the answer is no, restore a working vertical slice before expanding breadth.
+
+Do not create large amounts of disconnected scaffolding, rule modules, UI surfaces, or integrations that cannot yet participate in a runnable workflow.
+
+### Reason
+
+The Treasury assignment explicitly prefers a working core application with clean code over ambitious but incomplete features.
+
+Therefore prototype viability outranks architectural breadth.
+
+Horizontal refactoring and breadth are appropriate after the relevant vertical path works and when they improve maintainability, testability, performance, or future extension.
+
+## 12. Testing Protocol
 
 Before declaring a material feature complete, check as applicable:
 
@@ -218,7 +293,7 @@ Before declaring a material feature complete, check as applicable:
 
 Tests must not be described as passing unless they actually ran and passed.
 
-## 12. Performance Protocol
+## 13. Performance Protocol
 
 Performance changes must follow the priority order documented in `docs/PERFORMANCE_ARCHITECTURE.md`.
 
@@ -232,7 +307,7 @@ In particular:
 - Gemini is not raced against local OCR on every request;
 - deployment performance must be measured rather than assumed.
 
-## 13. Git and Commit Discipline
+## 14. Git and Commit Discipline
 
 Preferred commit prefixes:
 
@@ -248,7 +323,7 @@ Meaningful architectural changes should be identifiable from Git history.
 
 Do not commit secrets, API keys, private credentials, or sensitive information.
 
-## 14. Why Normal Chat May Be Used Instead of Work
+## 15. Why Normal Chat May Be Used Instead of Work
 
 This project may intentionally use a normal ChatGPT conversation for research, design, and iterative implementation rather than handing every phase to ChatGPT Work.
 
@@ -265,7 +340,7 @@ This is a workflow choice, not a claim that one ChatGPT mode is universally bett
 
 Work may be used later when its capabilities materially improve a task. If that occurs, the same repository protocol and source hierarchy still apply.
 
-## 15. Chat Length and Session Handoff Protocol
+## 16. Chat Length and Session Handoff Protocol
 
 Long conversations can become difficult to navigate and may approach practical context limits.
 
@@ -309,13 +384,14 @@ At the start of a new ChatGPT development session, ChatGPT should:
 4. read `docs/ARCHITECTURE.md`;
 5. read `docs/PERFORMANCE_ARCHITECTURE.md`;
 6. read `docs/TTB_RULE_SCOPE.md`;
-7. read any requirements/handoff file named by this protocol;
-8. inspect recent commits if needed;
-9. verify the requested task against the current repository state before changing code.
+7. read `docs/GOVERNMENT_SOURCES.md`;
+8. read any requirements/handoff file named by this protocol;
+9. inspect recent commits if needed;
+10. verify the requested task against the current repository state before changing code.
 
 ChatGPT should not reconstruct the project from remembered chat history when the repository contains the answer.
 
-## 16. Protocol Amendment Procedure
+## 17. Protocol Amendment Procedure
 
 This protocol is intentionally updateable.
 
@@ -342,7 +418,7 @@ ChatGPT must not silently amend this protocol on its own.
 
 If ChatGPT identifies a needed protocol change, it should propose the change to the human or clearly identify it while carrying out an already-authorized documentation update.
 
-## 17. Stop / Rollback Rule
+## 18. Stop / Rollback Rule
 
 If a change:
 
@@ -355,7 +431,7 @@ If a change:
 
 ChatGPT should stop building on that change, identify the problem, and either correct or roll back to the last known-good state.
 
-## 18. Transparency to Human Reviewers
+## 19. Transparency to Human Reviewers
 
 The use of ChatGPT is not hidden.
 
@@ -365,10 +441,10 @@ The intended development story is:
 
 The repository should make that process auditable without requiring a reviewer to read the original chat transcript.
 
-## 19. Current Handoff Snapshot
+## 20. Current Handoff Snapshot
 
 **Date:** 2026-09-23  
-**Protocol version:** 1.0  
+**Protocol version:** 1.1  
 **Architecture version:** v0.2  
 **Latest relevant commit before this protocol:** `143beb12e0c2e446b951df6d47f69e6f83d6b122`
 
@@ -414,8 +490,19 @@ Requirements and regulatory-research refinement before application implementatio
 - `docs/ARCHITECTURE.md`
 - `docs/PERFORMANCE_ARCHITECTURE.md`
 - `docs/TTB_RULE_SCOPE.md`
+- `docs/GOVERNMENT_SOURCES.md`
 
-## 20. Protocol Changelog
+## 21. Protocol Changelog
+
+### 1.1 — 2026-09-23
+
+Added:
+
+- dedicated government-source registry;
+- source-separation rule for government websites;
+- vertical-slice viability rule;
+- explicit priority of working end-to-end prototype paths over horizontal feature breadth;
+- government-source registry added to new-chat bootstrap/handoff reading set.
 
 ### 1.0 — 2026-09-23
 
