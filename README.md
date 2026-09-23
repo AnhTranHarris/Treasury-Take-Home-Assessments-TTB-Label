@@ -4,7 +4,88 @@ Prototype repository for the **AI-Powered Alcohol Label Verification App** take-
 
 ## Current Status
 
-**Requirements gate complete. First runnable vertical slice is now the active implementation phase.**
+**Requirements gate complete. The first distilled-spirits vertical slice is implemented in the repository and is moving through runtime/integration QC before deployment.**
+
+The current slice accepts application/reference fields plus one label image, performs local OCR, extracts supported evidence, applies deterministic Python checks, and returns a field-by-field **PASS / REVIEW / FAIL** prototype result with human-review advisories.
+
+PASS means the implemented automated checks passed. It is **not** a complete legal-compliance determination.
+
+## Quick Start
+
+The validated CI/runtime target is **Python 3.11**.
+
+```bash
+git clone https://github.com/AnhTranHarris/Treasury-Take-Home-Assessments-TTB-Label.git
+cd Treasury-Take-Home-Assessments-TTB-Label
+
+python -m venv .venv
+```
+
+Activate the environment.
+
+Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+macOS / Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Install the prototype runtime:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Run the browser application:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+The local Streamlit URL will be printed in the terminal.
+
+### First OCR initialization
+
+The application uses PaddleOCR PP-OCRv5 mobile models. A machine that does not already have the required model assets cached may require network access during initial OCR/model initialization.
+
+## Reproducible Demo Label
+
+Generate a synthetic distilled-spirits label:
+
+```bash
+python -m scripts.generate_demo_label
+```
+
+This creates:
+
+```text
+sample_labels/demo_happy_path.png
+```
+
+Use the application's default reference values and upload that image for a controlled happy-path demonstration.
+
+The synthetic image is a regression/demo fixture. It is not an example of a complete legally approved commercial label.
+
+## Fast Tests
+
+The normal regression suite deliberately avoids downloading or initializing PaddleOCR models.
+
+```bash
+python -m pip install -r requirements-test.txt
+python -m pytest -q
+```
+
+GitHub Actions runs the same fast test suite on pushes and pull requests.
+
+A separate **OCR integration** workflow installs the full pinned runtime and exercises the real PaddleOCR provider so heavyweight compatibility failures remain visible without slowing every unit-test run.
+
+## Architecture
 
 The frozen v0.2 design baseline is documented here:
 
@@ -15,33 +96,78 @@ The frozen v0.2 design baseline is documented here:
 - [TTB Requirements Matrix](docs/REQUIREMENTS_MATRIX.md)
 - [Government Source Registry](docs/GOVERNMENT_SOURCES.md)
 
-## Locked Baseline
+Current implementation baseline:
 
 ```text
 Streamlit
 + OpenCV
 + PaddleOCR PP-OCRv5 mobile
-+ RapidFuzz
-+ deterministic Python compliance rules
-+ optional Google Gemini image-text fallback as a last resort
++ deterministic Python validation rules
++ optional future Gemini image-text rescue path
 ```
 
 Core principle:
 
 > **AI extracts evidence. Python rules determine the prototype result. Ambiguous cases go to a human reviewer.**
 
-Implementation changes that materially alter this architecture should update the architecture document first.
+## First Vertical Slice
 
+Current user inputs:
 
-## Accepted v0.2 Refinements
+- brand name;
+- class/type;
+- alcohol content (% Alc./Vol.);
+- net contents;
+- bottler / producer / importer name and address;
+- imported yes/no;
+- country of origin when imported;
+- one JPG/PNG label image or camera image.
 
-- image-quality triage with OpenCV;
-- targeted evidence crops;
-- RapidOCR as a deployment contingency only;
-- synthetic regression labels + pytest + GitHub Actions;
-- bounded pipeline concurrency with one warm OCR model;
-- distilled-spirits rule pack based on reviewed TTB guidance.
+Current automated checks include:
 
+- application/reference brand consistency;
+- class/type consistency;
+- numeric ABV consistency;
+- supported mandatory alcohol-statement form;
+- net-contents consistency when visible;
+- name/address consistency;
+- imported country-of-origin consistency when applicable;
+- exact government-warning wording, capitalization, numbering, and punctuation after whitespace normalization.
+
+The application separately surfaces manual-review advisories for requirements the MVP cannot safely establish from ordinary OCR pixels, including warning boldness, physical type size/characters-per-inch/true contrast, and full physical same-field-of-vision geometry.
+
+## Result Model
+
+Overall automated precedence:
+
+```text
+any supported deterministic FAIL
+        -> FAIL
+
+otherwise any unresolved supported automated check
+        -> REVIEW
+
+otherwise all supported automated checks pass
+        -> PASS
+```
+
+Human-review advisories remain visible even when the supported automated result is PASS.
+
+## Current Limitations
+
+The repository intentionally does **not** claim complete TTB compliance.
+
+Current limitations include:
+
+- distilled spirits only;
+- one label image at a time;
+- local OCR first pass only in the current runnable slice;
+- targeted OCR retry is designed but not yet part of the first submitted code path;
+- Gemini rescue is designed but not yet enabled;
+- batch processing is deferred;
+- physical typography/container-geometry requirements remain human-review items;
+- composition-dependent disclosures such as sulfites, certain colors, age statements, and other conditional rules are documented but deferred from the core MVP;
+- no COLA integration, production federal authentication, user database, or production authorization claim.
 
 ## Performance Principle
 
@@ -52,11 +178,10 @@ The intended runtime model is:
 - lightweight input and image analysis may overlap where beneficial;
 - one cached/warm OCR engine performs local inference;
 - deterministic validation remains lightweight;
-- Gemini is called only for unresolved cases;
+- external AI fallback, if later enabled, is called only for unresolved cases;
 - uncertain evidence routes to human review rather than being guessed.
 
-Performance optimization must preserve correctness, explainability, and deployment stability.
-
+The stakeholder target is approximately five seconds for a simple label. The repository does not claim that target has been achieved until the deployed application is measured.
 
 ## Development Approach
 
@@ -64,20 +189,20 @@ This prototype uses a **human-directed, AI-assisted development process**.
 
 The human developer retains responsibility for scope, requirements, architecture decisions, trade-offs, and acceptance of changes. ChatGPT assists with source research, implementation, testing, debugging, performance analysis, and documentation.
 
-The version-controlled collaboration rules, source-verification process, change-control process, and chat-session handoff procedure are documented in:
+The version-controlled collaboration rules, source-verification process, mandatory post-write QC, change-control process, and chat-session handoff procedure are documented in:
 
 - [Human + ChatGPT Development Protocol](PROTOCOLS.md)
 
-This keeps the project auditable without requiring a reviewer to read the original ChatGPT conversation.
-
+AI-generated or AI-modified code is treated as provisional until executable QC passes. Time pressure reduces scope before it reduces testing.
 
 ## Source Transparency
 
-Official government websites and publications used to define or verify regulatory requirements are maintained separately in the [Government Source Registry](docs/GOVERNMENT_SOURCES.md). This keeps source authority distinct from architecture, implementation, and AI-development procedures.
+Official government websites and publications used to define or verify regulatory requirements are maintained separately in the [Government Source Registry](docs/GOVERNMENT_SOURCES.md).
 
+Individual TTB requirements and the prototype's AUTOMATE / REVIEW / CONDITIONAL / OUT OF MVP decisions are recorded in the [TTB Requirements Matrix](docs/REQUIREMENTS_MATRIX.md).
 
 ## Project Status
 
-Lifecycle, milestones, risks, quality gates, decisions, and current delivery position are maintained in the [Project Management & Delivery Record](PROJECT_MANAGEMENT.md).
+Lifecycle, milestones, risks, quality gates, decisions, and the current delivery position are maintained in the [Project Management & Delivery Record](PROJECT_MANAGEMENT.md).
 
 The record uses PMI-CPMAI as an AI-project lifecycle reference and official OPM/USAJOBS material for federal project-management and job-specific alignment. It records evidence and project state without making a self-awarded General Schedule grade determination.
