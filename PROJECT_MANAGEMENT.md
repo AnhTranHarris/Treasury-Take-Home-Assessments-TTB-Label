@@ -189,7 +189,7 @@ No material rule should exist only because it was discussed in chat.
 |---|---|---|---|---|
 | OCR model exceeds free-host memory budget | Medium | High | One cached model; benchmark PaddleOCR; RapidOCR contingency | Open |
 | Simple-label latency exceeds stakeholder target | Medium | High | Adaptive preprocessing; bounded retries; measure deployed latency | Open |
-| OCR confidently reads incorrect text | Medium | High | Field confidence, targeted retry, evidence display, deterministic validation, REVIEW on conflict | Open |
+| OCR confidently reads incorrect text | Medium | High | Evidence display, conservative automation boundaries, targeted retry, REVIEW on conflict; real integration showed warning case instability, so capitalization is now advisory | Active / demonstrated |
 | Gemini/network unavailable | Medium | Medium | Local-first architecture; Gemini optional; REVIEW on fallback failure | Controlled |
 | Regulatory rule implemented incorrectly | Low/Medium | High | Government-source registry, requirements matrix, test coverage, source hierarchy | Open until matrix complete |
 | Prototype scope expands beyond time budget | Medium | High | Vertical-slice rule, explicit non-goals, deferred feature list | Controlled |
@@ -427,6 +427,17 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
   https://www.usajobs.gov/job/858700600
 
 ## 20. Change History
+
+### 2026-09-23 — OCR capitalization scope refinement
+
+Integration evidence:
+
+- PaddleOCR correctly extracted brand, class/type, ABV, net contents, and reconstructed name/address from the controlled full label;
+- the warm full pipeline measured 5.206 seconds on the GitHub Actions CPU runner;
+- PaddleOCR read the correctly rendered `GOVERNMENT` heading as `GOvERNMENT`;
+- the project therefore moved warning capitalization from deterministic first-pass validation to a human-review advisory rather than allowing a false regulatory FAIL.
+
+Warning wording/numbering/punctuation remain automated; targeted case verification remains a later evidence-driven enhancement.
 
 ### 2026-09-23 — Requirements gate completed
 
