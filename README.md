@@ -53,3 +53,16 @@ The intended runtime model is:
 - uncertain evidence routes to human review rather than being guessed.
 
 Performance optimization must preserve correctness, explainability, and deployment stability.
+
+
+## Development Approach
+
+This prototype uses a **human-directed, AI-assisted development process**.
+
+The human developer retains responsibility for scope, requirements, architecture decisions, trade-offs, and acceptance of changes. ChatGPT assists with source research, implementation, testing, debugging, performance analysis, and documentation.
+
+The version-controlled collaboration rules, source-verification process, change-control process, and chat-session handoff procedure are documented in:
+
+- [Human + ChatGPT Development Protocol](PROTOCOLS.md)
+
+This keeps the project auditable without requiring a reviewer to read the original ChatGPT conversation.
