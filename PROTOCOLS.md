@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.3  
+**Protocol version:** 1.4  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -376,9 +376,9 @@ The living interview guide should include, as applicable:
 - a vocabulary/reference section;
 - official source links.
 
-### GS-13 bridge rule
+### GS-13 through GS-15 stretch-ladder rule
 
-GS-13 preparation is a **knowledge-growth lane**, not a claim of current GS-13-equivalent employment.
+GS-13 through GS-15 preparation is a **graduated knowledge-growth ladder**, not a claim of current equivalent employment or formal qualification.
 
 Where the Treasury announcement identifies GS-13 requirements beyond the GS-12 prototype baseline, the guide should:
 
@@ -389,7 +389,13 @@ Where the Treasury announcement identifies GS-13 requirements beyond the GS-12 p
 5. connect the concept to this project where truthful;
 6. state what must not be claimed without real experience.
 
-For the current announcement, particular attention should be given to AI/cloud cybersecurity practices and participation in Agile sprint planning/execution.
+For the current announcement, the preparation depth is:
+
+- **GS-13:** working knowledge of AI/cloud cybersecurity practices and Agile sprint planning/execution, with truthful connections to project controls;
+- **GS-14 stretch:** identify senior-executive alignment responsibilities and AI cybersecurity risk-assessment responsibilities, and sketch a rough roadmap for how the work should proceed;
+- **GS-15 super-stretch:** grasp the enterprise concepts behind collaborative project direction, cloud-native modernization, production-grade AI systems, DevSecOps, enterprise AI strategy, and cross-agency coordination, and explain a high-level conceptual roadmap.
+
+The guide must make the decreasing evidence level explicit as the grade rises. GS-14 and GS-15 material is for recognition, structured reasoning, vocabulary, dependencies, and roadmap thinking—not for claiming prior execution or leadership.
 
 ### Project evidence rule
 
@@ -671,6 +677,15 @@ Requirements and regulatory-research refinement before application implementatio
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.4 — 2026-09-23
+
+Added:
+
+- five-rung interview-development ladder from GS-11 foundation through GS-15 conceptual awareness;
+- GS-14 stretch goal for executive alignment and AI cybersecurity risk-assessment roadmap thinking;
+- GS-15 super-stretch goal for enterprise AI strategy, cloud modernization, production AI, DevSecOps, and cross-agency systems thinking;
+- explicit rule that GS-14/15 preparation is recognition and roadmap reasoning, not claimed experience.
 
 ### 1.3 — 2026-09-23
 
