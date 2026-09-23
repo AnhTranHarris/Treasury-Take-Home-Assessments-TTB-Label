@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.1  
+**Protocol version:** 1.2  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -80,6 +80,7 @@ Current governing documents include:
 
 - `README.md` — human-facing project overview;
 - `PROTOCOLS.md` — development and handoff protocol;
+- `PROJECT_MANAGEMENT.md` — lifecycle, risks, milestones, quality gates, and current delivery status;
 - `docs/ARCHITECTURE.md` — product architecture;
 - `docs/PERFORMANCE_ARCHITECTURE.md` — runtime/performance rules;
 - `docs/TTB_RULE_SCOPE.md` — supported regulatory scope;
@@ -278,7 +279,35 @@ Therefore prototype viability outranks architectural breadth.
 
 Horizontal refactoring and breadth are appropriate after the relevant vertical path works and when they improve maintainability, testability, performance, or future extension.
 
-## 12. Testing Protocol
+## 12. Project Management Record Maintenance
+
+`PROJECT_MANAGEMENT.md` is the human-facing lifecycle and delivery record for this repository.
+
+ChatGPT should update it when a material project-management event occurs, including:
+
+- lifecycle phase change;
+- milestone completion;
+- new material risk or mitigation;
+- major scope decision;
+- architecture decision with delivery impact;
+- benchmark/performance gate result;
+- deployment event;
+- change to the next vertical slice;
+- project handoff;
+- submission-readiness decision.
+
+The file must distinguish:
+
+- completed work from planned work;
+- measured results from targets;
+- project evidence from self-evaluation;
+- official federal competency language from any informal interpretation.
+
+The file may map repository evidence to PMI/OPM/Treasury frameworks, but it must not claim that the project formally establishes a General Schedule grade or certification.
+
+At every major phase gate, ChatGPT should verify that `PROJECT_MANAGEMENT.md` accurately reflects the repository's actual state.
+
+## 13. Testing Protocol
 
 Before declaring a material feature complete, check as applicable:
 
@@ -293,7 +322,7 @@ Before declaring a material feature complete, check as applicable:
 
 Tests must not be described as passing unless they actually ran and passed.
 
-## 13. Performance Protocol
+## 14. Performance Protocol
 
 Performance changes must follow the priority order documented in `docs/PERFORMANCE_ARCHITECTURE.md`.
 
@@ -307,7 +336,7 @@ In particular:
 - Gemini is not raced against local OCR on every request;
 - deployment performance must be measured rather than assumed.
 
-## 14. Git and Commit Discipline
+## 15. Git and Commit Discipline
 
 Preferred commit prefixes:
 
@@ -323,7 +352,7 @@ Meaningful architectural changes should be identifiable from Git history.
 
 Do not commit secrets, API keys, private credentials, or sensitive information.
 
-## 15. Why Normal Chat May Be Used Instead of Work
+## 16. Why Normal Chat May Be Used Instead of Work
 
 This project may intentionally use a normal ChatGPT conversation for research, design, and iterative implementation rather than handing every phase to ChatGPT Work.
 
@@ -340,7 +369,7 @@ This is a workflow choice, not a claim that one ChatGPT mode is universally bett
 
 Work may be used later when its capabilities materially improve a task. If that occurs, the same repository protocol and source hierarchy still apply.
 
-## 16. Chat Length and Session Handoff Protocol
+## 17. Chat Length and Session Handoff Protocol
 
 Long conversations can become difficult to navigate and may approach practical context limits.
 
@@ -381,17 +410,18 @@ At the start of a new ChatGPT development session, ChatGPT should:
 1. inspect the current GitHub repository;
 2. read `PROTOCOLS.md`;
 3. read `README.md`;
-4. read `docs/ARCHITECTURE.md`;
-5. read `docs/PERFORMANCE_ARCHITECTURE.md`;
-6. read `docs/TTB_RULE_SCOPE.md`;
-7. read `docs/GOVERNMENT_SOURCES.md`;
-8. read any requirements/handoff file named by this protocol;
-9. inspect recent commits if needed;
-10. verify the requested task against the current repository state before changing code.
+4. read `PROJECT_MANAGEMENT.md`;
+5. read `docs/ARCHITECTURE.md`;
+6. read `docs/PERFORMANCE_ARCHITECTURE.md`;
+7. read `docs/TTB_RULE_SCOPE.md`;
+8. read `docs/GOVERNMENT_SOURCES.md`;
+9. read any requirements/handoff file named by this protocol;
+10. inspect recent commits if needed;
+11. verify the requested task against the current repository state before changing code.
 
 ChatGPT should not reconstruct the project from remembered chat history when the repository contains the answer.
 
-## 17. Protocol Amendment Procedure
+## 18. Protocol Amendment Procedure
 
 This protocol is intentionally updateable.
 
@@ -418,7 +448,7 @@ ChatGPT must not silently amend this protocol on its own.
 
 If ChatGPT identifies a needed protocol change, it should propose the change to the human or clearly identify it while carrying out an already-authorized documentation update.
 
-## 18. Stop / Rollback Rule
+## 19. Stop / Rollback Rule
 
 If a change:
 
@@ -431,7 +461,7 @@ If a change:
 
 ChatGPT should stop building on that change, identify the problem, and either correct or roll back to the last known-good state.
 
-## 19. Transparency to Human Reviewers
+## 20. Transparency to Human Reviewers
 
 The use of ChatGPT is not hidden.
 
@@ -441,10 +471,10 @@ The intended development story is:
 
 The repository should make that process auditable without requiring a reviewer to read the original chat transcript.
 
-## 20. Current Handoff Snapshot
+## 21. Current Handoff Snapshot
 
 **Date:** 2026-09-23  
-**Protocol version:** 1.1  
+**Protocol version:** 1.2  
 **Architecture version:** v0.2  
 **Latest relevant commit before this snapshot update:** `adab0da8cb2b48dc0f0fe899be5739880ce5b148`
 
@@ -475,7 +505,8 @@ Requirements and regulatory-research refinement before application implementatio
 - distilled-spirits scope document;
 - adaptive multi-pass OCR escalation design;
 - government-source registry separated from non-government sources;
-- vertical-slice viability rule added to the development protocol.
+- vertical-slice viability rule added to the development protocol;
+- project-management lifecycle record added with PMI/OPM/Treasury alignment.
 
 ### Unresolved / next research
 
@@ -489,12 +520,24 @@ Requirements and regulatory-research refinement before application implementatio
 
 - `PROTOCOLS.md`
 - `README.md`
+- `PROJECT_MANAGEMENT.md`
 - `docs/ARCHITECTURE.md`
 - `docs/PERFORMANCE_ARCHITECTURE.md`
 - `docs/TTB_RULE_SCOPE.md`
 - `docs/GOVERNMENT_SOURCES.md`
 
-## 21. Protocol Changelog
+## 22. Protocol Changelog
+
+### 1.2 — 2026-09-23
+
+Added:
+
+- `PROJECT_MANAGEMENT.md` as the lifecycle/status system of record;
+- project-management maintenance rules at phase gates and handoffs;
+- PMI-CPMAI lifecycle mapping;
+- OPM GS-12/13 project-management competency alignment;
+- Treasury GS-12 job-specific evidence mapping;
+- project-management file added to new-chat bootstrap.
 
 ### 1.1 — 2026-09-23
 
