@@ -277,3 +277,48 @@ The architecture now includes:
 4. Synthetic test labels + pytest + GitHub Actions for regression QA.
 
 These additions are accepted design requirements for v0.2.
+
+
+## 16. Performance Priority Order
+
+When optimization goals conflict, use this order:
+
+1. **Correct deterministic decisions.**
+2. **Never fabricate uncertain evidence.**
+3. **Meet the approximately five-second simple-label target when deployment measurements permit.**
+4. **Remain within the free-host CPU and memory budget.**
+5. **Gracefully survive Gemini or network failure.**
+6. **Improve batch throughput.**
+7. **Add advanced image-recovery techniques.**
+
+This order is intentional. A faster result is not acceptable if it weakens correctness, silently guesses unreadable text, or makes the application unstable.
+
+## 17. Pipeline-Concurrency Rule
+
+Use concurrency only where the tasks are both independent and inexpensive enough to coexist inside the deployment budget.
+
+Preferred pattern:
+
+```text
+cheap input normalization
+        +
+cheap image-quality analysis
+        |
+        v
+one adaptive preprocessing path
+        |
+        v
+ONE warm OCR engine
+        |
+        v
+field parsing + evidence crops + deterministic validation
+        |
+        v
+optional Gemini rescue only if unresolved
+```
+
+Do not race PaddleOCR and Gemini on every request.
+
+Do not launch multiple OCR model instances merely to increase parallelism.
+
+The implementation should prefer **pipeline concurrency and resource reuse** over model-level parallelism.
