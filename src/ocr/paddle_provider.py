@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from threading import Lock
 from typing import Any
 
 from src.imaging.preprocess import prepare_ocr_image
@@ -61,6 +62,7 @@ class PaddleOCRProvider:
     def __init__(self, engine: Any | None = None, max_dimension: int = 1600):
         self._engine = engine
         self.max_dimension = max_dimension
+        self._inference_lock = Lock()
 
     def _get_engine(self) -> Any:
         if self._engine is None:
@@ -77,7 +79,8 @@ class PaddleOCRProvider:
 
     def recognize(self, image_bytes: bytes) -> list[OCRLine]:
         image = prepare_ocr_image(image_bytes, max_dimension=self.max_dimension)
-        results = list(self._get_engine().predict(image))
+        with self._inference_lock:
+            results = list(self._get_engine().predict(image))
         if not results:
             return []
 
