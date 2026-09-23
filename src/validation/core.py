@@ -13,6 +13,7 @@ from .models import (
 from .normalization import (
     has_supported_abv_format,
     normalize_identity,
+    normalize_name_address,
     parse_abv,
     parse_net_contents_ml,
     warning_text_for_comparison,
@@ -42,6 +43,14 @@ def _compare_identity(rule_id: str, field: str, expected: str, detected: Optiona
     if normalize_identity(expected) == normalize_identity(detected):
         return FieldResult(rule_id, field, Status.PASS, expected, detected, "Detected value matches after conservative normalization.")
     return FieldResult(rule_id, field, Status.FAIL, expected, detected, "Detected value does not match the application/reference value.")
+
+
+def _compare_name_address(expected: str, detected: Optional[str]) -> FieldResult:
+    if not detected or not detected.strip():
+        return _review("DS-NAME-001", "Name/address", expected, detected, "Required name/address evidence was not reliably detected.")
+    if normalize_name_address(expected) == normalize_name_address(detected):
+        return FieldResult("DS-NAME-001", "Name/address", Status.PASS, expected, detected, "Detected name/address matches after harmless separator normalization.")
+    return FieldResult("DS-NAME-001", "Name/address", Status.FAIL, expected, detected, "Detected name/address does not match the application/reference value.")
 
 
 def verify(reference: ApplicationReference, evidence: DetectedEvidence) -> VerificationResult:
@@ -83,7 +92,7 @@ def verify(reference: ApplicationReference, evidence: DetectedEvidence) -> Verif
     else:
         results.append(_review("DS-NET-002", "Net contents format", "Metric L/mL form", evidence.net_contents, "Net-contents format could not be evaluated from reliable visible evidence."))
 
-    results.append(_compare_identity("DS-NAME-001", "Name/address", reference.name_address, evidence.name_address))
+    results.append(_compare_name_address(reference.name_address, evidence.name_address))
 
     if not reference.imported:
         results.append(FieldResult("DS-IMPORT-001", "Country of origin", Status.NOT_APPLICABLE, None, evidence.country_origin, "Application indicates a domestic product."))
