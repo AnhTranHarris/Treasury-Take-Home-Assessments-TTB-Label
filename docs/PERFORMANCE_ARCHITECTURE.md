@@ -322,3 +322,110 @@ Do not race PaddleOCR and Gemini on every request.
 Do not launch multiple OCR model instances merely to increase parallelism.
 
 The implementation should prefer **pipeline concurrency and resource reuse** over model-level parallelism.
+
+
+## 18. Adaptive Multi-Pass OCR Strategy
+
+The prototype should not repeat the exact same OCR request multiple times and treat repetition as independent confirmation.
+
+Repeated recognition is useful only when the evidence or processing path changes.
+
+### Pass 1 — Fast full-label pass
+
+Run the normal local path:
+
+```text
+uploaded image
+    |
+    v
+light/adaptive OpenCV preprocessing
+    |
+    v
+one PP-OCRv5 mobile pass
+    |
+    v
+field extraction + OCR confidence
+```
+
+If all required fields are extracted with sufficient tested confidence and the deterministic checks can proceed, stop immediately.
+
+Do not perform an unnecessary second pass and do not call Gemini.
+
+### Pass 2 — Targeted local rescue
+
+If Pass 1 leaves one or more important fields unresolved:
+
+1. identify the problem field/region using OCR bounding boxes where possible;
+2. crop only that region;
+3. apply only the correction appropriate to the problem, such as enlargement, contrast improvement, deskewing, thresholding, or perspective correction;
+4. run OCR on the targeted crop.
+
+Examples of priority retry targets:
+
+- alcohol content;
+- government warning;
+- brand;
+- class/type.
+
+Do not rerun the entire high-resolution image when a small evidence crop is sufficient.
+
+### Optional narrow third local attempt
+
+A third local attempt may be allowed only when testing demonstrates that a specific alternative preprocessing transform materially improves a critical crop without violating the latency/memory budget.
+
+It must remain bounded and targeted.
+
+The implementation must never loop indefinitely until OCR produces a desired value.
+
+### Gemini escalation
+
+Escalate to Gemini only after the bounded local passes leave a critical field unresolved or contradictory.
+
+Gemini receives the original image or the most relevant evidence crop and a constrained extraction schema.
+
+Gemini remains extraction-only and never determines compliance.
+
+### Agreement handling
+
+Multiple OCR passes improve evidence quality; they do not vote on regulatory compliance.
+
+Examples:
+
+```text
+Pass 1: 45% Alc./Vol.
+Pass 2: 45% Alc./Vol.
+=> stronger extraction evidence
+=> deterministic Python rules decide result
+```
+
+```text
+Pass 1: 45% Alc./Vol.
+Pass 2: 46% Alc./Vol.
+=> extraction conflict
+=> Gemini rescue or REVIEW
+```
+
+A repeated identical result from the same pixels/model/configuration is not treated as independent confirmation.
+
+### Confidence states
+
+The implementation may internally classify extraction status conceptually as:
+
+```text
+GREEN  -> sufficient local evidence; validate now
+YELLOW -> targeted local retry
+RED    -> unresolved/missing/conflicting evidence; Gemini or REVIEW
+```
+
+Exact numerical thresholds are test-derived configuration values, not design-time assumptions.
+
+### Bounded-pass rule
+
+Default MVP maximum:
+
+- one full-image local OCR pass;
+- one targeted local OCR retry;
+- optionally one additional narrow crop retry only if benchmark evidence justifies it;
+- then Gemini fallback or human REVIEW.
+
+This bounded escalation protects Sarah's latency requirement, Marcus's resource/network concerns, Dave's need for human judgment, and Jenny's difficult-image requirement.
