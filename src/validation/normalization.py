@@ -20,6 +20,14 @@ def normalize_identity(value: str) -> str:
     return collapse_whitespace(normalized).casefold()
 
 
+def normalize_name_address(value: str) -> str:
+    """Normalize harmless address separators while preserving substantive words/numbers."""
+    normalized = unicodedata.normalize("NFKC", value)
+    normalized = normalized.translate(_APOSTROPHES).translate(_DASHES)
+    normalized = re.sub(r"[,|.]", " ", normalized)
+    return collapse_whitespace(normalized).casefold()
+
+
 def parse_abv(value: Optional[str]) -> Optional[Decimal]:
     if not value:
         return None
