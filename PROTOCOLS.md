@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.4  
+**Protocol version:** 1.5  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -205,6 +205,47 @@ A feature is not complete because code exists.
 
 Completion requires appropriate tests and working behavior.
 
+### Mandatory continuous QC after code writes
+
+Because this take-home has a compressed delivery window and the human cannot manually inspect every AI-assisted code change at programming-engineer speed, **every coherent code-change batch must pass executable QC before another feature is layered on top of it**.
+
+A coherent code-change batch is a logically complete edit such as adding or modifying one validator, parser, OCR adapter, UI behavior, configuration path, or tightly related set of files. This rule does not require rerunning an expensive full OCR/deployment suite after every individual line.
+
+Minimum post-write QC, as applicable:
+
+1. syntax / import / dependency check for the changed code;
+2. targeted test for the behavior that changed;
+3. fast regression tests protecting previously working behavior;
+4. application or module smoke check for the affected path;
+5. inspect exceptions, tracebacks, warnings, and logs;
+6. if any check fails, fix and repeat QC before proceeding.
+
+AI-generated or AI-modified code is **provisional until it has been executed and verified**.
+
+Expensive integration checks should be risk-based. OCR changes must exercise OCR. Streamlit changes must smoke-test the UI/application startup path. Regulatory-rule changes must run the relevant positive and negative rule tests. Documentation-only changes do not require loading the OCR model.
+
+At the completion of each vertical slice, run the broader gate appropriate to the implemented scope, including unit/regression tests, synthetic or representative input, error path, application path, dependency/import checks, and performance/resource measurements when relevant.
+
+### Time-pressure safety rule
+
+**Time pressure reduces scope before it reduces QC.**
+
+If the delivery schedule becomes threatened:
+
+```text
+reduce or defer features
+        ↓
+preserve the working vertical core
+        ↓
+run QC
+        ↓
+document deferred work
+        ↓
+submit a stable prototype
+```
+
+Do not respond to schedule pressure by stacking unverified code, removing tests, or claiming behavior that has not been executed.
+
 ## 11. Vertical-Slice Viability Rule
 
 Horizontal coding and vertical coding both matter, but **vertical coding has priority for prototype viability**.
@@ -306,6 +347,21 @@ The file must distinguish:
 The file may map repository evidence to PMI/OPM/Treasury frameworks, but it must not claim that the project formally establishes a General Schedule grade or certification.
 
 At every major phase gate, ChatGPT should verify that `PROJECT_MANAGEMENT.md` accurately reflects the repository's actual state.
+
+### Compressed submission-window control
+
+Treasury's verified September 21, 2026 email states that the assessment must be submitted within one week of the earlier of the original assessment receipt date or that email. The human reports first receiving the assessment on September 20.
+
+For project management, use **Saturday, September 26, 2026 end of day as the internal hard stabilization/submission target**. This is a conservative internal safety deadline, not a claim that Treasury explicitly stated September 26 as the official deadline.
+
+Sunday, September 27 is treated only as contingency buffer. Normal feature development must not depend on that buffer.
+
+As the internal target approaches:
+
+- prioritize the working vertical core;
+- stop nonessential scope expansion;
+- reserve the final day for regression testing, deployment verification, README/setup verification, secrets review, and submission-package inspection;
+- document deferred features rather than destabilizing the prototype.
 
 ## 13. Temporary Interview Readiness Protocol — ACTIVE
 
@@ -442,6 +498,28 @@ If an interview is scheduled:
 5. add timed 30-second, 60-second, and 2-minute answer variants where useful;
 6. prepare a mock panel/quiz workflow if requested;
 7. flag any résumé/SF-50/application inconsistency that should be resolved before the interview.
+
+### Rapid interview-preparation window
+
+Because the date of any live interview is unknown, prepare as though a live interview could occur by approximately **Wednesday, September 30, 2026**.
+
+The objective is not to become a full programming-engineering expert in a few days. Preparation should optimize for **project mastery and defensible technical literacy**.
+
+Priority order:
+
+1. understand and explain the mission, stakeholders, requirements, architecture, risks, and failure behavior;
+2. trace a label through the actual implemented code path from input to PASS / REVIEW / FAIL;
+3. read and explain the Python constructs actually used by this project;
+4. understand and run the project's tests;
+5. diagnose a basic traceback or failed test and explain the debugging path;
+6. make or explain a small bounded rule change safely;
+7. discuss GS-13 AI/cloud cybersecurity and Agile concepts accurately without claiming experience not held;
+8. recognize GS-14 responsibilities and sketch a rough roadmap;
+9. grasp GS-15 enterprise concepts at a high level.
+
+Generic programming study is subordinate to the code actually used in this repository. Focus on functions, variables, dictionaries/data models, classes where used, conditionals, imports, exceptions, lists, return values, tests/assertions, configuration/secrets, module boundaries, and reading tracebacks.
+
+Before submission, interview study should not jeopardize the prototype. After the stable submission package is complete, increase interview-practice intensity using the private guide and the final repository evidence.
 
 ### Sunset rule
 
@@ -621,7 +699,7 @@ The repository should make that process auditable without requiring a reviewer t
 ## 22. Current Handoff Snapshot
 
 **Date:** 2026-09-23  
-**Protocol version:** 1.3  
+**Protocol version:** 1.5  
 **Architecture version:** v0.2  
 **Latest relevant commit before this snapshot update:** `a6682cae79c2b61c2b28c3eea5f3c5ea3398b14c`
 
@@ -656,7 +734,10 @@ Requirements and regulatory-research refinement before application implementatio
 - project-management lifecycle record added with PMI/OPM/Treasury alignment;
 - OPM and USAJOBS sources added to the government-source registry;
 - private interview-readiness protocol activated for the current application cycle;
-- private Google Docs interview guide initialized under the canonical title recorded in this protocol.
+- private Google Docs interview guide initialized under the canonical title recorded in this protocol;
+- continuous executable QC required after every coherent code-change batch;
+- September 26 internal stabilization/submission target established;
+- rapid interview-preparation window established through approximately September 30.
 
 ### Unresolved / next research
 
@@ -677,6 +758,17 @@ Requirements and regulatory-research refinement before application implementatio
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.5 — 2026-09-23
+
+Added:
+
+- mandatory executable QC after every coherent code-change batch;
+- rule that AI-assisted code is provisional until executed and verified;
+- time-pressure rule requiring scope reduction before QC reduction;
+- September 26, 2026 internal stabilization/submission target, with September 27 treated only as contingency buffer;
+- final-day stabilization and submission-package controls;
+- rapid interview-preparation window through approximately September 30, focused on project mastery rather than broad programming-engineer expertise.
 
 ### 1.4 — 2026-09-23
 
