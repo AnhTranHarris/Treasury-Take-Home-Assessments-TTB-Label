@@ -85,7 +85,7 @@ Current governing documents include:
 - `docs/PERFORMANCE_ARCHITECTURE.md` — runtime/performance rules;
 - `docs/TTB_RULE_SCOPE.md` — supported regulatory scope;
 - `docs/GOVERNMENT_SOURCES.md` — official government-source registry;
-- future `docs/REQUIREMENTS_MATRIX.md` — machine-readable/implementation-oriented TTB requirement mapping.
+- `docs/REQUIREMENTS_MATRIX.md` — implementation-oriented TTB requirement mapping and current first-slice authorization.
 
 When chat memory and committed documentation differ, ChatGPT must inspect the repository and use the committed documentation unless the human explicitly changes it.
 
@@ -705,7 +705,7 @@ The repository should make that process auditable without requiring a reviewer t
 
 ### Current phase
 
-Compressed requirements-to-prototype delivery: finish regulatory matrix, then implement and continuously QC the first working vertical slice before the September 26 internal stabilization/submission target.
+Compressed prototype implementation: the regulatory matrix is complete and the first vertical slice is locked; implement and continuously QC that working slice before the September 26 internal stabilization/submission target.
 
 ### Locked decisions
 
@@ -737,15 +737,15 @@ Compressed requirements-to-prototype delivery: finish regulatory matrix, then im
 - private Google Docs interview guide initialized under the canonical title recorded in this protocol;
 - continuous executable QC required after every coherent code-change batch;
 - September 26 internal stabilization/submission target established;
-- rapid interview-preparation window established through approximately September 30.
+- rapid interview-preparation window established through approximately September 30;
+- TTB requirements matrix completed and first implementation slice locked.
 
 ### Unresolved / next research
 
-- complete the deeper TTB.gov requirement analysis;
-- build `docs/REQUIREMENTS_MATRIX.md`;
-- classify TTB requirements as AUTOMATE / REVIEW / CONDITIONAL;
-- decide which conditional fields belong in the MVP UI;
-- only then begin application implementation.
+- verify current implementation-library APIs and deployment compatibility;
+- implement the first vertical slice authorized by `docs/REQUIREMENTS_MATRIX.md`;
+- run mandatory post-write QC after each coherent code-change batch;
+- preserve conditional disclosures as deferred unless the core remains stable and schedule permits.
 
 ### Governing files for the next session
 
