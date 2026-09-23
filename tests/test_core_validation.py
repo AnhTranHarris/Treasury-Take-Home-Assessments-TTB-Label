@@ -53,13 +53,23 @@ def test_abv_abbreviation_only_is_not_supported_mandatory_format():
     assert by_rule(result, "DS-ABV-002").status == Status.FAIL
 
 
-def test_warning_wrong_heading_case_fails():
+def test_warning_heading_case_is_advisory_in_first_slice():
     ev = happy_evidence()
-    bad = GOVERNMENT_WARNING.replace("GOVERNMENT WARNING", "Government Warning", 1)
-    ev = DetectedEvidence(**{**ev.__dict__, "warning_text": bad})
+    bad_case = GOVERNMENT_WARNING.replace("GOVERNMENT WARNING", "Government Warning", 1)
+    ev = DetectedEvidence(**{**ev.__dict__, "warning_text": bad_case})
     result = verify(reference(), ev)
-    assert result.overall_status == Status.FAIL
-    assert by_rule(result, "DS-WARN-001").status == Status.FAIL
+    assert result.overall_status == Status.PASS
+    assert by_rule(result, "DS-WARN-001").status == Status.PASS
+    assert any("capitalization" in item.lower() for item in result.manual_review_advisories)
+
+
+def test_warning_wording_mismatch_routes_to_review_until_targeted_retry_exists():
+    ev = happy_evidence()
+    bad_text = GOVERNMENT_WARNING.replace("birth defects", "birth injuries", 1)
+    ev = DetectedEvidence(**{**ev.__dict__, "warning_text": bad_text})
+    result = verify(reference(), ev)
+    assert result.overall_status == Status.REVIEW
+    assert by_rule(result, "DS-WARN-001").status == Status.REVIEW
 
 
 def test_warning_line_breaks_are_tolerated():
