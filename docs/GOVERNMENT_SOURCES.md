@@ -200,7 +200,54 @@ The MVP should not independently implement broad CBP country-of-origin law unles
 
 Do not use general Treasury pages as substitutes for TTB-specific beverage-labeling authority.
 
-## 9. Source Classification
+## 9. OPM — Federal Program and Project Management
+
+### Federal Program and Project Management Competency Development Framework — Part I
+
+**Agency:** U.S. Office of Personnel Management (OPM)  
+**Source:** https://www.opm.gov/policy-data-oversight/career-paths-for-federal-program-and-project-management-guide/federal-program-and-project-management-competency-development-framework-part-i/  
+**Role:** Federal project/program-management competency framework and GS 12-13 expert-level competency context  
+**Reviewed:** 2026-09-23
+
+Used to inform the competency-alignment section in `PROJECT_MANAGEMENT.md`.
+
+### Federal Program and Project Management Competency Development Framework — Part II
+
+**Agency:** OPM  
+**Source:** https://www.opm.gov/policy-data-oversight/career-paths-for-federal-program-and-project-management-guide/federal-program-and-project-management-competency-development-framework-part-ii/  
+**Role:** Federal work behaviors associated with project/program management career levels  
+**Reviewed:** 2026-09-23
+
+Used to inform project-management behaviors such as requirements, risk, quality, stakeholder, scope, schedule, compliance, knowledge management, problem solving, planning, and evaluation.
+
+### Appendix E — Competency Model Proficiency Level Guidance
+
+**Agency:** OPM  
+**Source:** https://www.opm.gov/policy-data-oversight/career-paths-for-federal-program-and-project-management-guide/appendix-e/  
+**Role:** Proficiency-level guidance and GS 12-13 project-management competency levels  
+**Reviewed:** 2026-09-23
+
+Used to avoid vague or inflated descriptions of federal competency expectations.
+
+## 10. USAJOBS — Treasury AI Position
+
+### IT Specialist (Artificial Intelligence), GS-2210-12 through GS-15
+
+**Agency:** U.S. Department of the Treasury, Departmental Offices  
+**Source:** https://www.usajobs.gov/job/858700600  
+**Announcement:** 26-DO-12891471-DH  
+**Role:** Job-specific reference for the Treasury AI position associated with this take-home project  
+**Reviewed:** 2026-09-23
+
+Relevant GS-12 context includes:
+
+- assisting in designing, developing, testing, or deploying AI models and prototypes;
+- ability to implement AI solutions in production or test environments;
+- IT competencies including Attention to Detail, Customer Service, Oral Communication, and Problem Solving.
+
+This source is used for evidence alignment only. The repository does not make a formal qualification or grade determination.
+
+## 11. Source Classification
 
 Government sources used by this project should be classified as one of:
 
@@ -211,7 +258,7 @@ Government sources used by this project should be classified as one of:
 
 The future requirements matrix should reference the relevant government-source classification.
 
-## 10. Update Procedure
+## 12. Update Procedure
 
 When a government source is added or materially re-reviewed:
 
@@ -225,7 +272,7 @@ When a government source is added or materially re-reviewed:
 
 A government webpage changing does **not** automatically change application behavior. Rule changes enter the program only after deliberate review, documentation, implementation, and testing.
 
-## 11. Separation of Duties
+## 13. Separation of Duties
 
 This file answers:
 
