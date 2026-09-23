@@ -1,8 +1,9 @@
 # Project Management & Delivery Record
 
 **Project:** Treasury Take-Home Assessment — TTB Label Verification Prototype  
-**Status:** Active — requirements and regulatory-research phase  
+**Status:** Active — compressed requirements-to-prototype delivery phase  
 **Last updated:** 2026-09-23  
+**Internal stabilization/submission target:** Saturday, 2026-09-26 end of day  
 **Delivery approach:** Human-directed, ChatGPT-assisted, vertically sliced AI prototype development
 
 ## 1. Purpose
@@ -195,6 +196,7 @@ No material rule should exist only because it was discussed in chat.
 | Visual label requirements cannot be reliably inferred from pixels | High | Medium | Mark unsupported physical/typographic checks for human REVIEW | Controlled |
 | Chat context drifts over long sessions | Medium | Medium | PROTOCOLS.md, GitHub source of truth, handoff snapshot | Controlled |
 | Batch processing destabilizes single-label path | Medium | Medium | Batch deferred until single-label benchmark and memory gates pass | Deferred |
+| Compressed delivery window causes unverified code accumulation | High | High | Mandatory post-write QC; vertical-slice scope control; defer features before reducing tests; final-day stabilization | Active |
 
 Risk levels are qualitative planning labels, not measured statistical probabilities.
 
@@ -228,11 +230,16 @@ A phase or vertical slice is not complete merely because code exists.
 - scope classification defined;
 - expected PASS / REVIEW / FAIL behavior documented.
 
+### Continuous code-change gate
+
+After every coherent code-change batch, run the applicable syntax/import check, targeted test, fast regression tests, affected-path smoke check, and error/log inspection. A failed gate blocks additional feature layering until corrected.
+
 ### Gate B — Implementation viability
 
 - end-to-end slice runs;
 - errors handled without fabricated results;
-- repository remains runnable.
+- repository remains runnable;
+- latest coherent code-change batch has passed its applicable QC gate.
 
 ### Gate C — Test readiness
 
@@ -271,7 +278,30 @@ Planned measures include:
 
 No performance target will be reported as achieved until measured in the deployed environment.
 
-## 14. Milestone Record
+## 14. Compressed Delivery Schedule
+
+Treasury's verified September 21 email requires submission within one week of the earlier of the original assessment receipt date or that email. The human reports original receipt on September 20. The project therefore uses **Saturday, September 26 end of day as an internal safety deadline**, not as a quoted Treasury deadline.
+
+| Date | Delivery focus | Exit condition |
+|---|---|---|
+| Wed Sep 23 | Finish authoritative TTB requirement classification and lock MVP rule scope | Requirements matrix sufficient to define first vertical slice |
+| Thu Sep 24 | Build and continuously QC the first complete label-to-result vertical slice | Runnable core with PASS / REVIEW / FAIL and targeted tests |
+| Fri Sep 25 | Add highest-value resilience only: uncertainty handling, targeted retry, integration/deployment work | Stable core, meaningful regression coverage, deployment path working |
+| Sat Sep 26 | **Stabilization / submission day** — no nonessential scope expansion | Full regression/smoke QC, deployed URL verified, README/setup verified, secrets checked, submission package inspected |
+| Sun Sep 27 | Contingency buffer only | Normal plan must not depend on this day |
+
+### Schedule control
+
+If work slips, defer lower-value features in this order before weakening core QC:
+
+1. batch-processing enhancements;
+2. additional conditional regulatory rules beyond the demonstrated core;
+3. advanced image-recovery variants;
+4. optional polish that does not improve evaluator access, correctness, or explainability.
+
+Do not defer the working core, reproducible setup instructions, safe uncertainty handling, tests protecting implemented behavior, deployed accessibility, or final submission verification.
+
+## 15. Milestone Record
 
 | Milestone | Status | Evidence |
 |---|---|---|
@@ -289,9 +319,9 @@ No performance target will be reported as achieved until measured in the deploye
 | Add automated regression suite | Planned | pending |
 | Deploy Streamlit prototype | Planned | pending |
 | Benchmark and document results | Planned | pending |
-| Submission readiness review | Planned | pending |
+| Submission readiness review | Planned — internal target Sep 26 | final QC + deployment + README + submission package |
 
-## 15. Current Work / Next Decision Gate
+## 16. Current Work / Next Decision Gate
 
 ### Current work
 
@@ -316,7 +346,7 @@ Each relevant requirement should be classified as:
 - initial UI context fields identified;
 - first vertical slice selected.
 
-## 16. Federal Project-Management Alignment
+## 17. Federal Project-Management Alignment
 
 This section documents alignment to official federal competency language; it is not a formal grade determination.
 
@@ -339,7 +369,7 @@ Repository evidence currently maps as follows:
 | Decision making / problem solving | Alternatives analysis, trade-offs, contingency planning |
 | Attention to detail | Source hierarchy, rule traceability, explicit uncertainty handling |
 
-## 17. Treasury GS-12 Job-Specific Alignment
+## 18. Treasury GS-12 Job-Specific Alignment
 
 Treasury announcement **26-DO-12891471-DH** covers GS-12 through GS-15 IT Specialist (Artificial Intelligence) positions.
 
@@ -366,7 +396,7 @@ The announcement also identifies four IT competencies:
 
 The stakeholder-centered, explainable, source-traceable design is intended to make those behaviors visible in the repository rather than merely assert them.
 
-## 18. Framework and Source References
+## 19. Framework and Source References
 
 ### AI project management
 
@@ -389,7 +419,17 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
 - USAJOBS — IT Specialist (Artificial Intelligence), announcement 26-DO-12891471-DH  
   https://www.usajobs.gov/job/858700600
 
-## 19. Change History
+## 20. Change History
+
+### 2026-09-23 — Compressed delivery controls
+
+Added:
+
+- September 26 internal stabilization/submission target;
+- continuous post-write QC gate;
+- schedule-compression risk and mitigation;
+- final-day stabilization rule;
+- scope-reduction order for schedule recovery.
 
 ### 2026-09-23 — Initial record
 
