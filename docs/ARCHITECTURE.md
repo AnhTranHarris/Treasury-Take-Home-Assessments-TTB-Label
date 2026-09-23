@@ -322,24 +322,51 @@ Unexpected internal error
 .
 ├── streamlit_app.py
 ├── requirements.txt
-├── packages.txt
 ├── README.md
+├── .streamlit/
+│   └── config.toml
 ├── docs/
-│   └── ARCHITECTURE.md
+│   ├── ARCHITECTURE.md
+│   ├── PERFORMANCE_ARCHITECTURE.md
+│   └── TTB_RULE_SCOPE.md
 ├── src/
-│   ├── image_processing.py
-│   ├── ocr.py
-│   ├── extraction.py
-│   ├── normalization.py
-│   ├── validation.py
-│   └── gemini_fallback.py
+│   ├── orchestration/
+│   │   └── verifier.py
+│   ├── imaging/
+│   │   ├── quality.py
+│   │   ├── preprocess.py
+│   │   └── evidence_crops.py
+│   ├── ocr/
+│   │   ├── interface.py
+│   │   ├── paddle_provider.py
+│   │   └── rapid_provider.py
+│   ├── extraction/
+│   │   ├── fields.py
+│   │   └── models.py
+│   ├── validation/
+│   │   ├── application_match.py
+│   │   └── result.py
+│   ├── rules/
+│   │   └── distilled_spirits/
+│   │       ├── brand.py
+│   │       ├── class_type.py
+│   │       ├── alcohol_content.py
+│   │       ├── net_contents.py
+│   │       ├── name_address.py
+│   │       ├── country_origin.py
+│   │       └── warning.py
+│   └── fallback/
+│       └── gemini.py
 ├── tests/
-│   ├── test_normalization.py
-│   └── test_validation.py
+│   ├── unit/
+│   ├── regression/
+│   └── synthetic/
 └── sample_labels/
 ```
 
-This structure is a starting point, not a requirement to create unused files.
+The structure separates orchestration, imaging, OCR, extraction, application matching, TTB rule packs, and external fallback logic so each concern can be tested independently.
+
+Only the OCR provider selected by deployment benchmarking should be active in production. The second provider remains a documented contingency, not a second simultaneous OCR engine.
 
 ## 16. Change-Control Rule
 
