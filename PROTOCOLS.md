@@ -476,7 +476,7 @@ The repository should make that process auditable without requiring a reviewer t
 **Date:** 2026-09-23  
 **Protocol version:** 1.2  
 **Architecture version:** v0.2  
-**Latest relevant commit before this snapshot update:** `adab0da8cb2b48dc0f0fe899be5739880ce5b148`
+**Latest relevant commit before this snapshot update:** `27aec851d633a12208d25c17616a0740d9fcc6b2`
 
 ### Current phase
 
@@ -506,7 +506,8 @@ Requirements and regulatory-research refinement before application implementatio
 - adaptive multi-pass OCR escalation design;
 - government-source registry separated from non-government sources;
 - vertical-slice viability rule added to the development protocol;
-- project-management lifecycle record added with PMI/OPM/Treasury alignment.
+- project-management lifecycle record added with PMI/OPM/Treasury alignment;
+- OPM and USAJOBS sources added to the government-source registry.
 
 ### Unresolved / next research
 
