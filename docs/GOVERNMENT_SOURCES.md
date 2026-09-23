@@ -1,0 +1,255 @@
+# Government Source Registry
+
+**Status:** Authoritative-source registry  
+**Last reviewed:** 2026-09-23  
+**Purpose:** Keep official government sources separate from implementation notes, architecture decisions, and third-party technical documentation.
+
+## 1. Purpose
+
+This file is the project's registry for **government websites and official government publications only**.
+
+It exists so a human reviewer or future ChatGPT session can quickly determine:
+
+- which official government sources informed the project;
+- what each source is used for;
+- which agency owns the source;
+- whether the source is primary or supporting authority;
+- when the project last reviewed it;
+- which project documents depend on it.
+
+This file must not become a general web bibliography.
+
+Third-party libraries, GitHub projects, hosting documentation, Google/Gemini documentation, community sources, and secondary commentary belong elsewhere.
+
+## 2. Source-Use Rule
+
+Government-source research should follow this order when possible:
+
+1. governing statute or regulation;
+2. official agency regulation/guidance page;
+3. official agency checklist, form, or publication;
+4. another official federal agency source when the requirement crosses agency boundaries.
+
+If two official sources appear to conflict, ChatGPT must not silently reconcile them. The conflict must be documented and resolved through higher-authority or more current official material before implementation.
+
+## 3. Treasury Take-Home Assignment
+
+### U.S. Department of the Treasury — Take-Home Instructions
+
+**Agency / owner:** U.S. Department of the Treasury take-home assessment repository  
+**Role in project:** Primary assignment specification and stakeholder context  
+**Source:** https://github.com/treasurytakehome-rgb/instructions  
+**Reviewed:** 2026-09-23
+
+Although hosted on GitHub, this repository is treated as the project's supplied government-assignment source because it is the assessment provided by Treasury.
+
+Used for:
+
+- stakeholder requirements;
+- prototype scope;
+- sample distilled-spirits fields;
+- deliverables;
+- evaluation criteria;
+- explicit instruction to review TTB guidance.
+
+## 4. TTB — Distilled Spirits Labeling
+
+### Distilled Spirits Labeling Home
+
+**Agency:** Alcohol and Tobacco Tax and Trade Bureau (TTB), U.S. Department of the Treasury  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/labeling  
+**Role:** Primary navigation/source hub for distilled-spirits label requirements  
+**Reviewed:** 2026-09-23
+
+Used to establish the distilled-spirits MVP regulatory domain.
+
+### Mandatory Label Information / Brand Label
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-brand-label  
+**Role:** Required information and same-field-of-vision requirements  
+**Reviewed:** 2026-09-23
+
+Used for:
+
+- brand name;
+- class/type;
+- alcohol content;
+- same-field-of-vision context.
+
+### Brand Name
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-brand-name  
+**Role:** Brand-name labeling guidance  
+**Reviewed:** 2026-09-23
+
+Used for brand-name validation scope and limitations.
+
+### Alcohol Content
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-alcohol-content  
+**Role:** Alcohol-content statement requirements  
+**Reviewed:** 2026-09-23
+
+Used for:
+
+- percent alcohol by volume;
+- permitted presentation/abbreviation concepts;
+- distinction between proof and mandatory alcohol-by-volume statement;
+- regulatory context separate from application-to-label equality.
+
+### Net Contents
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-net-contents  
+**Role:** Net-contents requirements  
+**Reviewed:** 2026-09-23
+
+Used for:
+
+- quantity/unit extraction;
+- recognition that net contents may appear on the label or elsewhere on the container;
+- avoiding automatic failure when submitted artwork alone is insufficient.
+
+### Name and Address
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-name-address  
+**Role:** Name/address requirements for distilled spirits  
+**Reviewed:** 2026-09-23
+
+Used to scope comparison of expected producer/bottler/importer information.
+
+### Government Health Warning
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-health-warning  
+**Role:** Government health-warning text and presentation requirements  
+**Reviewed:** 2026-09-23
+
+Used for:
+
+- mandatory warning text;
+- capitalization;
+- presentation requirements;
+- separation of machine-verifiable textual checks from physical/visual checks that may require human review.
+
+### Anatomy of a Distilled Spirits Label
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/anatomy-of-a-distilled-spirits-label-tool  
+**Role:** Supporting explanation of distilled-spirits label elements  
+**Reviewed:** 2026-09-23
+
+Used as a supporting implementation reference, not as a substitute for higher-authority regulatory material.
+
+## 5. TTB — Official Distilled Spirits Checklist
+
+### Distilled Spirits Labeling Checklist
+
+**Agency:** TTB  
+**Source:** https://www.ttb.gov/system/files/images/labeling-ds/ds-labeling-checklist.pdf  
+**Role:** Official review checklist closely matching the workflow described in the Treasury take-home assignment  
+**Reviewed:** 2026-09-23
+
+Used to identify and organize:
+
+- brand-name/application comparison;
+- alcohol content;
+- class/type;
+- net contents;
+- name/address;
+- health warning;
+- country of origin for imports;
+- sulfite declarations;
+- color disclosures;
+- age statements;
+- commodity statements;
+- state-of-distillation disclosures;
+- other conditional label elements.
+
+The future `docs/REQUIREMENTS_MATRIX.md` should map individual checklist items to AUTOMATE / REVIEW / CONDITIONAL implementation states.
+
+## 6. eCFR — Federal Regulations
+
+### Electronic Code of Federal Regulations
+
+**Agency / publisher:** U.S. Government Publishing Office / Office of the Federal Register  
+**Source:** https://www.ecfr.gov/  
+**Role:** Higher-authority regulatory verification when TTB guidance requires confirmation against codified federal regulations  
+**Reviewed:** 2026-09-23
+
+Use eCFR when:
+
+- exact regulatory text matters;
+- a TTB guidance page summarizes rather than reproduces a requirement;
+- a requirement's legal scope/effective language needs confirmation;
+- two TTB pages appear inconsistent.
+
+Specific CFR sections should be recorded in the future requirements matrix when implemented.
+
+## 7. U.S. Customs and Border Protection
+
+### CBP
+
+**Agency:** U.S. Customs and Border Protection, Department of Homeland Security  
+**Source:** https://www.cbp.gov/  
+**Role:** Supporting authority for import/country-of-origin matters when TTB guidance delegates or references customs requirements  
+**Reviewed:** 2026-09-23
+
+The MVP should not independently implement broad CBP country-of-origin law unless the requirement is necessary to the take-home scope and has been verified from the specific governing source.
+
+## 8. U.S. Department of the Treasury
+
+### Treasury
+
+**Agency:** U.S. Department of the Treasury  
+**Source:** https://home.treasury.gov/  
+**Role:** Department-level institutional context only  
+**Reviewed:** 2026-09-23
+
+Do not use general Treasury pages as substitutes for TTB-specific beverage-labeling authority.
+
+## 9. Source Classification
+
+Government sources used by this project should be classified as one of:
+
+- **ASSIGNMENT** — supplied take-home requirements;
+- **PRIMARY REGULATORY** — statute/regulation or direct authoritative regulatory text;
+- **AGENCY GUIDANCE** — official TTB guidance interpreting or operationalizing requirements;
+- **OFFICIAL CHECKLIST/FORM** — official workflow/checklist source;
+- **CROSS-AGENCY SUPPORT** — official source from another agency needed for a conditional rule.
+
+The future requirements matrix should reference the relevant government-source classification.
+
+## 10. Update Procedure
+
+When a government source is added or materially re-reviewed:
+
+1. confirm it is an official government source;
+2. add or update the entry here;
+3. record the review date;
+4. identify what part of the project depends on it;
+5. update `docs/REQUIREMENTS_MATRIX.md` if a rule changed;
+6. update tests if implemented behavior changed;
+7. update architecture only if the source change affects architecture.
+
+A government webpage changing does **not** automatically change application behavior. Rule changes enter the program only after deliberate review, documentation, implementation, and testing.
+
+## 11. Separation of Duties
+
+This file answers:
+
+> **Which official government sources govern or inform the prototype?**
+
+Other files answer different questions:
+
+- `PROTOCOLS.md` — how the human + ChatGPT collaboration operates;
+- `docs/ARCHITECTURE.md` — how the application is designed;
+- `docs/PERFORMANCE_ARCHITECTURE.md` — how the application should run efficiently;
+- `docs/TTB_RULE_SCOPE.md` — which regulatory domain the MVP supports;
+- `docs/REQUIREMENTS_MATRIX.md` — which individual government requirements are automated, conditional, or human-review items.
+
+This separation is intentional so regulatory sources can be reviewed or updated without rewriting the development protocol or application architecture.
