@@ -254,7 +254,9 @@ Government sources used by this project should be classified as one of:
 - **PRIMARY REGULATORY** — statute/regulation or direct authoritative regulatory text;
 - **AGENCY GUIDANCE** — official TTB guidance interpreting or operationalizing requirements;
 - **OFFICIAL CHECKLIST/FORM** — official workflow/checklist source;
-- **CROSS-AGENCY SUPPORT** — official source from another agency needed for a conditional rule.
+- **CROSS-AGENCY SUPPORT** — official source from another agency needed for a conditional rule;
+- **FEDERAL CAREER FRAMEWORK** — official OPM career/competency guidance used for project-management alignment;
+- **OFFICIAL JOB ANNOUNCEMENT** — official USAJOBS announcement used for position-specific alignment.
 
 The future requirements matrix should reference the relevant government-source classification.
 
@@ -281,6 +283,7 @@ This file answers:
 Other files answer different questions:
 
 - `PROTOCOLS.md` — how the human + ChatGPT collaboration operates;
+- `PROJECT_MANAGEMENT.md` — lifecycle status, decisions, risks, milestones, gates, and federal/AI-project-management alignment;
 - `docs/ARCHITECTURE.md` — how the application is designed;
 - `docs/PERFORMANCE_ARCHITECTURE.md` — how the application should run efficiently;
 - `docs/TTB_RULE_SCOPE.md` — which regulatory domain the MVP supports;
