@@ -158,7 +158,18 @@ Used to identify and organize:
 - state-of-distillation disclosures;
 - other conditional label elements.
 
-The future `docs/REQUIREMENTS_MATRIX.md` should map individual checklist items to AUTOMATE / REVIEW / CONDITIONAL implementation states.
+`docs/REQUIREMENTS_MATRIX.md` maps individual checklist items to AUTOMATE / REVIEW / CONDITIONAL / OUT OF MVP implementation states.
+
+### Conditional Disclosure and Age Guidance
+
+**Agency:** TTB  
+**Sources:**  
+- https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-color  
+- https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/distilled-spirits-faqs  
+**Role:** Supporting official guidance for conditional color disclosures and age-statement scope  
+**Reviewed:** 2026-09-23
+
+Used to classify conditional requirements that are documented but intentionally deferred from the core MVP unless product-context inputs establish that they apply.
 
 ## 6. eCFR — Federal Regulations
 
@@ -176,7 +187,7 @@ Use eCFR when:
 - a requirement's legal scope/effective language needs confirmation;
 - two TTB pages appear inconsistent.
 
-Specific CFR sections should be recorded in the future requirements matrix when implemented.
+Specific CFR sections are recorded in `docs/REQUIREMENTS_MATRIX.md` as requirements are implemented.
 
 ## 7. U.S. Customs and Border Protection
 
