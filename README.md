@@ -132,7 +132,7 @@ Current automated checks include:
 - net-contents consistency when visible;
 - name/address consistency;
 - imported country-of-origin consistency when applicable;
-- exact government-warning wording, capitalization, numbering, and punctuation after whitespace normalization.
+- government-warning wording, numbering, and punctuation after whitespace normalization; heading capitalization is surfaced as a human-review advisory because real OCR integration showed case instability.
 
 The application separately surfaces manual-review advisories for requirements the MVP cannot safely establish from ordinary OCR pixels, including warning boldness, physical type size/characters-per-inch/true contrast, and full physical same-field-of-vision geometry.
 
@@ -181,7 +181,7 @@ The intended runtime model is:
 - external AI fallback, if later enabled, is called only for unresolved cases;
 - uncertain evidence routes to human review rather than being guessed.
 
-The stakeholder target is approximately five seconds for a simple label. The repository does not claim that target has been achieved until the deployed application is measured.
+The stakeholder target is approximately five seconds for a simple label. On the current GitHub Actions CPU runner, the latest real-OCR integration measured 18.093 seconds for the first OCR call and 5.368 seconds for the warm full pipeline. These CI measurements are evidence, not a claim that the deployed target has been achieved; deployment must be measured separately.
 
 ## Development Approach
 
