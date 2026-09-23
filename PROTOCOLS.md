@@ -446,7 +446,7 @@ The repository should make that process auditable without requiring a reviewer t
 **Date:** 2026-09-23  
 **Protocol version:** 1.1  
 **Architecture version:** v0.2  
-**Latest relevant commit before this protocol:** `143beb12e0c2e446b951df6d47f69e6f83d6b122`
+**Latest relevant commit before this snapshot update:** `adab0da8cb2b48dc0f0fe899be5739880ce5b148`
 
 ### Current phase
 
@@ -473,7 +473,9 @@ Requirements and regulatory-research refinement before application implementatio
 - v0.2 architecture documentation;
 - performance/concurrency architecture;
 - distilled-spirits scope document;
-- adaptive multi-pass OCR escalation design.
+- adaptive multi-pass OCR escalation design;
+- government-source registry separated from non-government sources;
+- vertical-slice viability rule added to the development protocol.
 
 ### Unresolved / next research
 
