@@ -259,9 +259,45 @@ Preferred baseline:
 
 - PaddleOCR PP-OCRv5 mobile.
 
+### Current CPU runtime compatibility control
+
+The pinned prototype currently uses PaddleOCR 3.7.0 with PaddlePaddle 3.3.1 on CPU.
+
+A real GitHub Actions integration run on 2026-09-23 successfully installed the pinned runtime and downloaded both PP-OCRv5 mobile models, but inference failed inside PaddlePaddle's oneDNN/PIR executor with:
+
+```text
+ConvertPirAttribute2RuntimeAttribute not support
+[pir::ArrayAttribute<pir::DoubleAttribute>]
+```
+
+Upstream PaddleOCR/PaddlePaddle reports identify this as a PaddlePaddle 3.3.x CPU oneDNN regression. Current PaddleOCR documentation exposes `enable_mkldnn` as a supported inference parameter.
+
+For the current prototype, **disable MKL-DNN/oneDNN acceleration** with:
+
+```python
+PaddleOCR(
+    ...,
+    enable_mkldnn=False,
+)
+```
+
+Reasoning:
+
+1. correctness and runnable compatibility outrank acceleration;
+2. this is a narrowly targeted workaround for an observed upstream runtime defect;
+3. current package versions remain pinned rather than introducing a broader downgrade during the compressed delivery window;
+4. the five-second goal remains a measured deployment target rather than an assumption.
+
+If disabling oneDNN causes unacceptable deployed latency, the next tested alternatives are:
+
+1. benchmark PaddlePaddle 3.2.2 with oneDNN enabled, because upstream reports identify 3.2.x as a pre-regression path;
+2. benchmark RapidOCR as the already-approved deployment contingency.
+
+Do not change runtime versions solely on speculation. Each alternative must pass real OCR integration and performance QC before adoption.
+
 Deployment contingency:
 
-- RapidOCR using lightweight inference backends/models derived from PaddleOCR, if Streamlit memory or deployment behavior proves unacceptable.
+- RapidOCR using lightweight inference backends/models derived from PaddleOCR, if Streamlit memory, latency, or deployment behavior proves unacceptable.
 
 Do not ship both OCR engines active at runtime.
 
