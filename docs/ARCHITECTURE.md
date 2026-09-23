@@ -157,13 +157,14 @@ Examples include:
 
 - alcohol content / ABV;
 - net contents;
-- required warning wording;
-- warning heading capitalization;
+- required warning wording/numbering/punctuation;
 - other exact statutory text requirements implemented in the prototype.
 
-Government-warning text should use strict text/case validation where the requirement is machine-verifiable.
+Government-warning wording/numbering/punctuation remain strictly compared within the supported automated scope.
 
-Visual requirements such as bold styling, exact font size, or layout should remain **manual review** in the MVP unless a separately tested implementation is added later.
+Warning capitalization is a **manual-review advisory in the first slice**. Real PP-OCRv5 integration on 2026-09-23 read the correctly rendered all-caps word `GOVERNMENT` as `GOvERNMENT`, demonstrating that raw OCR case is not reliable enough to create a deterministic regulatory FAIL. A future targeted visual retry may promote capitalization back into automated validation only after testing demonstrates reliable behavior.
+
+Visual requirements such as capitalization in the current first slice, bold styling, exact font size, or layout should remain **manual review** unless a separately tested implementation is added later.
 
 ## 8. User-Facing Result States
 
@@ -209,9 +210,10 @@ Detected:    45% Alc./Vol.
 Result:      MATCH
 
 Government Warning
-Detected:    Government Warning:
-Result:      FAIL / REVIEW
-Reason:      Required heading capitalization did not match the configured rule.
+Detected:    GOvERNMENT WARNING: ...
+Automated:   PASS for supported wording/numbering/punctuation
+Advisory:    HUMAN REVIEW REQUIRED
+Reason:      Warning capitalization is not trusted from one OCR read in the first slice.
 ```
 
 The UI should also show:
