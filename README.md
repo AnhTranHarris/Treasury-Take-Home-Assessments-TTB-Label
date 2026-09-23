@@ -6,9 +6,11 @@ Prototype repository for the **AI-Powered Alcohol Label Verification App** take-
 
 **Architecture/design phase. Application implementation has not started yet.**
 
-The frozen v0.1 design baseline is documented here:
+The frozen v0.2 design baseline is documented here:
 
 - [Architecture v0.2](docs/ARCHITECTURE.md)
+- [Performance Architecture](docs/PERFORMANCE_ARCHITECTURE.md)
+- [TTB Rule Scope](docs/TTB_RULE_SCOPE.md)
 
 ## Locked Baseline
 
@@ -36,3 +38,18 @@ Implementation changes that materially alter this architecture should update the
 - synthetic regression labels + pytest + GitHub Actions;
 - bounded pipeline concurrency with one warm OCR model;
 - distilled-spirits rule pack based on reviewed TTB guidance.
+
+
+## Performance Principle
+
+The prototype uses **maximum useful concurrency, not maximum simultaneous work**.
+
+The intended runtime model is:
+
+- lightweight input and image analysis may overlap where beneficial;
+- one cached/warm OCR engine performs local inference;
+- deterministic validation remains lightweight;
+- Gemini is called only for unresolved cases;
+- uncertain evidence routes to human review rather than being guessed.
+
+Performance optimization must preserve correctness, explainability, and deployment stability.
