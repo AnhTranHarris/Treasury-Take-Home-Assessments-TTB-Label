@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.2  
+**Protocol version:** 1.3  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -307,7 +307,144 @@ The file may map repository evidence to PMI/OPM/Treasury frameworks, but it must
 
 At every major phase gate, ChatGPT should verify that `PROJECT_MANAGEMENT.md` accurately reflects the repository's actual state.
 
-## 13. Testing Protocol
+## 13. Temporary Interview Readiness Protocol — ACTIVE
+
+### Purpose
+
+Maintain a private Google Docs interview-preparation guide for this Treasury application so the human can prepare for a possible live interview using verified evidence from the application record, project repositories, and current federal role requirements.
+
+This protocol is temporary. It remains active through the current Treasury application/interview cycle unless the human explicitly deactivates, replaces, or extends it.
+
+### Evidence separation
+
+The interview guide must keep three categories visibly separate:
+
+1. **Formal documented record** — facts supported by the current résumé, SF-50, and other official employment/application records.
+2. **Project-demonstrated capability** — behaviors, technical decisions, artifacts, tests, repositories, and outcomes demonstrated through portfolio/project work.
+3. **Knowledge-growth bridge** — GS-13 or future-role concepts the human is studying and preparing to discuss, but must not present as prior professional experience unless separately documented.
+
+ChatGPT must never merge project evidence into formal qualifying employment, convert self-directed study into claimed professional experience, or imply a General Schedule qualification that the formal record does not establish.
+
+### Private-document boundary
+
+The interview guide is a private personal study artifact in the human's Google Drive.
+
+Do not:
+
+- commit the private Google Doc link to this public repository;
+- copy Social Security numbers, dates of birth, personnel action identifiers, personal telephone numbers, supervisor telephone numbers, or other unnecessary personal identifiers into GitHub;
+- reproduce the SF-50 itself in this repository;
+- expose private interview-preparation notes in the public README.
+
+The guide may summarize non-sensitive facts necessary for preparation, such as current federal series/grade, role type, documented duties, and verified project evidence.
+
+### Authoritative preparation sources
+
+Use this order for interview-preparation content:
+
+1. current résumé and SF-50 actually available to ChatGPT;
+2. current repository/project evidence and measured outcomes;
+3. current Treasury job announcement;
+4. current OPM qualification/competency guidance;
+5. current official federal AI/cybersecurity guidance such as NIST/CISA when relevant;
+6. current PMI AI-project-management material where useful;
+7. prior chat discussion only when corroborated by the sources above.
+
+If a source cannot support a claimed accomplishment, the guide must label it as study, inference, planned work, or unavailable rather than filling the gap.
+
+### Required guide content
+
+The living interview guide should include, as applicable:
+
+- a truthful professional introduction;
+- the formal-record baseline and important discrepancies to verify before interview;
+- GS-12 job-specific expectations;
+- GS-13 knowledge/experience gap analysis;
+- the TTB prototype architecture and stakeholder rationale;
+- likely technical and project-management interview questions;
+- concise answer frameworks;
+- STAR-style examples grounded in actual employment or verified project work;
+- project portfolio examples that demonstrate transferable capability;
+- AI governance, human-in-the-loop, testing, security, and risk questions;
+- Agile and DevSecOps study material where relevant;
+- questions for the interview panel;
+- a demo/interview-day checklist;
+- a vocabulary/reference section;
+- official source links.
+
+### GS-13 bridge rule
+
+GS-13 preparation is a **knowledge-growth lane**, not a claim of current GS-13-equivalent employment.
+
+Where the Treasury announcement identifies GS-13 requirements beyond the GS-12 prototype baseline, the guide should:
+
+1. identify the specific additional requirement;
+2. explain what the human already has evidence for;
+3. identify the actual gap;
+4. provide a concise study explanation;
+5. connect the concept to this project where truthful;
+6. state what must not be claimed without real experience.
+
+For the current announcement, particular attention should be given to AI/cloud cybersecurity practices and participation in Agile sprint planning/execution.
+
+### Project evidence rule
+
+Other repositories may be used to demonstrate transferable behaviors such as:
+
+- requirements decomposition;
+- iterative experimentation;
+- testing and QA;
+- technical risk management;
+- source/provenance control;
+- human-in-the-loop governance;
+- exception/failure handling;
+- documentation;
+- replayability/auditability;
+- structured AI workflows.
+
+They must not be represented as paid employment or formal federal specialized experience unless the underlying record actually supports that characterization.
+
+### Maintenance triggers
+
+ChatGPT should refresh the private interview guide when any of the following occurs:
+
+- the TTB requirements matrix is completed;
+- the first runnable vertical slice is completed;
+- meaningful automated tests pass;
+- measured latency/memory results become available;
+- Gemini fallback is implemented/tested;
+- the app is deployed;
+- a major architecture decision changes;
+- a new verified portfolio artifact materially improves an interview example;
+- the human receives an interview invitation;
+- the human requests mock-interview preparation.
+
+Do not create duplicate interview guides. Search for and update the existing guide by title unless the human explicitly requests a new version.
+
+### Interview-invitation escalation
+
+If an interview is scheduled:
+
+1. re-check the current job announcement and any interview instructions;
+2. refresh the guide against the latest repository state;
+3. prioritize answers supported by completed evidence over planned work;
+4. add likely panel questions mapped to the announcement's competencies;
+5. add timed 30-second, 60-second, and 2-minute answer variants where useful;
+6. prepare a mock panel/quiz workflow if requested;
+7. flag any résumé/SF-50/application inconsistency that should be resolved before the interview.
+
+### Sunset rule
+
+After this Treasury application/interview cycle ends, the human may:
+
+- deactivate this temporary protocol;
+- archive the guide;
+- convert it into a general federal AI interview-preparation protocol;
+- or delete the temporary section.
+
+ChatGPT must not silently keep the protocol active after the human explicitly ends it.
+
+## 14. Testing Protocol
 
 Before declaring a material feature complete, check as applicable:
 
@@ -322,7 +459,7 @@ Before declaring a material feature complete, check as applicable:
 
 Tests must not be described as passing unless they actually ran and passed.
 
-## 14. Performance Protocol
+## 15. Performance Protocol
 
 Performance changes must follow the priority order documented in `docs/PERFORMANCE_ARCHITECTURE.md`.
 
@@ -336,7 +473,7 @@ In particular:
 - Gemini is not raced against local OCR on every request;
 - deployment performance must be measured rather than assumed.
 
-## 15. Git and Commit Discipline
+## 16. Git and Commit Discipline
 
 Preferred commit prefixes:
 
@@ -352,7 +489,7 @@ Meaningful architectural changes should be identifiable from Git history.
 
 Do not commit secrets, API keys, private credentials, or sensitive information.
 
-## 16. Why Normal Chat May Be Used Instead of Work
+## 17. Why Normal Chat May Be Used Instead of Work
 
 This project may intentionally use a normal ChatGPT conversation for research, design, and iterative implementation rather than handing every phase to ChatGPT Work.
 
@@ -369,7 +506,7 @@ This is a workflow choice, not a claim that one ChatGPT mode is universally bett
 
 Work may be used later when its capabilities materially improve a task. If that occurs, the same repository protocol and source hierarchy still apply.
 
-## 17. Chat Length and Session Handoff Protocol
+## 18. Chat Length and Session Handoff Protocol
 
 Long conversations can become difficult to navigate and may approach practical context limits.
 
@@ -421,7 +558,7 @@ At the start of a new ChatGPT development session, ChatGPT should:
 
 ChatGPT should not reconstruct the project from remembered chat history when the repository contains the answer.
 
-## 18. Protocol Amendment Procedure
+## 19. Protocol Amendment Procedure
 
 This protocol is intentionally updateable.
 
@@ -448,7 +585,7 @@ ChatGPT must not silently amend this protocol on its own.
 
 If ChatGPT identifies a needed protocol change, it should propose the change to the human or clearly identify it while carrying out an already-authorized documentation update.
 
-## 19. Stop / Rollback Rule
+## 20. Stop / Rollback Rule
 
 If a change:
 
@@ -461,7 +598,7 @@ If a change:
 
 ChatGPT should stop building on that change, identify the problem, and either correct or roll back to the last known-good state.
 
-## 20. Transparency to Human Reviewers
+## 21. Transparency to Human Reviewers
 
 The use of ChatGPT is not hidden.
 
@@ -471,10 +608,10 @@ The intended development story is:
 
 The repository should make that process auditable without requiring a reviewer to read the original chat transcript.
 
-## 21. Current Handoff Snapshot
+## 22. Current Handoff Snapshot
 
 **Date:** 2026-09-23  
-**Protocol version:** 1.2  
+**Protocol version:** 1.3  
 **Architecture version:** v0.2  
 **Latest relevant commit before this snapshot update:** `27aec851d633a12208d25c17616a0740d9fcc6b2`
 
@@ -507,7 +644,8 @@ Requirements and regulatory-research refinement before application implementatio
 - government-source registry separated from non-government sources;
 - vertical-slice viability rule added to the development protocol;
 - project-management lifecycle record added with PMI/OPM/Treasury alignment;
-- OPM and USAJOBS sources added to the government-source registry.
+- OPM and USAJOBS sources added to the government-source registry;
+- private interview-readiness protocol activated for the current application cycle.
 
 ### Unresolved / next research
 
@@ -527,7 +665,17 @@ Requirements and regulatory-research refinement before application implementatio
 - `docs/TTB_RULE_SCOPE.md`
 - `docs/GOVERNMENT_SOURCES.md`
 
-## 22. Protocol Changelog
+## 23. Protocol Changelog
+
+### 1.3 — 2026-09-23
+
+Added:
+
+- temporary private interview-readiness protocol for the current Treasury application cycle;
+- explicit separation of formal documented experience, project-demonstrated capability, and GS-13 knowledge-growth material;
+- privacy boundary preventing SF-50/personal data and the private Google Doc link from entering the public repository;
+- interview-guide maintenance triggers tied to real project milestones;
+- interview-invitation escalation and protocol sunset rules.
 
 ### 1.2 — 2026-09-23
 
