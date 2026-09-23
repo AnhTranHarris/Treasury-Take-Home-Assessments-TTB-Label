@@ -8,6 +8,7 @@ Prototype repository for the **AI-Powered Alcohol Label Verification App** take-
 
 The frozen v0.2 design baseline is documented here:
 
+- [Project Management & Delivery Record](PROJECT_MANAGEMENT.md)
 - [Architecture v0.2](docs/ARCHITECTURE.md)
 - [Performance Architecture](docs/PERFORMANCE_ARCHITECTURE.md)
 - [TTB Rule Scope](docs/TTB_RULE_SCOPE.md)
@@ -72,3 +73,10 @@ This keeps the project auditable without requiring a reviewer to read the origin
 ## Source Transparency
 
 Official government websites and publications used to define or verify regulatory requirements are maintained separately in the [Government Source Registry](docs/GOVERNMENT_SOURCES.md). This keeps source authority distinct from architecture, implementation, and AI-development procedures.
+
+
+## Project Status
+
+Lifecycle, milestones, risks, quality gates, decisions, and current delivery position are maintained in the [Project Management & Delivery Record](PROJECT_MANAGEMENT.md).
+
+The record uses PMI-CPMAI as an AI-project lifecycle reference and official OPM/USAJOBS material for federal project-management and job-specific alignment. It records evidence and project state without making a self-awarded General Schedule grade determination.
