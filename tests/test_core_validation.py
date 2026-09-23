@@ -90,3 +90,10 @@ def test_imported_missing_country_routes_to_review():
     result = verify(reference(imported=True), ev)
     assert by_rule(result, "DS-IMPORT-001").status == Status.REVIEW
     assert result.overall_status == Status.REVIEW
+
+
+def test_name_address_allows_line_separator_reconstruction():
+    ev = happy_evidence()
+    ev = DetectedEvidence(**{**ev.__dict__, "name_address": "Old Tom Distillery | Louisville | KY"})
+    result = verify(reference(), ev)
+    assert by_rule(result, "DS-NAME-001").status == Status.PASS
