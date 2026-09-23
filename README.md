@@ -4,7 +4,7 @@ Prototype repository for the **AI-Powered Alcohol Label Verification App** take-
 
 ## Current Status
 
-**Architecture/design phase. Application implementation has not started yet.**
+**Requirements gate complete. First runnable vertical slice is now the active implementation phase.**
 
 The frozen v0.2 design baseline is documented here:
 
@@ -12,6 +12,7 @@ The frozen v0.2 design baseline is documented here:
 - [Architecture v0.2](docs/ARCHITECTURE.md)
 - [Performance Architecture](docs/PERFORMANCE_ARCHITECTURE.md)
 - [TTB Rule Scope](docs/TTB_RULE_SCOPE.md)
+- [TTB Requirements Matrix](docs/REQUIREMENTS_MATRIX.md)
 - [Government Source Registry](docs/GOVERNMENT_SOURCES.md)
 
 ## Locked Baseline
