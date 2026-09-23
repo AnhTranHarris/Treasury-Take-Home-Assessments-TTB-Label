@@ -313,9 +313,9 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 | Establish government source registry | Complete | `docs/GOVERNMENT_SOURCES.md` |
 | Establish AI-development protocol | Complete | `PROTOCOLS.md` |
 | Establish project-management lifecycle record | Complete | this file |
-| Build TTB requirements matrix | **Next** | pending |
-| Define first vertical slice | Pending after matrix | pending |
-| Implement first runnable slice | Not started | pending |
+| Build TTB requirements matrix | **Complete** | `docs/REQUIREMENTS_MATRIX.md` |
+| Define first vertical slice | **Complete** | Locked in `docs/REQUIREMENTS_MATRIX.md` |
+| Implement first runnable slice | **NEXT / ACTIVE** | Streamlit → local OCR → core extraction → deterministic results |
 | Add automated regression suite | Planned | pending |
 | Deploy Streamlit prototype | Planned | pending |
 | Benchmark and document results | Planned | pending |
@@ -325,26 +325,33 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 
 ### Current work
 
-Complete the deeper official TTB requirement analysis.
+Implement the first runnable vertical slice authorized by `docs/REQUIREMENTS_MATRIX.md`.
 
-### Next artifact
+### Active implementation gate
 
-`docs/REQUIREMENTS_MATRIX.md`
+The first slice is locked to:
 
-Each relevant requirement should be classified as:
+- one Streamlit form;
+- one JPG/PNG label image;
+- application/reference fields for brand, class/type, ABV, net contents, name/address, import status, and country when applicable;
+- one local OCR pass;
+- deterministic comparison of the supported core fields;
+- textual government-warning validation;
+- PASS / REVIEW / FAIL with field-level reasons;
+- timing;
+- automated tests.
 
-- **AUTOMATE** — machine-verifiable within supported evidence;
-- **REVIEW** — requires human judgment or unsupported physical evidence;
-- **CONDITIONAL** — applies only when product/application context triggers it;
-- **OUT OF MVP** — valid requirement intentionally deferred.
+Physical typography/container-geometry checks remain REVIEW. Product-composition-triggered disclosures remain conditional/deferred.
 
-### Exit criteria before coding the first rule set
+### Exit criteria for first vertical slice
 
-- core distilled-spirits requirements identified;
-- authoritative source mapped;
-- automation class assigned;
-- initial UI context fields identified;
-- first vertical slice selected.
+- application starts successfully;
+- one representative happy-path label reaches a deterministic result;
+- clear ABV mismatch reaches FAIL;
+- warning capitalization defect reaches FAIL when extraction is reliable;
+- missing/unreadable supported evidence reaches REVIEW rather than guessed PASS/FAIL;
+- targeted tests and fast regression tests pass;
+- README setup instructions reflect the actual runnable application.
 
 ## 17. Federal Project-Management Alignment
 
@@ -420,6 +427,18 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
   https://www.usajobs.gov/job/858700600
 
 ## 20. Change History
+
+### 2026-09-23 — Requirements gate completed
+
+Completed:
+
+- current official TTB distilled-spirits checklist/source review;
+- `docs/REQUIREMENTS_MATRIX.md`;
+- AUTOMATE / REVIEW / CONDITIONAL / OUT OF MVP classification;
+- first vertical slice definition;
+- conditional-rule deferral to protect the working core.
+
+Next gate: implement and continuously QC the first runnable vertical slice.
 
 ### 2026-09-23 — Compressed delivery controls
 
