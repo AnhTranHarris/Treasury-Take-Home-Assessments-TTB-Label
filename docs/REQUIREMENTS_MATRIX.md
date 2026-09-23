@@ -36,10 +36,33 @@ The requirement is valid, but implementation is intentionally deferred to protec
 
 ## 3. Result Semantics
 
-- **PASS** — sufficient reliable evidence exists and the implemented deterministic check matches.
-- **FAIL** — sufficient reliable evidence exists and a supported deterministic requirement clearly does not match.
-- **REVIEW** — evidence is missing, unreadable, contradictory, externally dependent, physically unverifiable from the submitted image, or outside safe automated judgment.
+The prototype separates the **automated outcome** from **manual-review advisories**.
+
+### Automated outcome
+
+- **PASS** — sufficient reliable evidence exists and every implemented automated check passes.
+- **FAIL** — sufficient reliable evidence exists and at least one implemented deterministic check clearly fails.
+- **REVIEW** — evidence required for an implemented automated check is missing, unreadable, contradictory, or otherwise too uncertain for PASS/FAIL.
 - **NOT APPLICABLE** — a conditional rule is explicitly known not to apply.
+
+Overall automated precedence:
+
+```text
+any supported deterministic FAIL
+        -> FAIL
+
+otherwise any unresolved supported automated check
+        -> REVIEW
+
+otherwise all supported automated checks pass
+        -> PASS
+```
+
+### Manual-review advisories
+
+Requirements that the MVP deliberately does not automate—such as physical type size, font weight, true contrast, full container geometry, permit-record identity, or broader legal judgment—are shown separately as **HUMAN REVIEW REQUIRED / NOT AUTOMATED**.
+
+These standing advisories do **not** automatically convert an otherwise supported automated PASS into REVIEW. The UI must therefore label the main result as a **prototype result for supported automated checks**, never as a complete legal-compliance determination.
 
 A conditional rule must never be treated as PASS merely because its trigger data was not supplied.
 
@@ -73,10 +96,10 @@ The older Beverage Alcohol Manual is not used as controlling authority because T
 | DS-NAME-001 | Bottler/distiller/importer name and address | Compare detected name/address to the supplied application/reference fields using conservative normalization. | Presence can be checked. Identity against a TTB basic permit is not performed because the prototype has no permit database. | AUTOMATE for reference match; REVIEW for permit/legal identity | Match = PASS; reliable mismatch = FAIL; permit-level verification needed = REVIEW | Expected name/address + OCR evidence | **CORE** |
 | DS-IMPORT-001 | Country of origin | If application says imported and supplies expected country, compare detected country-of-origin evidence. If domestic, mark NOT APPLICABLE. | Full CBP country-of-origin legal compliance is not determined by this prototype. | CONDITIONAL + AUTOMATE presence/match + REVIEW legal compliance | Imported + visible expected country = PASS for app consistency; missing/ambiguous = REVIEW; reliable different country = FAIL for app consistency | Imported? + expected country + OCR evidence | **CORE CONDITIONAL** |
 | DS-WARN-001 | Government health warning textual content | No ordinary application-field comparison; use configured statutory text as reference. | Check exact wording, punctuation, required capitalization of “GOVERNMENT WARNING,” and capitalization of Surgeon/General. Normalize only whitespace/line wrapping that does not change the prescribed statement. | AUTOMATE | Exact supported textual match = PASS; clear textual/case/punctuation defect = FAIL; OCR uncertainty = targeted retry then REVIEW | Warning OCR text | **CORE** |
-| DS-WARN-002 | Government warning paragraph separation / continuity | None | TTB requires the warning as one continuous statement and separate/apart from other information. OCR/layout evidence may assist but is not treated as conclusive in MVP. | REVIEW | Show warning crop and reason for human inspection | OCR boxes + evidence crop | **CORE REVIEW** |
-| DS-WARN-003 | Government warning boldness | None | “GOVERNMENT WARNING” must be bold; remainder may not be bold. Reliable font-weight determination is outside the text-OCR MVP. | REVIEW | Human review | Warning evidence crop | **CORE REVIEW** |
-| DS-WARN-004 | Government warning physical type size / characters per inch / true contrast | None | TTB requirements depend on physical container size and measurable print characteristics. Pixel measurements from an arbitrary uploaded image are not sufficient without calibration. | REVIEW | Human review | Container size context + physical label evidence | **CORE REVIEW** |
-| DS-SFV-001 | Same field of vision: brand + class/type + alcohol content | None | TTB requires these items in the same field of vision. A single submitted image can show that the three items were detected together, but the MVP cannot prove physical-container geometry or that the image captures one legally defined side. | REVIEW with machine evidence | Display whether all three were found in submitted image; do not claim legal PASS from image alone | OCR boxes / submitted image | **CORE REVIEW** |
+| DS-WARN-002 | Government warning paragraph separation / continuity | None | TTB requires the warning as one continuous statement and separate/apart from other information. OCR/layout evidence may assist but is not treated as conclusive in MVP. | REVIEW | Manual-review advisory; excluded from automated overall status | OCR boxes + evidence crop | **CORE ADVISORY** |
+| DS-WARN-003 | Government warning boldness | None | “GOVERNMENT WARNING” must be bold; remainder may not be bold. Reliable font-weight determination is outside the text-OCR MVP. | REVIEW | Manual-review advisory; excluded from automated overall status | Warning evidence crop | **CORE ADVISORY** |
+| DS-WARN-004 | Government warning physical type size / characters per inch / true contrast | None | TTB requirements depend on physical container size and measurable print characteristics. Pixel measurements from an arbitrary uploaded image are not sufficient without calibration. | REVIEW | Manual-review advisory; excluded from automated overall status | Container size context + physical label evidence | **CORE ADVISORY** |
+| DS-SFV-001 | Same field of vision: brand + class/type + alcohol content | None | TTB requires these items in the same field of vision. A single submitted image can show that the three items were detected together, but the MVP cannot prove physical-container geometry or that the image captures one legally defined side. | REVIEW with machine evidence | Manual-review advisory; display whether all three were found in submitted image; excluded from automated overall status | OCR boxes / submitted image | **CORE ADVISORY** |
 
 ## 6. Additional Deterministic Rule — Standards of Fill
 
@@ -215,7 +238,7 @@ Implement first:
 - DS-IMPORT-001
 - DS-WARN-001
 
-Surface as REVIEW evidence rather than automated legal PASS:
+Surface as separate HUMAN REVIEW REQUIRED advisories rather than automated legal PASS:
 
 - DS-WARN-002
 - DS-WARN-003
