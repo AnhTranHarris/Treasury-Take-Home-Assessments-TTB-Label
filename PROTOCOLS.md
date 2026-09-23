@@ -701,11 +701,11 @@ The repository should make that process auditable without requiring a reviewer t
 **Date:** 2026-09-23  
 **Protocol version:** 1.5  
 **Architecture version:** v0.2  
-**Latest relevant commit before this snapshot update:** `a6682cae79c2b61c2b28c3eea5f3c5ea3398b14c`
+**Latest relevant commit before this snapshot update:** `86214ed36b3464beaba652b4a385f140dda7c275`
 
 ### Current phase
 
-Requirements and regulatory-research refinement before application implementation.
+Compressed requirements-to-prototype delivery: finish regulatory matrix, then implement and continuously QC the first working vertical slice before the September 26 internal stabilization/submission target.
 
 ### Locked decisions
 
