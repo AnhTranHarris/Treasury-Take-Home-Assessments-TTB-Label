@@ -11,6 +11,7 @@ The frozen v0.2 design baseline is documented here:
 - [Architecture v0.2](docs/ARCHITECTURE.md)
 - [Performance Architecture](docs/PERFORMANCE_ARCHITECTURE.md)
 - [TTB Rule Scope](docs/TTB_RULE_SCOPE.md)
+- [Government Source Registry](docs/GOVERNMENT_SOURCES.md)
 
 ## Locked Baseline
 
@@ -66,3 +67,8 @@ The version-controlled collaboration rules, source-verification process, change-
 - [Human + ChatGPT Development Protocol](PROTOCOLS.md)
 
 This keeps the project auditable without requiring a reviewer to read the original ChatGPT conversation.
+
+
+## Source Transparency
+
+Official government websites and publications used to define or verify regulatory requirements are maintained separately in the [Government Source Registry](docs/GOVERNMENT_SOURCES.md). This keeps source authority distinct from architecture, implementation, and AI-development procedures.
