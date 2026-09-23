@@ -27,6 +27,7 @@ GOVERNMENT_WARNING = (
 )
 
 MANUAL_REVIEW_ADVISORIES = [
+    "Government warning capitalization is not automatically verified in the first slice because OCR case proved unstable in integration testing.",
     "Government warning boldness is not automatically verified.",
     "Government warning physical type size, characters per inch, and true contrast require human review.",
     "Same-field-of-vision physical container geometry requires human review.",
@@ -107,10 +108,13 @@ def verify(reference: ApplicationReference, evidence: DetectedEvidence) -> Verif
 
     if not evidence.warning_text:
         results.append(_review("DS-WARN-001", "Government warning", GOVERNMENT_WARNING, evidence.warning_text, "Government warning text was not reliably detected."))
-    elif warning_text_for_comparison(evidence.warning_text) == warning_text_for_comparison(GOVERNMENT_WARNING):
-        results.append(FieldResult("DS-WARN-001", "Government warning", Status.PASS, GOVERNMENT_WARNING, evidence.warning_text, "Warning wording, capitalization, numbering, and punctuation match the configured TTB text after whitespace normalization."))
     else:
-        results.append(FieldResult("DS-WARN-001", "Government warning", Status.FAIL, GOVERNMENT_WARNING, evidence.warning_text, "Warning text does not exactly match the configured TTB wording/case/punctuation after whitespace normalization."))
+        detected_warning = warning_text_for_comparison(evidence.warning_text)
+        expected_warning = warning_text_for_comparison(GOVERNMENT_WARNING)
+        if detected_warning.casefold() == expected_warning.casefold():
+            results.append(FieldResult("DS-WARN-001", "Government warning", Status.PASS, GOVERNMENT_WARNING, evidence.warning_text, "Warning wording, numbering, and punctuation match after whitespace normalization. Capitalization is surfaced separately for human review in the first slice."))
+        else:
+            results.append(_review("DS-WARN-001", "Government warning", GOVERNMENT_WARNING, evidence.warning_text, "Warning text differs from the configured TTB wording/numbering/punctuation. First-pass OCR mismatch is routed to REVIEW until targeted warning retry is implemented and validated."))
 
     return VerificationResult(
         field_results=results,
