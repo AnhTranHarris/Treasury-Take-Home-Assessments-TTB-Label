@@ -95,7 +95,8 @@ The older Beverage Alcohol Manual is not used as controlling authority because T
 | DS-NET-002 | Net contents format | Normalize L/liter/litre and mL variants documented by TTB. | Check that visible statement uses a supported metric form. | AUTOMATE | Supported visible form = PASS; clear unsupported form = FAIL; no visible statement = REVIEW | OCR text | **CORE** |
 | DS-NAME-001 | Bottler/distiller/importer name and address | Compare detected name/address to the supplied application/reference fields using conservative normalization. | Presence can be checked. Identity against a TTB basic permit is not performed because the prototype has no permit database. | AUTOMATE for reference match; REVIEW for permit/legal identity | Match = PASS; reliable mismatch = FAIL; permit-level verification needed = REVIEW | Expected name/address + OCR evidence | **CORE** |
 | DS-IMPORT-001 | Country of origin | If application says imported and supplies expected country, compare detected country-of-origin evidence. If domestic, mark NOT APPLICABLE. | Full CBP country-of-origin legal compliance is not determined by this prototype. | CONDITIONAL + AUTOMATE presence/match + REVIEW legal compliance | Imported + visible expected country = PASS for app consistency; missing/ambiguous = REVIEW; reliable different country = FAIL for app consistency | Imported? + expected country + OCR evidence | **CORE CONDITIONAL** |
-| DS-WARN-001 | Government health warning textual content | No ordinary application-field comparison; use configured statutory text as reference. | Check exact wording, punctuation, required capitalization of “GOVERNMENT WARNING,” and capitalization of Surgeon/General. Normalize only whitespace/line wrapping that does not change the prescribed statement. | AUTOMATE | Exact supported textual match = PASS; clear textual/case/punctuation defect = FAIL; OCR uncertainty = targeted retry then REVIEW | Warning OCR text | **CORE** |
+| DS-WARN-001 | Government health warning wording / numbering / punctuation | No ordinary application-field comparison; use configured statutory text as reference. | Check prescribed words, numbering, and punctuation after whitespace normalization. Comparison is case-insensitive in the first slice because real PP-OCRv5 integration demonstrated a capitalization false read on a correctly rendered all-caps heading. | AUTOMATE | Supported wording/numbering/punctuation match = PASS; differing OCR text = REVIEW in the first slice pending targeted retry; never infer a legal FAIL from one OCR read | Warning OCR text | **CORE** |
+| DS-WARN-005 | Government warning capitalization | None | TTB requires `GOVERNMENT WARNING` in capital letters and specified capitalization in the statement. First-slice OCR capitalization is not treated as sufficiently reliable for deterministic FAIL/PASS after integration evidence showed `GOVERNMENT` read as `GOvERNMENT`. | REVIEW | Manual-review advisory; evidence crop/OCR shown; future targeted visual retry may promote this check if validated | Warning evidence crop + OCR text | **CORE ADVISORY** |
 | DS-WARN-002 | Government warning paragraph separation / continuity | None | TTB requires the warning as one continuous statement and separate/apart from other information. OCR/layout evidence may assist but is not treated as conclusive in MVP. | REVIEW | Manual-review advisory; excluded from automated overall status | OCR boxes + evidence crop | **CORE ADVISORY** |
 | DS-WARN-003 | Government warning boldness | None | “GOVERNMENT WARNING” must be bold; remainder may not be bold. Reliable font-weight determination is outside the text-OCR MVP. | REVIEW | Manual-review advisory; excluded from automated overall status | Warning evidence crop | **CORE ADVISORY** |
 | DS-WARN-004 | Government warning physical type size / characters per inch / true contrast | None | TTB requirements depend on physical container size and measurable print characteristics. Pixel measurements from an arbitrary uploaded image are not sufficient without calibration. | REVIEW | Manual-review advisory; excluded from automated overall status | Container size context + physical label evidence | **CORE ADVISORY** |
@@ -127,13 +128,16 @@ Configured reference text:
 Source:  
 https://www.ttb.gov/regulated-commodities/beverage-alcohol/distilled-spirits/ds-labeling-home/ds-health-warning
 
-Machine comparison policy:
+Machine comparison policy for the first slice:
 
-- preserve required words, capitalization, punctuation, and numbering;
-- tolerate OCR line breaks and repeated whitespace only;
-- do not lowercase the entire warning before comparison;
-- if punctuation/case is uncertain because OCR confidence is weak, use the bounded targeted warning-crop retry;
-- conflicting/uncertain extraction after bounded rescue = REVIEW, not FAIL.
+- preserve required words, punctuation, and numbering;
+- tolerate OCR line breaks and repeated whitespace;
+- compare wording/numbering/punctuation case-insensitively because real PP-OCRv5 integration demonstrated an isolated capitalization false read on the controlled correct label;
+- surface capitalization as a separate HUMAN REVIEW REQUIRED advisory;
+- any non-case textual difference from the first OCR pass routes to REVIEW until the bounded targeted warning-crop retry is implemented and validated;
+- conflicting/uncertain extraction after bounded rescue remains REVIEW, not FAIL.
+
+This is an evidence-driven scope reduction, not a relaxation of the TTB requirement. The legal capitalization requirement remains documented; the prototype is declining to make an unreliable automated determination from one OCR read.
 
 ## 8. Conditional Requirements — Valid but Deferred from Core MVP
 
@@ -243,6 +247,7 @@ Surface as separate HUMAN REVIEW REQUIRED advisories rather than automated legal
 - DS-WARN-002
 - DS-WARN-003
 - DS-WARN-004
+- DS-WARN-005
 - DS-SFV-001
 
 Do not implement the conditional disclosure family until the working core remains stable and the schedule permits.
@@ -254,7 +259,7 @@ At minimum:
 1. **Happy path** — all supplied fields match and warning textual content is correct.
 2. **Dave normalization case** — application `Stone's Throw`, label `STONE'S THROW` => application brand consistency PASS.
 3. **ABV mismatch** — application 45%, label 46% => FAIL.
-4. **Warning heading case defect** — `Government Warning:` => FAIL when OCR evidence is reliable.
+4. **Warning heading case defect** — `Government Warning:` => automated wording check still passes, while capitalization remains a visible HUMAN REVIEW REQUIRED advisory in the first slice; targeted case verification is deferred until validated.
 5. **Net contents absent from submitted image** => REVIEW, not automatic FAIL.
 6. **Imported product missing country evidence** => REVIEW unless reliable evidence establishes a clear contradictory country.
 7. **Unreadable/low-confidence critical field** => REVIEW after bounded local retry when that retry is implemented.
