@@ -701,11 +701,11 @@ The repository should make that process auditable without requiring a reviewer t
 **Date:** 2026-09-23  
 **Protocol version:** 1.5  
 **Architecture version:** v0.2  
-**Latest relevant commit before this snapshot update:** `86214ed36b3464beaba652b4a385f140dda7c275`
+**Latest relevant commit before this snapshot update:** `31b89e734cedf87992c6b785ed43dbe1cfc4a694`
 
 ### Current phase
 
-Compressed prototype implementation: the regulatory matrix is complete and the first vertical slice is locked; implement and continuously QC that working slice before the September 26 internal stabilization/submission target.
+Compressed prototype stabilization and deployment: the first vertical slice is implemented and green in both fast CI and real PaddleOCR/full-pipeline integration. The next gate is deployment compatibility, followed by only the highest-value resilience work that can preserve the September 26 stabilization target.
 
 ### Locked decisions
 
@@ -738,14 +738,21 @@ Compressed prototype implementation: the regulatory matrix is complete and the f
 - continuous executable QC required after every coherent code-change batch;
 - September 26 internal stabilization/submission target established;
 - rapid interview-preparation window established through approximately September 30;
-- TTB requirements matrix completed and first implementation slice locked.
+- TTB requirements matrix completed and first implementation slice locked;
+- first runnable Streamlit → PaddleOCR → extraction → deterministic validation slice implemented;
+- 27 fast tests passing on the current main head;
+- real PaddleOCR/full-pipeline integration passing on the current main head;
+- Paddle 3.3 CPU oneDNN incompatibility identified and controlled by disabling MKL-DNN for the OCR engine;
+- OCR warning-heading capitalization instability identified from integration evidence and moved to human-review advisory rather than false FAIL;
+- current GitHub Actions evidence: first OCR call 18.093s and warm full pipeline 5.368s on the CI runner.
 
 ### Unresolved / next research
 
-- verify current implementation-library APIs and deployment compatibility;
-- implement the first vertical slice authorized by `docs/REQUIREMENTS_MATRIX.md`;
-- run mandatory post-write QC after each coherent code-change batch;
-- preserve conditional disclosures as deferred unless the core remains stable and schedule permits.
+- deploy the current green first slice to the intended Streamlit environment and verify memory/model-download/runtime compatibility;
+- measure deployed warm latency before claiming the approximately five-second stakeholder target;
+- preserve the current green core while evaluating whether targeted local OCR retry is necessary and affordable;
+- keep Gemini rescue, batch processing, and additional conditional disclosures deferred unless deployment is stable and schedule permits;
+- run mandatory post-write QC after every coherent code-change batch.
 
 ### Governing files for the next session
 
