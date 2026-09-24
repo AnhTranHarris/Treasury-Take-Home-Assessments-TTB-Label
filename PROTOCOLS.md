@@ -547,6 +547,14 @@ Before declaring a material feature complete, check as applicable:
 
 Tests must not be described as passing unless they actually ran and passed.
 
+### Deployment interpreter rule
+
+For Streamlit Community Cloud, the current approved interpreter is **Python 3.11**.
+
+The first deployment attempt on 2026-09-23 selected Python 3.14.7 and failed during dependency resolution because the pinned PaddlePaddle runtime had no compatible CPython 3.14 wheel. Future Streamlit Community Cloud deployments must explicitly select Python 3.11 in Advanced settings.
+
+If an existing Streamlit app was created with the wrong Python version, change control should prefer deleting and redeploying the app with Python 3.11 rather than changing the validated Paddle/PaddleOCR stack merely to accommodate an unintended interpreter selection.
+
 ## 15. Performance Protocol
 
 Performance changes must follow the priority order documented in `docs/PERFORMANCE_ARCHITECTURE.md`.
