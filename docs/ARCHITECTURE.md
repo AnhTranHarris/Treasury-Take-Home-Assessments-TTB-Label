@@ -395,7 +395,7 @@ Do not silently change architecture based only on remembered chat context.
 
 A concise explanation of the design:
 
-> The prototype uses OpenCV to improve label images and PaddleOCR as the primary local text-recognition engine. The extracted fields are compared with application data using ordinary Python validation rules, with RapidFuzz only where harmless formatting differences should be tolerated. If the local OCR cannot reliably read a difficult image, Gemini can be used as an optional last-resort text-extraction fallback. Gemini never determines compliance, and if the systems disagree or remain uncertain, the case is routed to human review.
+> The prototype uses OpenCV to prepare label images and one local OCR backend selected for the deployment runtime. PaddleOCR remains the preferred path on compatible Python versions; RapidOCR with ONNX Runtime is the tested Python 3.14 deployment contingency. The application never runs both OCR engines simultaneously. Extracted fields are evaluated by deterministic Python rules, and uncertain evidence goes to human review. Gemini remains an optional future extraction-only fallback and never determines compliance.
 
 ## 18. Accepted v0.2 Refinements
 
@@ -403,7 +403,7 @@ The following additions are now part of the architecture:
 
 1. OpenCV image-quality triage before OCR.
 2. Targeted evidence crops for human review.
-3. RapidOCR as a deployment contingency only if the preferred PaddleOCR runtime does not fit free-hosting constraints.
+3. RapidOCR + ONNX Runtime as the activated deployment contingency when the host runtime cannot install PaddlePaddle, including the observed Python 3.14 Community Cloud case.
 4. Synthetic test labels, pytest, and GitHub Actions for regression QA.
 
 Performance/concurrency decisions are documented in [Performance Architecture](PERFORMANCE_ARCHITECTURE.md).
@@ -417,10 +417,14 @@ The supported regulatory scope is documented in [TTB Rule Scope](TTB_RULE_SCOPE.
 ```text
 Streamlit
 + OpenCV
-+ PaddleOCR PP-OCRv5 mobile
-+ RapidFuzz
++ ONE local OCR backend selected by runtime:
+    Python 3.11–3.13 -> PaddleOCR PP-OCRv5 mobile
+    Python 3.14      -> RapidOCR + ONNX Runtime
++ RapidFuzz / conservative normalization where appropriate
 + deterministic Python compliance rules
 + optional Gemini image-text fallback as last resort
 ```
+
+The dual-provider code is a deployment compatibility strategy, not an ensemble. Exactly one local OCR provider is instantiated in a running process.
 
 No application code should contradict this architecture unless this document is deliberately revised first.
