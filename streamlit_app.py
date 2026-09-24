@@ -2,15 +2,16 @@ from __future__ import annotations
 
 import streamlit as st
 
-from src.ocr.paddle_provider import PaddleOCRProvider
+from src.ocr.factory import build_default_ocr_provider, choose_ocr_backend
+from src.ocr.interface import OCRProvider
 from src.orchestration.verifier import VerificationExecutionError, verify_label
 from src.presentation import overall_message, result_rows
 from src.validation.models import ApplicationReference, Status
 
 
 @st.cache_resource(show_spinner=False)
-def get_ocr_provider() -> PaddleOCRProvider:
-    return PaddleOCRProvider()
+def get_ocr_provider() -> OCRProvider:
+    return build_default_ocr_provider()
 
 
 def main() -> None:
@@ -20,6 +21,7 @@ def main() -> None:
         "Distilled-spirits prototype. AI/OCR extracts evidence; deterministic Python rules evaluate "
         "the supported automated checks. This is not a complete legal-compliance determination."
     )
+    st.caption(f"Local OCR backend: {choose_ocr_backend().upper()}")
 
     st.markdown("### Application / reference information")
     brand = st.text_input("Brand name", value="Stone's Throw")
