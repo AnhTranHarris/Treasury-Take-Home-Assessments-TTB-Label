@@ -71,6 +71,13 @@ def main() -> None:
     try:
         with st.spinner("Reading label and checking supported requirements..."):
             run = verify_label(reference, selected_image.getvalue(), get_ocr_provider())
+    except (ImportError, OSError):
+        st.error("The local OCR runtime could not load a required system library.")
+        st.info(
+            "This is a deployment-environment problem, not a label-compliance result. "
+            "The application did not evaluate the uploaded label."
+        )
+        return
     except VerificationExecutionError as exc:
         st.error(str(exc))
         st.info("Try a clearer JPG/PNG image. The prototype did not generate a compliance result from the failed run.")
