@@ -718,7 +718,7 @@ The repository should make that process auditable without requiring a reviewer t
 **Date:** 2026-09-23  
 **Protocol version:** 1.6  
 **Architecture version:** v0.2  
-**Latest relevant commit before this snapshot update:** `31b89e734cedf87992c6b785ed43dbe1cfc4a694`
+**Latest relevant implementation/test commit before this snapshot update:** `cfbeff830fccfb966198edcfe06bec449409509e`
 
 ### Current phase
 
