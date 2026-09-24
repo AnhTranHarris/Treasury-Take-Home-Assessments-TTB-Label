@@ -188,7 +188,7 @@ No material rule should exist only because it was discussed in chat.
 | Risk | Probability | Impact | Mitigation / response | Status |
 |---|---|---|---|---|
 | OCR model exceeds free-host memory budget | Medium | High | One cached model; benchmark PaddleOCR; RapidOCR contingency | Open |
-| Streamlit deployment selects unsupported Python interpreter | High (observed) | High | Deploy/redeploy Community Cloud app with Python 3.11 selected in Advanced settings; keep CI on 3.11 | Mitigation active |
+| Streamlit deployment selects Python 3.14 where PaddlePaddle is unavailable | High (observed) | High | Runtime-conditioned dependencies; Paddle on Python 3.11–3.13, RapidOCR/ONNX on Python 3.14; dual-runtime CI | Mitigated in code; Community Cloud redeploy pending |
 | Simple-label latency exceeds stakeholder target | Medium | High | Adaptive preprocessing; bounded retries; measure deployed latency | Open |
 | OCR confidently reads incorrect text | Medium | High | Evidence display, conservative automation boundaries, targeted retry, REVIEW on conflict; real integration showed warning case instability, so capitalization is now advisory | Active / demonstrated |
 | Gemini/network unavailable | Medium | Medium | Local-first architecture; Gemini optional; REVIEW on fallback failure | Controlled |
@@ -318,7 +318,7 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 | Define first vertical slice | **Complete** | Locked in `docs/REQUIREMENTS_MATRIX.md` |
 | Implement first runnable slice | **Complete** | Current main implements Streamlit → local PaddleOCR → core extraction → deterministic PASS / REVIEW / FAIL |
 | Add automated regression suite | **Core suite complete / ongoing** | 27 fast tests + real OCR/full-pipeline integration workflow passing |
-| Deploy Streamlit prototype | **NEXT / ACTIVE** | public deployment and runtime-resource validation pending |
+| Deploy Streamlit prototype | **NEXT / ACTIVE** | original Python 3.14/Paddle install blocker mitigated; fresh Community Cloud redeploy pending |
 | Benchmark and document results | **Partial** | GitHub Actions: first OCR call 18.093s; warm full pipeline 5.368s; deployed benchmark pending |
 | Submission readiness review | Planned — internal target Sep 26 | final QC + deployment + README + submission package |
 
@@ -326,21 +326,23 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 
 ### Current work
 
-Redeploy and validate the current green first vertical slice on Streamlit Community Cloud using **Python 3.11**.
+Redeploy and validate the current dual-runtime first vertical slice on Streamlit Community Cloud.
 
-The first deployment attempt failed before application startup because Streamlit selected Python 3.14.7, while the pinned `paddlepaddle==3.3.1` dependency has no matching CPython 3.14 wheel. The immediate remediation is environment correction, not an application-logic rewrite.
+The observed deployment selected Python 3.14.7, where `paddlepaddle==3.3.1` has no compatible wheel. Rather than weakening the validated Python 3.11/Paddle path, the repository now selects one local OCR backend by runtime: PaddleOCR on Python 3.11–3.13 and RapidOCR/ONNX Runtime on Python 3.14.
 
 ### Current verified build
 
-The current main head (`31b89e734cedf87992c6b785ed43dbe1cfc4a694`) has:
+The current build has:
 
-- 27 fast tests passing;
-- successful Streamlit startup smoke coverage;
-- successful real PaddleOCR integration;
-- successful full controlled label-to-result pipeline;
+- 32 fast tests passing;
+- successful Python 3.11 Streamlit startup and real PaddleOCR/full-pipeline integration;
+- successful Python 3.14 dependency installation, Streamlit startup, real RapidOCR/ONNX inference, and full controlled label-to-result pipeline;
+- runtime backend factory and explicit override tests;
 - controlled Paddle 3.3 CPU compatibility through `enable_mkldnn=False`;
-- government-warning capitalization routed to human-review advisory because OCR case proved unstable;
-- current GitHub Actions timing of 18.093 seconds for the first OCR call and 5.368 seconds for the warm full pipeline.
+- government-warning capitalization kept as a human-review advisory despite one clean RapidOCR fixture;
+- Python 3.11/Paddle CI evidence: first OCR call 18.093 seconds; warm full pipeline 5.368 seconds;
+- Python 3.14/RapidOCR controlled full-pipeline evidence: 1.200 seconds;
+- deployed Streamlit Community Cloud latency/resource evidence still pending.
 
 ### Active deployment gate
 
