@@ -188,7 +188,8 @@ No material rule should exist only because it was discussed in chat.
 | Risk | Probability | Impact | Mitigation / response | Status |
 |---|---|---|---|---|
 | OCR model exceeds free-host memory budget | Medium | High | One cached model; benchmark PaddleOCR; RapidOCR contingency | Open |
-| Streamlit deployment selects Python 3.14 where PaddlePaddle is unavailable | High (observed) | High | Runtime-conditioned dependencies; Paddle on Python 3.11–3.13, RapidOCR/ONNX on Python 3.14; dual-runtime CI | Mitigated in code; Community Cloud redeploy pending |
+| Streamlit deployment selects Python 3.14 where PaddlePaddle is unavailable | High (observed) | High | Runtime-conditioned dependencies; Paddle on Python 3.11–3.13, RapidOCR/ONNX on Python 3.14; dual-runtime CI | Mitigated in code |
+| Community Cloud lacks native OpenCV shared libraries | High (observed) | High | Root `packages.txt` installs `libgl1` and `libglib2.0-0`; app catches native OCR startup failures without fabricating a result | Mitigation active; redeploy pending |
 | Simple-label latency exceeds stakeholder target | Medium | High | Adaptive preprocessing; bounded retries; measure deployed latency | Open |
 | OCR confidently reads incorrect text | Medium | High | Evidence display, conservative automation boundaries, targeted retry, REVIEW on conflict; real integration showed warning case instability, so capitalization is now advisory | Active / demonstrated |
 | Gemini/network unavailable | Medium | Medium | Local-first architecture; Gemini optional; REVIEW on fallback failure | Controlled |
@@ -329,6 +330,8 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 Redeploy and validate the current dual-runtime first vertical slice on Streamlit Community Cloud.
 
 The observed deployment selected Python 3.14.7, where `paddlepaddle==3.3.1` has no compatible wheel. Rather than weakening the validated Python 3.11/Paddle path, the repository now selects one local OCR backend by runtime: PaddleOCR on Python 3.11–3.13 and RapidOCR/ONNX Runtime on Python 3.14.
+
+The subsequent Community Cloud run reached the RapidOCR path but failed at `import cv2`, demonstrating that the interpreter/package blocker was resolved and exposing the next deployment-layer dependency: missing Linux libraries required by the regular OpenCV wheel. The repository now supplies `libgl1` and `libglib2.0-0` through Streamlit's supported root-level `packages.txt` mechanism.
 
 ### Current verified build
 
