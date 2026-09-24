@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.6  
+**Protocol version:** 1.7  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -564,6 +564,19 @@ Do not rely on `runtime.txt` or `.python-version` as the primary Community Cloud
 
 This architecture change is accepted because both runtime paths pass real OCR/full-pipeline GitHub Actions integration tests.
 
+### Native deployment dependency rule
+
+When Community Cloud reaches the selected OCR backend but fails while importing a native Python extension such as OpenCV, treat the named missing shared library as a deployment dependency rather than rewriting application logic.
+
+Streamlit Community Cloud supports root-level `packages.txt` for Debian/apt dependencies. The observed OpenCV import failure activates the minimal current package set:
+
+- `libgl1`;
+- `libglib2.0-0`.
+
+Do not add broad desktop/GUI package bundles speculatively. Add further system libraries only when the deployment log identifies the next missing dependency.
+
+A native OCR startup failure must not produce a compliance result. The Streamlit UI should catch ImportError/OSError at provider startup and display a deployment-environment message instead of an unhandled/redacted traceback.
+
 ## 15. Performance Protocol
 
 Performance changes must follow the priority order documented in `docs/PERFORMANCE_ARCHITECTURE.md`.
@@ -716,7 +729,7 @@ The repository should make that process auditable without requiring a reviewer t
 ## 22. Current Handoff Snapshot
 
 **Date:** 2026-09-23  
-**Protocol version:** 1.6  
+**Protocol version:** 1.7  
 **Architecture version:** v0.2  
 **Latest relevant implementation/test commit before this snapshot update:** `cfbeff830fccfb966198edcfe06bec449409509e`
 
@@ -771,7 +784,7 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 
 - redeploy current main to Streamlit Community Cloud and capture a fresh deployment log;
 - verify the platform-selected backend starts successfully and measure deployed warm latency/resource behavior;
-- if the next failure is a specific missing Linux shared library such as `libGL.so.1`, add only the required system package after confirming the log;
+- OpenCV native-library failure observed on Community Cloud; `packages.txt` now installs `libgl1` and `libglib2.0-0`; verify the next redeploy before adding any further system packages;
 - if the next failure is memory/resource exhaustion, evaluate the minimum resource reduction before changing hosts or architecture;
 - preserve targeted retry, Gemini rescue, batch processing, and extra conditional rules as deferred until deployment is stable;
 - run mandatory post-write QC after every coherent code-change batch.
@@ -787,6 +800,16 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.7 — 2026-09-23
+
+Added:
+
+- Streamlit-supported root `packages.txt` for observed OpenCV native dependencies;
+- `libgl1` and `libglib2.0-0` as the minimum current Community Cloud system-package mitigation;
+- rule to treat native extension import failures as deployment dependencies before changing application logic;
+- graceful Streamlit handling for OCR provider ImportError/OSError so no compliance result is fabricated from a failed runtime;
+- Python 3.14 integration gate now installs the same declared native package set before testing.
 
 ### 1.6 — 2026-09-23
 
