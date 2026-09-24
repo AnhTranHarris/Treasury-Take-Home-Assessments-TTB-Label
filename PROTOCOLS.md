@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.5  
+**Protocol version:** 1.6  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -547,13 +547,22 @@ Before declaring a material feature complete, check as applicable:
 
 Tests must not be described as passing unless they actually ran and passed.
 
-### Deployment interpreter rule
+### Deployment runtime contingency rule
 
-For Streamlit Community Cloud, the current approved interpreter is **Python 3.11**.
+Python 3.11 remains the preferred Streamlit Community Cloud interpreter when Advanced settings honors that selection, because the PaddleOCR/PaddlePaddle path is already validated there.
 
-The first deployment attempt on 2026-09-23 selected Python 3.14.7 and failed during dependency resolution because the pinned PaddlePaddle runtime had no compatible CPython 3.14 wheel. Future Streamlit Community Cloud deployments must explicitly select Python 3.11 in Advanced settings.
+However, observed Community Cloud deployment used Python 3.14.7, where PaddlePaddle 3.3.1 has no compatible wheel. The repository therefore uses a tested runtime-selected local OCR strategy:
 
-If an existing Streamlit app was created with the wrong Python version, change control should prefer deleting and redeploying the app with Python 3.11 rather than changing the validated Paddle/PaddleOCR stack merely to accommodate an unintended interpreter selection.
+- Python 3.11–3.13 → PaddleOCR/PaddlePaddle;
+- Python 3.14 → RapidOCR/ONNX Runtime.
+
+Exactly one OCR backend is loaded in a process. The application must not run PaddleOCR and RapidOCR simultaneously or race their outputs.
+
+The dependency file uses Python environment markers so Python 3.14 skips the incompatible Paddle packages rather than failing installation.
+
+Do not rely on `runtime.txt` or `.python-version` as the primary Community Cloud control. Prefer the platform's Advanced settings when available, while keeping the repository resilient if the deployed interpreter is Python 3.14.
+
+This architecture change is accepted because both runtime paths pass real OCR/full-pipeline GitHub Actions integration tests.
 
 ## 15. Performance Protocol
 
@@ -707,20 +716,20 @@ The repository should make that process auditable without requiring a reviewer t
 ## 22. Current Handoff Snapshot
 
 **Date:** 2026-09-23  
-**Protocol version:** 1.5  
+**Protocol version:** 1.6  
 **Architecture version:** v0.2  
 **Latest relevant commit before this snapshot update:** `31b89e734cedf87992c6b785ed43dbe1cfc4a694`
 
 ### Current phase
 
-Compressed prototype stabilization and deployment: the first vertical slice is implemented and green in both fast CI and real PaddleOCR/full-pipeline integration. The next gate is deployment compatibility, followed by only the highest-value resilience work that can preserve the September 26 stabilization target.
+Compressed prototype stabilization and deployment: the first vertical slice is implemented, the original Paddle path remains green, and a Python 3.14 RapidOCR/ONNX deployment contingency is now also green. The next gate is a fresh Streamlit Community Cloud redeploy and deployed-resource/latency validation.
 
 ### Locked decisions
 
 - Streamlit web UI.
 - OpenCV image-quality triage and adaptive preprocessing.
-- PaddleOCR PP-OCRv5 mobile preferred local OCR.
-- RapidOCR is a deployment contingency, not a simultaneous second engine.
+- PaddleOCR PP-OCRv5 mobile remains the preferred local OCR on compatible Python runtimes.
+- RapidOCR + ONNX Runtime is the activated Python 3.14 deployment contingency; exactly one OCR engine is active.
 - RapidFuzz only for fields where tolerant comparison is appropriate.
 - Deterministic Python rules decide supported compliance outcomes.
 - Gemini image extraction is optional, last-resort only.
@@ -748,18 +757,23 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 - rapid interview-preparation window established through approximately September 30;
 - TTB requirements matrix completed and first implementation slice locked;
 - first runnable Streamlit → PaddleOCR → extraction → deterministic validation slice implemented;
-- 27 fast tests passing on the current main head;
+- 32 fast tests passing on the current main head;
 - real PaddleOCR/full-pipeline integration passing on the current main head;
 - Paddle 3.3 CPU oneDNN incompatibility identified and controlled by disabling MKL-DNN for the OCR engine;
 - OCR warning-heading capitalization instability identified from integration evidence and moved to human-review advisory rather than false FAIL;
-- current GitHub Actions evidence: first OCR call 18.093s and warm full pipeline 5.368s on the CI runner.
+- current Python 3.11/Paddle GitHub Actions evidence: first OCR call 18.093s and warm full pipeline 5.368s on the CI runner;
+- Streamlit Community Cloud deployment log showed Python 3.14.7 and failed before app startup because PaddlePaddle 3.3.1 had no compatible wheel;
+- runtime-selected RapidOCR/ONNX contingency implemented for Python 3.14 without changing deterministic validation;
+- Python 3.14 GitHub Actions verification passed dependency installation, Streamlit startup, real RapidOCR, and the complete controlled label-to-result pipeline;
+- controlled Python 3.14/RapidOCR full-pipeline timing measured 1.200s on the GitHub Actions runner; this is not yet a Community Cloud benchmark.
 
 ### Unresolved / next research
 
-- deploy the current green first slice to the intended Streamlit environment and verify memory/model-download/runtime compatibility;
-- measure deployed warm latency before claiming the approximately five-second stakeholder target;
-- preserve the current green core while evaluating whether targeted local OCR retry is necessary and affordable;
-- keep Gemini rescue, batch processing, and additional conditional disclosures deferred unless deployment is stable and schedule permits;
+- redeploy current main to Streamlit Community Cloud and capture a fresh deployment log;
+- verify the platform-selected backend starts successfully and measure deployed warm latency/resource behavior;
+- if the next failure is a specific missing Linux shared library such as `libGL.so.1`, add only the required system package after confirming the log;
+- if the next failure is memory/resource exhaustion, evaluate the minimum resource reduction before changing hosts or architecture;
+- preserve targeted retry, Gemini rescue, batch processing, and extra conditional rules as deferred until deployment is stable;
 - run mandatory post-write QC after every coherent code-change batch.
 
 ### Governing files for the next session
@@ -773,6 +787,18 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.6 — 2026-09-23
+
+Added:
+
+- evidence-driven Python 3.14 deployment contingency using RapidOCR + ONNX Runtime;
+- runtime backend selection that preserves PaddleOCR on compatible Python and activates only one OCR engine;
+- Python environment markers preventing incompatible PaddlePaddle installation on Python 3.14;
+- dual-runtime GitHub Actions integration gates for Python 3.11/Paddle and Python 3.14/RapidOCR;
+- 32-test fast regression baseline;
+- verified Python 3.14 Streamlit startup and controlled full-pipeline PASS at 1.200 seconds on the GitHub Actions runner;
+- rule to add Linux system packages only in response to a specific observed deployment error.
 
 ### 1.5 — 2026-09-23
 
