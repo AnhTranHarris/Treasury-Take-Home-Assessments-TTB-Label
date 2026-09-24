@@ -12,7 +12,7 @@ PASS means the implemented automated checks passed. It is **not** a complete leg
 
 ## Quick Start
 
-The validated CI/runtime target is **Python 3.11**.
+**Python 3.11 is the preferred local-development/PaddleOCR target.** The runtime dependency set is now interpreter-aware: Python 3.11–3.13 use PaddleOCR/PaddlePaddle, while Python 3.14 uses the tested RapidOCR/ONNX Runtime deployment contingency.
 
 ```bash
 git clone https://github.com/AnhTranHarris/Treasury-Take-Home-Assessments-TTB-Label.git
@@ -52,7 +52,9 @@ The local Streamlit URL will be printed in the terminal.
 
 ### First OCR initialization
 
-The application uses PaddleOCR PP-OCRv5 mobile models. A machine that does not already have the required model assets cached may require network access during initial OCR/model initialization.
+On Python 3.11–3.13, the application selects PaddleOCR PP-OCRv5 mobile. A machine that does not already have the required Paddle model assets cached may require network access during initial model initialization.
+
+On Python 3.14, where PaddlePaddle 3.3.1 has no compatible wheel, the application selects RapidOCR with ONNX Runtime instead. Exactly one local OCR backend is active in a process.
 
 ## Reproducible Demo Label
 
@@ -74,7 +76,7 @@ The synthetic image is a regression/demo fixture. It is not an example of a comp
 
 ## Fast Tests
 
-The normal regression suite deliberately avoids downloading or initializing PaddleOCR models.
+The normal regression suite deliberately avoids downloading or initializing heavyweight OCR models.
 
 ```bash
 python -m pip install -r requirements-test.txt
@@ -83,7 +85,12 @@ python -m pytest -q
 
 GitHub Actions runs the same fast test suite on pushes and pull requests.
 
-A separate **OCR integration** workflow installs the full pinned runtime and exercises the real PaddleOCR provider so heavyweight compatibility failures remain visible without slowing every unit-test run.
+A separate **OCR integration** workflow verifies both supported runtime paths:
+
+- Python 3.11 + PaddleOCR/PaddlePaddle;
+- Python 3.14 + RapidOCR/ONNX Runtime.
+
+The current fast suite has 32 tests, and both real-OCR integration jobs pass.
 
 ## Architecture
 
@@ -101,7 +108,9 @@ Current implementation baseline:
 ```text
 Streamlit
 + OpenCV
-+ PaddleOCR PP-OCRv5 mobile
++ one runtime-selected local OCR backend:
+    - PaddleOCR PP-OCRv5 mobile on Python < 3.14
+    - RapidOCR + ONNX Runtime on Python 3.14
 + deterministic Python validation rules
 + optional future Gemini image-text rescue path
 ```
@@ -181,7 +190,12 @@ The intended runtime model is:
 - external AI fallback, if later enabled, is called only for unresolved cases;
 - uncertain evidence routes to human review rather than being guessed.
 
-The stakeholder target is approximately five seconds for a simple label. On the current GitHub Actions CPU runner, the latest real-OCR integration measured 18.093 seconds for the first OCR call and 5.368 seconds for the warm full pipeline. These CI measurements are evidence, not a claim that the deployed target has been achieved; deployment must be measured separately.
+The stakeholder target is approximately five seconds for a simple label. Current controlled GitHub Actions evidence includes:
+
+- Python 3.11/PaddleOCR: 18.093 seconds for the first OCR call and 5.368 seconds for the warm full pipeline;
+- Python 3.14/RapidOCR: 1.200 seconds for the controlled full demo-label pipeline.
+
+These are CI measurements, not Streamlit Community Cloud benchmarks. The deployed application must still be measured separately before claiming the stakeholder target is achieved.
 
 ## Development Approach
 
@@ -210,18 +224,22 @@ The record uses PMI-CPMAI as an AI-project lifecycle reference and official OPM/
 
 ## Streamlit Community Cloud Deployment
 
-The validated deployment/runtime target is **Python 3.11**.
+The deployment is designed to survive either interpreter outcome currently encountered on Community Cloud.
 
-This matters because `paddlepaddle==3.3.1` does not provide a CPython 3.14 wheel. If Streamlit Community Cloud creates the app with Python 3.14, dependency resolution fails before the application starts.
-
-When deploying on Streamlit Community Cloud:
+Preferred path:
 
 1. choose this repository and branch `main`;
 2. use `streamlit_app.py` as the entrypoint;
-3. open **Advanced settings**;
-4. select **Python 3.11**;
-5. deploy.
+3. if Advanced settings offers Python 3.11, select it;
+4. deploy.
 
-If an app was already created with a different Python version, Streamlit requires deleting that app and redeploying it to change the interpreter version.
+Runtime behavior:
 
-The repository's GitHub Actions integration workflow also uses Python 3.11 so deployment and CI target the same interpreter family.
+- Python 3.11–3.13 → PaddleOCR/PaddlePaddle;
+- Python 3.14 → RapidOCR/ONNX Runtime.
+
+The repository does not rely on `runtime.txt` or `.python-version` to force Streamlit Community Cloud's interpreter. Instead, `requirements.txt` uses Python environment markers so Python 3.14 does not attempt to install incompatible PaddlePaddle wheels.
+
+The application displays the active local OCR backend near the top of the UI.
+
+GitHub Actions separately verifies both the Python 3.11/Paddle path and the Python 3.14/RapidOCR deployment-contingency path before changes are accepted.
