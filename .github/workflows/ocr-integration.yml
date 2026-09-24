@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - "requirements.txt"
+      - "packages.txt"
       - "streamlit_app.py"
       - "src/ocr/**"
       - "src/imaging/**"
@@ -66,6 +67,10 @@ jobs:
         with:
           python-version: "3.14"
           cache: pip
+      - name: Install Streamlit-style native packages
+        run: |
+          sudo apt-get update
+          xargs -r -a packages.txt sudo apt-get install -y
       - name: Install Python 3.14 deployment dependencies
         run: python -m pip install -r requirements.txt
       - name: Show deployment runtime versions
