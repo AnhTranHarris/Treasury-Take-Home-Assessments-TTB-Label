@@ -188,6 +188,7 @@ No material rule should exist only because it was discussed in chat.
 | Risk | Probability | Impact | Mitigation / response | Status |
 |---|---|---|---|---|
 | OCR model exceeds free-host memory budget | Medium | High | One cached model; benchmark PaddleOCR; RapidOCR contingency | Open |
+| Streamlit deployment selects unsupported Python interpreter | High (observed) | High | Deploy/redeploy Community Cloud app with Python 3.11 selected in Advanced settings; keep CI on 3.11 | Mitigation active |
 | Simple-label latency exceeds stakeholder target | Medium | High | Adaptive preprocessing; bounded retries; measure deployed latency | Open |
 | OCR confidently reads incorrect text | Medium | High | Evidence display, conservative automation boundaries, targeted retry, REVIEW on conflict; real integration showed warning case instability, so capitalization is now advisory | Active / demonstrated |
 | Gemini/network unavailable | Medium | Medium | Local-first architecture; Gemini optional; REVIEW on fallback failure | Controlled |
@@ -325,7 +326,9 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 
 ### Current work
 
-Deploy and validate the current green first vertical slice without destabilizing it.
+Redeploy and validate the current green first vertical slice on Streamlit Community Cloud using **Python 3.11**.
+
+The first deployment attempt failed before application startup because Streamlit selected Python 3.14.7, while the pinned `paddlepaddle==3.3.1` dependency has no matching CPython 3.14 wheel. The immediate remediation is environment correction, not an application-logic rewrite.
 
 ### Current verified build
 
