@@ -206,3 +206,22 @@ Individual TTB requirements and the prototype's AUTOMATE / REVIEW / CONDITIONAL 
 Lifecycle, milestones, risks, quality gates, decisions, and the current delivery position are maintained in the [Project Management & Delivery Record](PROJECT_MANAGEMENT.md).
 
 The record uses PMI-CPMAI as an AI-project lifecycle reference and official OPM/USAJOBS material for federal project-management and job-specific alignment. It records evidence and project state without making a self-awarded General Schedule grade determination.
+
+
+## Streamlit Community Cloud Deployment
+
+The validated deployment/runtime target is **Python 3.11**.
+
+This matters because `paddlepaddle==3.3.1` does not provide a CPython 3.14 wheel. If Streamlit Community Cloud creates the app with Python 3.14, dependency resolution fails before the application starts.
+
+When deploying on Streamlit Community Cloud:
+
+1. choose this repository and branch `main`;
+2. use `streamlit_app.py` as the entrypoint;
+3. open **Advanced settings**;
+4. select **Python 3.11**;
+5. deploy.
+
+If an app was already created with a different Python version, Streamlit requires deleting that app and redeploying it to change the interpreter version.
+
+The repository's GitHub Actions integration workflow also uses Python 3.11 so deployment and CI target the same interpreter family.
