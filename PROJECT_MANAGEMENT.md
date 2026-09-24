@@ -445,6 +445,19 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
 
 ## 20. Change History
 
+### 2026-09-23 — Python 3.14 deployment contingency activated
+
+Observed and resolved:
+
+- Streamlit Community Cloud selected Python 3.14.7 and could not install PaddlePaddle 3.3.1;
+- platform/package research confirmed this was an interpreter-wheel compatibility failure before application startup;
+- the previously approved RapidOCR contingency was activated with ONNX Runtime for Python 3.14;
+- Python environment markers preserve PaddleOCR/PaddlePaddle on Python 3.11–3.13 and exclude them on Python 3.14;
+- 32 fast tests pass;
+- both Python 3.11/Paddle and Python 3.14/RapidOCR real-OCR integration jobs pass;
+- Python 3.14 CI passed Streamlit startup and the complete controlled verification pipeline in 1.200 seconds;
+- deployed Community Cloud performance remains unmeasured until the next redeploy.
+
 ### 2026-09-23 — OCR capitalization scope refinement
 
 Integration evidence:
