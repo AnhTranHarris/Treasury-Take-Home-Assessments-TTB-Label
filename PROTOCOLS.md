@@ -731,11 +731,11 @@ The repository should make that process auditable without requiring a reviewer t
 **Date:** 2026-09-23  
 **Protocol version:** 1.7  
 **Architecture version:** v0.2  
-**Latest relevant implementation/test commit before this snapshot update:** `cfbeff830fccfb966198edcfe06bec449409509e`
+**Latest relevant implementation/test commit before this snapshot update:** `46d6f03a6d488ad7aba7a06ebe9ad3b93f3ba925`
 
 ### Current phase
 
-Compressed prototype stabilization and deployment: the first vertical slice is implemented, the original Paddle path remains green, and a Python 3.14 RapidOCR/ONNX deployment contingency is now also green. The next gate is a fresh Streamlit Community Cloud redeploy and deployed-resource/latency validation.
+Compressed prototype stabilization and deployment: the first vertical slice is implemented; the Python 3.14 RapidOCR path reached Community Cloud but exposed a native OpenCV shared-library dependency. The repository now declares the required Debian libraries in `packages.txt`, and the Python 3.14 CI path passes with the same system-package installation. The next gate is a fresh Community Cloud redeploy and real deployed latency/resource validation.
 
 ### Locked decisions
 
@@ -778,7 +778,11 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 - Streamlit Community Cloud deployment log showed Python 3.14.7 and failed before app startup because PaddlePaddle 3.3.1 had no compatible wheel;
 - runtime-selected RapidOCR/ONNX contingency implemented for Python 3.14 without changing deterministic validation;
 - Python 3.14 GitHub Actions verification passed dependency installation, Streamlit startup, real RapidOCR, and the complete controlled label-to-result pipeline;
-- controlled Python 3.14/RapidOCR full-pipeline timing measured 1.200s on the GitHub Actions runner; this is not yet a Community Cloud benchmark.
+- controlled Python 3.14/RapidOCR full-pipeline timing measured 1.200s on the GitHub Actions runner; this is not yet a Community Cloud benchmark;
+- Community Cloud reached the RapidOCR path and failed at `import cv2`, exposing a native Linux dependency layer;
+- root `packages.txt` now installs `libgl1` and `libglib2.0-0`;
+- Python 3.14 CI successfully installs those same native packages before Streamlit/RapidOCR integration testing;
+- the Streamlit UI now catches OCR-provider ImportError/OSError and refuses to fabricate a compliance result.
 
 ### Unresolved / next research
 
