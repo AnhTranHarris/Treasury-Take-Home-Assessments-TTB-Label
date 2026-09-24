@@ -295,13 +295,24 @@ If disabling oneDNN causes unacceptable deployed latency, the next tested altern
 
 Do not change runtime versions solely on speculation. Each alternative must pass real OCR integration and performance QC before adoption.
 
-Deployment contingency:
+### Activated Python 3.14 deployment contingency
 
-- RapidOCR using lightweight inference backends/models derived from PaddleOCR, if Streamlit memory, latency, or deployment behavior proves unacceptable.
+The first Streamlit Community Cloud deployment used Python 3.14.7. Dependency resolution failed before application startup because PaddlePaddle 3.3.1 has no compatible CPython 3.14 wheel.
 
-Do not ship both OCR engines active at runtime.
+The repository now uses Python environment markers plus a runtime backend factory:
 
-Select one deployment engine through testing and document the decision.
+- Python 3.11–3.13 → PaddleOCR/PaddlePaddle;
+- Python 3.14 → RapidOCR 3.9.2 + ONNX Runtime 1.30.0.
+
+Exactly one OCR backend is active. This is not ensemble OCR and the engines are never raced against each other.
+
+GitHub Actions now verifies both environments independently. On the Python 3.14.7 job, the deployment dependency set installed successfully, Streamlit passed its health check, RapidOCR processed the controlled demo label, all supported deterministic checks passed, and the controlled full pipeline measured **1.200 seconds**.
+
+That result is evidence for compatibility and a controlled CI performance observation. It is **not** a Streamlit Community Cloud performance claim; deployed latency and memory still require measurement.
+
+The Python 3.11/Paddle path remains separately gated and green. The fallback was activated because of observed interpreter/package incompatibility, not because PaddleOCR was removed as the preferred supported-runtime engine.
+
+Do not add `packages.txt` or Linux GUI libraries speculatively. If Community Cloud next reports a concrete shared-library error (for example `libGL.so.1`), add only the required system package and rerun deployment QC.
 
 ## 15. Four Accepted Additions
 
@@ -309,7 +320,7 @@ The architecture now includes:
 
 1. OpenCV image-quality triage before OCR.
 2. Targeted evidence crops for human review.
-3. RapidOCR as a deployment contingency only.
+3. RapidOCR as the activated deployment contingency for incompatible host runtimes while preserving a single active OCR engine.
 4. Synthetic test labels + pytest + GitHub Actions for regression QA.
 
 These additions are accepted design requirements for v0.2.
