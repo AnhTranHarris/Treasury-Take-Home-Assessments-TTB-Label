@@ -243,3 +243,18 @@ The repository does not rely on `runtime.txt` or `.python-version` to force Stre
 The application displays the active local OCR backend near the top of the UI.
 
 GitHub Actions separately verifies both the Python 3.11/Paddle path and the Python 3.14/RapidOCR deployment-contingency path before changes are accepted.
+
+### Native OpenCV libraries on Community Cloud
+
+RapidOCR currently depends on the regular `opencv-python` package. Streamlit Community Cloud runs on Debian Linux, so native libraries required by OpenCV must be declared separately.
+
+The repository therefore includes a root-level `packages.txt` containing:
+
+```text
+libgl1
+libglib2.0-0
+```
+
+These packages address the observed Community Cloud failure at `import cv2` and the corresponding `libGL` / GLib dependency pattern documented by Streamlit Community users.
+
+If another native-library error appears, add only the library named by the new deployment log rather than expanding the operating-system dependency list speculatively.
