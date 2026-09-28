@@ -306,3 +306,10 @@ libglib2.0-0
 These packages address the observed Community Cloud failure at `import cv2` and the corresponding `libGL` / GLib dependency pattern documented by Streamlit Community users.
 
 If another native-library error appears, add only the library named by the new deployment log rather than expanding the operating-system dependency list speculatively.
+
+
+## Submission Presentation
+
+The Streamlit interface uses a restrained federal-document visual style inspired by the current TTB.gov information hierarchy: dark-blue agency-style header treatment, blue action hierarchy, white/gray content areas, and green accents. The application prominently identifies itself as an **unofficial take-home prototype** and does not use an official TTB seal or imply agency endorsement.
+
+Typography and spacing use current OPM/USAJOBS federal résumé guidance as a presentation baseline: sans-serif type, clear title/body hierarchy, and approximately 0.5-inch-equivalent page gutters. These résumé recommendations are adapted for browser readability rather than treated as web-development requirements.
