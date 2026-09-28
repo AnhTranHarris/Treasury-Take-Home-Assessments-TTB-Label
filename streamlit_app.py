@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from html import escape
 
 import streamlit as st
 
@@ -170,6 +171,30 @@ def _apply_federal_theme() -> None:
             border-radius: 2px !important;
         }
 
+        /* Review signals have fixed colors independent of Streamlit theme overrides. */
+        .ttb-review-flag {
+            display: block !important;
+            background: #FFE58F !important;
+            background-color: #FFE58F !important;
+            color: #202020 !important;
+            border: 2px solid #966000 !important;
+            border-left: 7px solid #966000 !important;
+            border-radius: 3px !important;
+            padding: 0.65rem 0.8rem !important;
+            margin: 0.4rem 0 0.35rem !important;
+            font-size: 15px !important;
+            line-height: 1.45 !important;
+            opacity: 1 !important;
+        }
+
+        .ttb-review-flag,
+        .ttb-review-flag *,
+        [data-testid="stMarkdownContainer"] .ttb-review-flag,
+        [data-testid="stMarkdownContainer"] .ttb-review-flag * {
+            color: #202020 !important;
+            -webkit-text-fill-color: #202020 !important;
+        }
+
         [data-testid="stDataFrame"] {
             border: 1px solid var(--ttb-border);
             border-radius: 2px;
@@ -263,8 +288,63 @@ def _show_status(result) -> None:
 
 
 def _review_marker(label: str, draft: FieldDraft) -> None:
+    """Visible high-contrast review banner independent of the active webpage theme."""
     if draft.review_required:
-        st.warning(f"⚠ Review {label}: {draft.reason}")
+        st.markdown(
+            '<div class="ttb-review-flag" role="alert" '
+            'style="background-color:#FFE58F !important;color:#202020 !important;'
+            'border:2px solid #966000 !important;border-left:7px solid #966000 !important;">'
+            f'<strong>⚠ HUMAN REVIEW — {escape(label)}</strong><br>'
+            f'{escape(draft.reason)}</div>',
+            unsafe_allow_html=True,
+        )
+
+
+def _highlight_review_fields(draft) -> None:
+    """Use fixed yellow on uncertain input fields, even if Streamlit theme changes."""
+    bindings = (
+        ("intake_brand", draft.brand),
+        ("intake_class_type", draft.class_type),
+        ("intake_alcohol_content", draft.alcohol_content),
+        ("intake_net_contents", draft.net_contents),
+        ("intake_name_address", draft.name_address),
+        ("intake_imported", draft.imported),
+        ("intake_country_origin", draft.country_origin),
+        ("intake_warning", draft.government_warning),
+        ("intake_age", draft.age_statement),
+        ("intake_color", draft.color_disclosure),
+        ("intake_commodity", draft.commodity_statement),
+    )
+    flagged = [f".st-key-{key}" for key, field in bindings if field.review_required]
+    if not flagged:
+        return
+
+    # Target widget surfaces AND child inputs, with explicit text/background overrides.
+    surfaces = ",\n".join(
+        f"{selector} [data-baseweb='input'], "
+        f"{selector} [data-baseweb='textarea'], "
+        f"{selector} [data-baseweb='base-input'], "
+        f"{selector} input, "
+        f"{selector} textarea"
+        for selector in flagged
+    )
+    controls = ",\n".join(
+        f"{selector} input, {selector} textarea, {selector} label, "
+        f"{selector} [data-testid='stWidgetLabel']"
+        for selector in flagged
+    )
+    st.markdown(
+        "<style>\n"
+        + surfaces
+        + " { background-color: #FFF1B2 !important; "
+          "border-color: #966000 !important; color: #202020 !important; "
+          "-webkit-text-fill-color: #202020 !important; }\n"
+        + controls
+        + " { color: #202020 !important; "
+          "-webkit-text-fill-color: #202020 !important; }\n"
+        + "</style>",
+        unsafe_allow_html=True,
+    )
 
 
 def _label_image_input(key_prefix: str):
@@ -399,9 +479,10 @@ def _render_quick_review() -> None:
         st.metric("OCR extraction time", f"{intake_run.elapsed_seconds:.2f} seconds")
         st.caption(f"Local OCR backend: {choose_ocr_backend().upper()}")
 
-    with right:
-        draft = intake_run.draft
+    draft = intake_run.draft
+    _highlight_review_fields(draft)
 
+    with right:
         _review_marker("Brand name", draft.brand)
         brand = st.text_input("Brand name", key="intake_brand")
 
