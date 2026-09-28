@@ -92,17 +92,18 @@ A separate **OCR integration** workflow verifies both supported runtime paths:
 - Python 3.11 + PaddleOCR/PaddlePaddle;
 - Python 3.14 + RapidOCR/ONNX Runtime.
 
-The current fast suite has **42 tests**, and both real-OCR integration jobs pass.
+The current fast suite has **52 tests**, and both real-OCR integration jobs pass.
 
 ## Architecture
 
 The frozen v0.2 design baseline is documented here:
 
 - [Project Management & Delivery Record](PROJECT_MANAGEMENT.md)
-- [Architecture v0.2](docs/ARCHITECTURE.md)
+- [Architecture v0.3](docs/ARCHITECTURE.md)
 - [Performance Architecture](docs/PERFORMANCE_ARCHITECTURE.md)
 - [TTB Rule Scope](docs/TTB_RULE_SCOPE.md)
 - [TTB Requirements Matrix](docs/REQUIREMENTS_MATRIX.md)
+- [Extraction Refinement & Blind-Test Protocol](docs/EXTRACTION_REFINEMENT_AND_BLIND_TEST.md)
 - [Government Source Registry](docs/GOVERNMENT_SOURCES.md)
 
 Current implementation baseline:
@@ -236,7 +237,7 @@ The stakeholder target is approximately five seconds for a simple label. Current
 - Python 3.11/PaddleOCR: 18.093 seconds for the first OCR call and 5.368 seconds for the warm full pipeline;
 - Python 3.14/RapidOCR: 1.200 seconds for the controlled full demo-label pipeline.
 
-These are CI measurements, not Streamlit Community Cloud benchmarks. The deployed application must still be measured separately before claiming the stakeholder target is achieved.
+The five-label deployed benchmark on Streamlit Community Cloud completed in 2.55–4.09 seconds per label (mean approximately 3.15 seconds) on the RapidOCR path. This is a small benchmark set, not a universal latency guarantee. The blind holdout labels will provide additional evidence.
 
 ## Development Approach
 
