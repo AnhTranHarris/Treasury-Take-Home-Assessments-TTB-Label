@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.8  
+**Protocol version:** 1.9  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -181,6 +181,24 @@ Rules:
 - conditional requirements such as age, color, and commodity disclosures remain REVIEW/CONDITIONAL unless product facts establish applicability.
 
 The UI should prefer one obvious label upload action, image preview, auto-filled editable fields, and visible yellow review notices over forcing a nontechnical user to type every field manually.
+
+### Blind-test holdout rule
+
+Two additional labels are reserved as a blind holdout set after the five-label development benchmark.
+
+Before both first-run blind outputs are captured, ChatGPT must not inspect those labels for tuning, encode their expected text into regression tests, change thresholds from their layouts, or create label-specific extraction rules.
+
+The sequence is:
+
+1. freeze the current green implementation;
+2. run blind label 1 and preserve its untouched output;
+3. run blind label 2 and preserve its untouched output;
+4. score both runs;
+5. only then analyze any new failure modes.
+
+Any post-blind fix must address a generalizable failure mode rather than memorizing a particular label.
+
+See `docs/EXTRACTION_REFINEMENT_AND_BLIND_TEST.md`.
 
 ## 9. Architecture Change Protocol
 
@@ -748,7 +766,7 @@ The repository should make that process auditable without requiring a reviewer t
 ## 22. Current Handoff Snapshot
 
 **Date:** 2026-09-27  
-**Protocol version:** 1.8  
+**Protocol version:** 1.9  
 **Architecture version:** v0.3  
 **Latest relevant implementation/test commit before this snapshot update:** `a627eeb7e01ffef6b43728ede93e70a8bf2b5b50`
 
@@ -789,7 +807,7 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - rapid interview-preparation window established through approximately September 30;
 - TTB requirements matrix completed and first implementation slice locked;
 - first runnable Streamlit → PaddleOCR → extraction → deterministic validation slice implemented;
-- 42 fast tests passing on the current main head;
+- 52 fast tests passing on the current main head;
 - real PaddleOCR/full-pipeline integration passing on the current main head;
 - Paddle 3.3 CPU oneDNN incompatibility identified and controlled by disabling MKL-DNN for the OCR engine;
 - OCR warning-heading capitalization instability identified from integration evidence and moved to human-review advisory rather than false FAIL;
@@ -813,7 +831,8 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - tune spatial grouping and the provisional 0.90 review threshold only from benchmark evidence;
 - verify that low-confidence/missing fields remain easy for a nontechnical user to identify and edit;
 - preserve Compare to Reference as a separate independent-consistency workflow;
-- capture deployed latency for the new label-first flow;
+- five-label deployed benchmark captured at 2.55–4.09 seconds per label (mean approximately 3.15 seconds) on the RapidOCR path;
+- capture untouched first-run outputs for both blind holdout labels before any further extraction tuning;
 - if a new deployment failure appears, follow the concrete log rather than changing architecture speculatively;
 - preserve targeted retry, Gemini rescue, batch processing, and extra conditional rules as deferred until the new label-first workflow is benchmarked;
 - run mandatory post-write QC after every coherent code-change batch.
@@ -829,6 +848,18 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.9 — 2026-09-27
+
+Added:
+
+- benchmark-driven extraction refinement using anchor-first key/value association, normalized geometry, hard section stops, exact ABV/net sub-value extraction, and street-address fallback;
+- human-review uncertainty propagation so highlighted core fields remain REVIEW until explicitly confirmed;
+- neutral handling for merely absent conditional disclosures;
+- five-label extraction regression cases;
+- 52-test fast regression baseline;
+- blind-test holdout rule for two unseen labels;
+- separate extraction-refinement/blind-test engineering record.
 
 ### 1.8 — 2026-09-27
 
