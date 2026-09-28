@@ -66,6 +66,7 @@ def test_streamlit_entrypoint_renders_initial_path_without_starting_ocr():
     namespace["main"]()
     called = [name for name, _ in fake.calls]
     assert "set_page_config" in called
+    assert "radio" in called
     assert "file_uploader" in called
     assert "camera_input" in called
-    assert "button" in called
+    assert "info" in called
