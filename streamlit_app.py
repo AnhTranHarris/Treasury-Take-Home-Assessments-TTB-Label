@@ -19,6 +19,185 @@ def get_ocr_provider() -> OCRProvider:
     return build_default_ocr_provider()
 
 
+def _apply_federal_theme() -> None:
+    st.markdown(
+        """
+        <style>
+        :root {
+            --ttb-navy: #16365C;
+            --ttb-blue: #005EA8;
+            --ttb-green: #2E8540;
+            --ttb-light-blue: #E7F3F8;
+            --ttb-light-gray: #F4F5F6;
+            --ttb-border: #AEB0B5;
+            --ttb-text: #1B1B1B;
+            --ttb-muted: #5C5C5C;
+        }
+
+        .stApp {
+            font-family: "Source Sans 3", "Source Sans Pro", Arial, Helvetica, sans-serif;
+        }
+
+        .block-container {
+            max-width: 1200px;
+            padding-top: 1.25rem;
+            padding-left: 48px;
+            padding-right: 48px;
+            padding-bottom: 2rem;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: "Source Sans 3", "Source Sans Pro", Arial, Helvetica, sans-serif !important;
+            color: var(--ttb-navy) !important;
+            font-weight: 700 !important;
+            letter-spacing: 0 !important;
+        }
+
+        h1 {
+            font-size: 28px !important;
+            line-height: 1.2 !important;
+            margin-bottom: 0.35rem !important;
+        }
+
+        h2 {
+            font-size: 22px !important;
+            line-height: 1.25 !important;
+        }
+
+        h3 {
+            font-size: 19px !important;
+            line-height: 1.3 !important;
+            border-bottom: 2px solid var(--ttb-blue);
+            padding-bottom: 0.35rem;
+            margin-top: 1.5rem !important;
+        }
+
+        p, label, .stCaption, [data-testid="stMarkdownContainer"] {
+            font-family: "Source Sans 3", "Source Sans Pro", Arial, Helvetica, sans-serif !important;
+        }
+
+        p, label, [data-testid="stMarkdownContainer"] p {
+            font-size: 14px !important;
+            line-height: 1.45 !important;
+        }
+
+        .stCaption, [data-testid="stCaptionContainer"] {
+            font-size: 13px !important;
+            color: var(--ttb-muted) !important;
+        }
+
+        a {
+            color: var(--ttb-blue) !important;
+        }
+
+        div[data-testid="stFileUploaderDropzone"] {
+            background: var(--ttb-light-gray) !important;
+            border: 1px solid var(--ttb-border) !important;
+            border-radius: 2px !important;
+        }
+
+        .stButton > button,
+        div[data-testid="stPopover"] > button {
+            border-radius: 2px !important;
+            font-family: "Source Sans 3", "Source Sans Pro", Arial, Helvetica, sans-serif !important;
+            font-weight: 600 !important;
+        }
+
+        .stButton > button[kind="primary"] {
+            background: var(--ttb-blue) !important;
+            border-color: var(--ttb-blue) !important;
+        }
+
+        .stButton > button[kind="primary"]:hover {
+            background: var(--ttb-navy) !important;
+            border-color: var(--ttb-navy) !important;
+        }
+
+        div[data-testid="stAlert"] {
+            border-radius: 2px !important;
+        }
+
+        [data-testid="stDataFrame"] {
+            border: 1px solid var(--ttb-border);
+            border-radius: 2px;
+        }
+
+        .federal-topbar {
+            background: var(--ttb-navy);
+            color: white;
+            padding: 10px 16px;
+            border-bottom: 4px solid var(--ttb-green);
+            margin: -0.25rem 0 1rem 0;
+        }
+
+        .federal-topbar .eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.035em;
+            text-transform: uppercase;
+            opacity: 0.95;
+        }
+
+        .federal-topbar .agency {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .prototype-banner {
+            background: var(--ttb-light-blue);
+            border-left: 5px solid var(--ttb-blue);
+            color: var(--ttb-text);
+            padding: 10px 14px;
+            margin-bottom: 1rem;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .project-byline {
+            margin-top: 0.15rem;
+            margin-bottom: 0.65rem;
+            color: var(--ttb-muted);
+            font-size: 13px;
+        }
+
+        .section-kicker {
+            color: var(--ttb-green);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 0.15rem;
+        }
+
+        @media (max-width: 800px) {
+            .block-container {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _render_federal_header() -> None:
+    st.markdown(
+        """
+        <div class="federal-topbar">
+            <div class="eyebrow">U.S. Department of the Treasury · TTB-inspired submission layout</div>
+            <div class="agency">Alcohol Label Verification Prototype</div>
+        </div>
+        <div class="prototype-banner">
+            <strong>Unofficial take-home prototype.</strong>
+            This project is not an official TTB system and does not represent a complete legal-compliance determination.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def _show_status(result) -> None:
     status = result.overall_status
     message = overall_message(status)
@@ -109,7 +288,7 @@ def _seed_intake_state(image_digest: str, draft) -> None:
 
 
 def _render_quick_review() -> None:
-    st.markdown("### 1. Upload the alcohol label")
+    st.markdown("### Step 1 — Upload the alcohol label")
     st.caption(
         "The prototype reads the label, auto-fills TTB-oriented fields, and flags uncertain extraction for human review."
     )
@@ -137,7 +316,7 @@ def _render_quick_review() -> None:
 
     _seed_intake_state(image_digest, intake_run.draft)
 
-    st.markdown("### 2. Review extracted label information")
+    st.markdown("### Step 2 — Review extracted label information")
     left, right = st.columns([1.0, 1.15], gap="large")
 
     with left:
@@ -248,7 +427,7 @@ def _render_quick_review() -> None:
         )
     )
 
-    st.markdown("### 3. TTB label screening")
+    st.markdown("### Step 3 — Review supported screening results")
     _show_status(screening)
     st.dataframe(result_rows(screening), use_container_width=True, hide_index=True)
 
@@ -355,14 +534,19 @@ def _render_reference_compare() -> None:
 
 def main() -> None:
     st.set_page_config(page_title="TTB Label Verification Prototype", page_icon="🔎", layout="wide")
+    _apply_federal_theme()
+    _render_federal_header()
+
+    st.markdown('<div class="section-kicker">Take-home assessment prototype</div>', unsafe_allow_html=True)
     st.title("AI-Powered Alcohol Label Verification")
-    st.markdown("**Made by Anh Tran (Harris) using vibe coding with ChatGPT**")
     st.markdown(
-        "[GitHub source](https://github.com/AnhTranHarris/Treasury-Take-Home-Assessments-TTB-Label)"
+        '<div class="project-byline"><strong>Made by Anh Tran (Harris)</strong> using vibe coding with ChatGPT · '
+        '<a href="https://github.com/AnhTranHarris/Treasury-Take-Home-Assessments-TTB-Label">GitHub source</a></div>',
+        unsafe_allow_html=True,
     )
     st.caption(
         "Distilled-spirits prototype. OCR extracts visible label evidence; deterministic Python rules evaluate "
-        "the supported checks. This is not a complete legal-compliance determination."
+        "the supported checks. Human review remains required where the prototype is uncertain."
     )
 
     mode = st.radio(
