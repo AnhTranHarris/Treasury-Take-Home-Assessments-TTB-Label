@@ -86,6 +86,30 @@ I retained human control over scope, acceptance, regulatory assumptions, and sub
 - The prototype has no COLA database integration, permit database, production identity system, or federal authorization to operate.
 - A submitted image cannot reliably prove all physical-container requirements such as actual print size or full same-field-of-vision geometry.
 
+### Scenario-based assumptions inferred from the Treasury assignment
+
+These are **my design interpretations** of the stakeholder interviews in the [Treasury take-home instructions](https://github.com/treasurytakehome-rgb/instructions). They are not additional TTB regulations or guarantees about an operational agency system.
+
+**1. Review speed — Sarah Chen.** Sarah said agents abandoned a scanner that took 30–40 seconds and wanted results in about five seconds. I treated five seconds as a target to measure, not a guarantee for every label.
+
+**2. Ease of use — Sarah Chen.** Sarah described reviewers with different levels of technical comfort who needed an obvious interface. I assumed a reviewer should be able to select a sample or upload a label, check auto-filled fields, and see clear results without technical setup.
+
+**3. High-volume submissions — Sarah Chen.** Sarah described importers submitting hundreds of applications at once and said batch processing would be helpful. I treated batch upload as a future enhancement because the assignment favored a complete, working core within limited time.
+
+**4. Restricted network access — Marcus Williams.** Marcus described blocked outbound domains that disrupted a previous vendor's machine-learning features. I assumed the core label-reading workflow should run without calling an external generative-AI service.
+
+**5. Standalone prototype and data protection — Marcus Williams.** Marcus explicitly said the prototype should not integrate with COLA and should avoid sensitive data. I assumed a standalone, sample-driven demonstration was appropriate, while production identity, retention, and security controls remained out of scope.
+
+**6. Harmless differences in names — Dave Morrison.** Dave described a brand name written in uppercase on the label and title case in the application. I inferred that ordinary capitalization differences should not automatically fail appropriate text comparisons, while material differences still need review.
+
+**7. Exact health warning — Jenny Park.** Jenny emphasized that the government warning's wording and heading must be exact, including capitalization and bold formatting. I treated textual checks as strict where reliable, but kept visual typography and physical sizing as human-review items.
+
+**8. Imperfect label images — Jenny Park.** Jenny described glare, poor lighting, and angled photographs as common obstacles. I assumed basic image preparation could help, but unreadable or conflicting OCR evidence should go to a human rather than be guessed.
+
+**9. Application comparison versus label screening — Sarah Chen's review process.** Sarah described comparing application values with what appears on the label artwork. I kept a separate *Compare to Reference* workflow because values extracted from a label cannot independently verify that same label against an application.
+
+**10. Beverage type and conditional rules — assignment technical context.** The instructions note that labeling requirements vary between beer, wine, and distilled spirits and provide a distilled-spirits example. I chose distilled spirits as the initial scope and did not assume a missing conditional disclosure always means a violation.
+
 ## 5. Deliberate scope decisions
 
 ### Live camera capture — disabled for submission
