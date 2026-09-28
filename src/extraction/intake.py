@@ -315,6 +315,41 @@ def _class_candidate_score(line: OCRLine) -> float:
     return area * penalty
 
 
+def _group_class_candidates(lines: Sequence[OCRLine]) -> list[list[OCRLine]]:
+    page_width, page_height = _page_extent(lines)
+    remaining = list(lines)
+    groups: list[list[OCRLine]] = []
+    while remaining:
+        seed = remaining.pop(0)
+        group = [seed]
+        changed = True
+        while changed:
+            changed = False
+            for candidate in list(remaining):
+                if any(
+                    _same_column(existing, candidate, page_width)
+                    and _vertical_gap(existing, candidate) / max(1.0, page_height) <= 0.06
+                    for existing in group
+                ):
+                    group.append(candidate)
+                    remaining.remove(candidate)
+                    changed = True
+        groups.append(
+            sorted(
+                group,
+                key=lambda item: (
+                    item.box[1] if item.box else 10**9,
+                    item.box[0] if item.box else 10**9,
+                ),
+            )
+        )
+    return groups
+
+
+def _class_group_score(group: Sequence[OCRLine]) -> float:
+    return sum(_class_candidate_score(line) for line in group)
+
+
 def _extract_class_type(lines: Sequence[OCRLine]) -> FieldDraft:
     anchored = _value_for_key(
         lines,
@@ -329,12 +364,15 @@ def _extract_class_type(lines: Sequence[OCRLine]) -> FieldDraft:
     if not candidates:
         return _draft(None, missing_reason="Class/type designation was not detected automatically.")
 
-    chosen = max(candidates, key=_class_candidate_score)
-    ranked_scores = sorted((_class_candidate_score(line), line) for line in candidates)
-    second_score = ranked_scores[-2][0] if len(ranked_scores) > 1 else 0.0
-    chosen_score = _class_candidate_score(chosen)
-    ambiguous = second_score >= 0.80 * chosen_score and _text(ranked_scores[-2][1]).casefold() != _text(chosen).casefold()
-    return _draft(_text(chosen), [chosen], ambiguous=ambiguous)
+    groups = _group_class_candidates(candidates)
+    ranked = sorted(groups, key=_class_group_score, reverse=True)
+    chosen = ranked[0]
+    chosen_score = _class_group_score(chosen)
+    second_score = _class_group_score(ranked[1]) if len(ranked) > 1 else 0.0
+    ambiguous = second_score >= 0.80 * chosen_score
+
+    value = " ".join(_text(line) for line in chosen)
+    return _draft(value, chosen, ambiguous=ambiguous)
 
 
 def _extract_abv(lines: Sequence[OCRLine]) -> FieldDraft:
