@@ -346,7 +346,7 @@ The subsequent Community Cloud run reached the RapidOCR path but failed at `impo
 
 The current build has:
 
-- 52 fast tests passing;
+- 57 fast tests passing;
 - successful Python 3.11 Streamlit startup and real PaddleOCR/full-pipeline integration;
 - successful Python 3.14 dependency installation, Streamlit startup, real RapidOCR/ONNX inference, and full controlled label-to-result pipeline;
 - runtime backend factory and explicit override tests;
@@ -456,6 +456,20 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
   https://www.usajobs.gov/job/858700600
 
 ## 20. Change History
+
+### 2026-09-28 — Reviewer-ready built-in samples
+
+Seven full-resolution, web-optimized copies of the AI-generated prototype test labels were added to `assets/sample_labels/`. The Streamlit image-input row now offers a sample dropdown on the left, reviewer-upload in the middle, and the intentionally disabled camera control on the right.
+
+Controls:
+
+- reviewers do not need to download examples onto their workstation;
+- their own uploaded image takes precedence over a selected sample;
+- sample source appears with the preview;
+- no custom model training is claimed; existing OCR models plus benchmark-refined Python extraction are disclosed;
+- the earlier blind labels are included only after their first-run results were captured;
+- the synthetic samples are explicitly not certified regulatory examples;
+- fast tests now cover sample existence and selection priority (57 passing tests).
 
 ### 2026-09-28 — Blind holdout completed
 
