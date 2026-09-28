@@ -72,6 +72,10 @@ def test_streamlit_entrypoint_renders_initial_path_without_starting_ocr():
     namespace["main"]()
     called = [name for name, _ in fake.calls]
     assert "set_page_config" in called
+    assert any(
+        name == "markdown" and "Unofficial take-home prototype" in value
+        for name, value in fake.calls
+    )
     assert "radio" in called
     assert "columns" in called
     assert "file_uploader" in called
