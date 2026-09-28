@@ -25,6 +25,13 @@ class FakeStreamlit(types.ModuleType):
     def markdown(self, value):
         self.calls.append(("markdown", value))
 
+    def radio(self, label, options, **kwargs):
+        self.calls.append(("radio", label))
+        return options[0]
+
+    def info(self, value):
+        self.calls.append(("info", value))
+
     def text_input(self, label, value="", **kwargs):
         self.calls.append(("text_input", label))
         return value
