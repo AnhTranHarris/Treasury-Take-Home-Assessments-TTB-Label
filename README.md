@@ -96,8 +96,9 @@ The current fast suite has **52 tests**, and both real-OCR integration jobs pass
 
 ## Architecture
 
-The frozen v0.2 design baseline is documented here:
+The submission architecture and supporting decisions are documented here:
 
+- [Brief Documentation — Approach, Tools, Assumptions & Maturation Path](docs/BRIEF_DOCUMENTATION.md)
 - [Project Management & Delivery Record](PROJECT_MANAGEMENT.md)
 - [Architecture v0.3](docs/ARCHITECTURE.md)
 - [Performance Architecture](docs/PERFORMANCE_ARCHITECTURE.md)
@@ -115,7 +116,7 @@ Streamlit
     - PaddleOCR PP-OCRv5 mobile on Python < 3.14
     - RapidOCR + ONNX Runtime on Python 3.14
 + deterministic Python validation rules
-+ optional future Gemini image-text rescue path
++ human review for unresolved evidence
 ```
 
 Core principle:
@@ -127,7 +128,7 @@ Core principle:
 The default user workflow is:
 
 ```text
-upload / photograph label
+upload label image
         ↓
 one local OCR pass
         ↓
@@ -172,7 +173,7 @@ Current user inputs:
 - bottler / producer / importer name and address;
 - imported yes/no;
 - country of origin when imported;
-- one JPG/PNG label image or camera image.
+- one JPG/PNG label image.
 
 Current automated checks include:
 
@@ -208,13 +209,19 @@ Human-review advisories remain visible even when the supported automated result 
 
 The repository intentionally does **not** claim complete TTB compliance.
 
+### Submission scope decisions
+
+- **Live camera capture is disabled.** File upload is the tested path. Camera capture needs broader testing across mobile devices, browsers, permissions, orientation metadata, compression, lighting, and webcam hardware before it should be enabled.
+- **External generative-AI fallback is not implemented.** Before any Google Gemini or similar service could be used in a federal environment, the design would require additional cybersecurity, privacy, network, data-handling, authorization, and vendor/service review. Unresolved evidence therefore routes to a human reviewer.
+
+
 Current limitations include:
 
 - distilled spirits only;
 - one label image at a time;
 - local OCR first pass only in the current runnable slice;
 - targeted OCR retry is designed but not yet part of the first submitted code path;
-- Gemini rescue is designed but not yet enabled;
+- external generative-AI fallback is intentionally excluded pending federal cybersecurity, privacy, network, and authorization testing;
 - batch processing is deferred;
 - physical typography/container-geometry requirements remain human-review items;
 - composition-dependent disclosures such as sulfites, certain colors, age statements, and other conditional rules are documented but deferred from the core MVP;
@@ -229,7 +236,6 @@ The intended runtime model is:
 - lightweight input and image analysis may overlap where beneficial;
 - one cached/warm OCR engine performs local inference;
 - deterministic validation remains lightweight;
-- external AI fallback, if later enabled, is called only for unresolved cases;
 - uncertain evidence routes to human review rather than being guessed.
 
 The stakeholder target is approximately five seconds for a simple label. Current controlled GitHub Actions evidence includes:
