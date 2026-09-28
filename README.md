@@ -4,9 +4,11 @@ Prototype repository for the **AI-Powered Alcohol Label Verification App** take-
 
 ## Current Status
 
-**Requirements gate complete. The first distilled-spirits vertical slice is implemented in the repository and is moving through runtime/integration QC before deployment.**
+**Requirements gate complete. The distilled-spirits prototype now supports two user workflows, including a label-first auto-fill path designed for low-friction human review.**
 
-The current slice accepts application/reference fields plus one label image, performs local OCR, extracts supported evidence, applies deterministic Python checks, and returns a field-by-field **PASS / REVIEW / FAIL** prototype result with human-review advisories.
+**Quick Label Review** accepts one label image, performs local OCR once, spatially groups detected evidence, auto-fills TTB-oriented label fields beside the uploaded image, and flags uncertain/missing extraction for human review before deterministic label screening.
+
+**Compare to Reference** preserves the original application/reference comparison workflow and remains the path for independent consistency checking.
 
 PASS means the implemented automated checks passed. It is **not** a complete legal-compliance determination.
 
@@ -90,7 +92,7 @@ A separate **OCR integration** workflow verifies both supported runtime paths:
 - Python 3.11 + PaddleOCR/PaddlePaddle;
 - Python 3.14 + RapidOCR/ONNX Runtime.
 
-The current fast suite has 32 tests, and both real-OCR integration jobs pass.
+The current fast suite has **42 tests**, and both real-OCR integration jobs pass.
 
 ## Architecture
 
@@ -118,6 +120,45 @@ Streamlit
 Core principle:
 
 > **AI extracts evidence. Python rules determine the prototype result. Ambiguous cases go to a human reviewer.**
+
+## Quick Label Review Workflow
+
+The default user workflow is:
+
+```text
+upload / photograph label
+        ↓
+one local OCR pass
+        ↓
+spatial evidence grouping
+        ↓
+auto-fill core TTB-oriented fields
+        ↓
+human visually reviews yellow warnings beside image
+        ↓
+edit / confirm extracted values
+        ↓
+Run TTB label checks
+        ↓
+PASS / REVIEW / FAIL for supported label-screening rules
+```
+
+Core auto-fill fields are based on current TTB distilled-spirits labeling guidance:
+
+- brand name;
+- class/type designation;
+- alcohol content statement;
+- net contents;
+- bottler / producer / importer name and address;
+- import status;
+- country/origin when applicable;
+- government health warning.
+
+The UI also exposes conditional fields for age statements, specified color disclosures, and commodity statements. A blank conditional field is not treated as proof of compliance or noncompliance because applicability can depend on product facts not visible in the artwork.
+
+A provisional OCR-score review gate of **0.90** is used only to decide whether an auto-filled value should be visibly flagged for human review. It is **not** a compliance-confidence threshold and should be tuned against the benchmark label set.
+
+Label-derived values are not treated as independent application data. Use **Compare to Reference** when independent application/reference consistency is required.
 
 ## First Vertical Slice
 
