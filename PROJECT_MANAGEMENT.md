@@ -2,7 +2,7 @@
 
 **Project:** Treasury Take-Home Assessment — TTB Label Verification Prototype  
 **Status:** Active — compressed requirements-to-prototype delivery phase  
-**Last updated:** 2026-09-23  
+**Last updated:** 2026-09-27  
 **Internal stabilization/submission target:** Saturday, 2026-09-26 end of day  
 **Delivery approach:** Human-directed, ChatGPT-assisted, vertically sliced AI prototype development
 
@@ -189,7 +189,9 @@ No material rule should exist only because it was discussed in chat.
 |---|---|---|---|---|
 | OCR model exceeds free-host memory budget | Medium | High | One cached model; benchmark PaddleOCR; RapidOCR contingency | Open |
 | Streamlit deployment selects Python 3.14 where PaddlePaddle is unavailable | High (observed) | High | Runtime-conditioned dependencies; Paddle on Python 3.11–3.13, RapidOCR/ONNX on Python 3.14; dual-runtime CI | Mitigated in code |
-| Community Cloud lacks native OpenCV shared libraries | High (observed) | High | Root `packages.txt` installs `libgl1` and `libglib2.0-0`; app catches native OCR startup failures without fabricating a result | Mitigation active; redeploy pending |
+| Community Cloud lacks native OpenCV shared libraries | High (observed) | High | Root `packages.txt` installs `libgl1` and `libglib2.0-0`; app catches native OCR startup failures without fabricating a result | Mitigated |
+| Label-derived auto-fill confused with independent application data | Medium | High | Separate Quick Label Review from Compare to Reference; never reuse label-derived values as independent expected data | Controlled |
+| Auto-fill silently accepts wrong OCR | Medium | High | Editable fields beside image preview; yellow review notices for low-confidence/missing/ambiguous extraction; benchmark tuning | Active QC |
 | Simple-label latency exceeds stakeholder target | Medium | High | Adaptive preprocessing; bounded retries; measure deployed latency | Open |
 | OCR confidently reads incorrect text | Medium | High | Evidence display, conservative automation boundaries, targeted retry, REVIEW on conflict; real integration showed warning case instability, so capitalization is now advisory | Active / demonstrated |
 | Gemini/network unavailable | Medium | Medium | Local-first architecture; Gemini optional; REVIEW on fallback failure | Controlled |
@@ -327,7 +329,12 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 
 ### Current work
 
-Redeploy and validate the current dual-runtime first vertical slice on Streamlit Community Cloud.
+Validate the new label-first Quick Label Review workflow on Streamlit Community Cloud using the fixed benchmark set and real TTB sample evidence.
+
+The application now preserves two separate missions:
+
+- **Quick Label Review:** extract and auto-fill TTB-oriented fields from the label itself, require human review where extraction is uncertain, then run supported label presence/format checks;
+- **Compare to Reference:** independently compare label evidence with supplied application/reference information.
 
 The observed deployment selected Python 3.14.7, where `paddlepaddle==3.3.1` has no compatible wheel. Rather than weakening the validated Python 3.11/Paddle path, the repository now selects one local OCR backend by runtime: PaddleOCR on Python 3.11–3.13 and RapidOCR/ONNX Runtime on Python 3.14.
 
@@ -337,7 +344,7 @@ The subsequent Community Cloud run reached the RapidOCR path but failed at `impo
 
 The current build has:
 
-- 32 fast tests passing;
+- 42 fast tests passing;
 - successful Python 3.11 Streamlit startup and real PaddleOCR/full-pipeline integration;
 - successful Python 3.14 dependency installation, Streamlit startup, real RapidOCR/ONNX inference, and full controlled label-to-result pipeline;
 - runtime backend factory and explicit override tests;
@@ -447,6 +454,19 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
   https://www.usajobs.gov/job/858700600
 
 ## 20. Change History
+
+### 2026-09-27 — Label-first intake UX
+
+Implemented:
+
+- spatial evidence extraction for multi-panel labels;
+- label-derived auto-fill for core TTB-oriented fields;
+- side-by-side uploaded-label preview and editable extracted fields;
+- human-review notices for low-confidence/missing/ambiguous fields;
+- conditional disclosure inputs for age, specified colors, and commodity statements;
+- separate label-only screening rules;
+- preserved independent Compare to Reference workflow;
+- 42 passing fast tests plus green Python 3.11/Paddle and Python 3.14/RapidOCR integration jobs.
 
 ### 2026-09-23 — Python 3.14 deployment contingency activated
 
