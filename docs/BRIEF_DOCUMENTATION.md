@@ -10,7 +10,7 @@ This prototype helps a reviewer examine a distilled-spirits label image without 
 
 The default workflow is intentionally simple:
 
-1. upload a JPG/PNG label image;
+1. choose one of seven built-in synthetic sample labels or upload a JPG/PNG label image;
 2. local OCR extracts visible text and bounding boxes;
 3. deterministic Python logic groups likely TTB-oriented fields;
 4. the application auto-fills editable review fields beside the uploaded image;
@@ -21,6 +21,14 @@ A second **Compare to Reference** workflow preserves independent comparison agai
 
 The prototype does **not** claim complete legal or regulatory compliance.
 
+### Built-in reviewer examples
+
+Seven ChatGPT-generated label illustrations are included directly in the GitHub repository. A reviewer can select one from a dropdown beside the upload control instead of downloading test images onto a personal or government workstation. Uploading a different JPG/PNG remains available for independent testing; if both are selected, the uploaded image takes precedence.
+
+These are synthetic **development and stress-test fixtures**, not examples of TTB-approved artwork. Some deliberately contain damaged lettering, decoy panels, ambiguous quantities, and other inconsistencies. A PASS is limited to the checks actually implemented, and some samples should produce REVIEW or FAIL.
+
+**Training disclosure:** The project did not train or fine-tune a custom machine-learning model on the seven images. Existing OCR models extract text; the Python extraction rules were implemented and revised using the known development labels. Liberty Creek and Raven Creek were initially blind holdouts and were added as built-in examples only after the untouched first-run evaluations were recorded. Reviewers can use their own independent label to test generalization.
+
 ## 2. Why I chose this approach
 
 The take-home assignment emphasized a working core, usability, speed, explainability, and safe handling of uncertainty.
@@ -28,7 +36,7 @@ The take-home assignment emphasized a working core, usability, speed, explainabi
 I therefore favored a small vertical slice over a large platform:
 
 - one browser UI;
-- one image at a time;
+- one image at a time, selected from the built-in sample-label dropdown or uploaded independently;
 - one local OCR engine per runtime;
 - deterministic validation rules;
 - visible evidence and reasons;
@@ -105,7 +113,7 @@ The repository uses a layered test approach:
 
 At the current submission state:
 
-- **52 fast tests pass**;
+- **57 fast tests pass**;
 - Python 3.11 + PaddleOCR integration passes;
 - Python 3.14 + RapidOCR/ONNX integration passes;
 - a five-label deployed benchmark completed in approximately 2.55–4.09 seconds per label on the RapidOCR deployment path;
