@@ -1,4 +1,4 @@
-# TTB Label Verification Prototype — Architecture v0.3
+# TTB Label Verification Prototype — Architecture v0.4
 
 **Status:** LOCKED DESIGN BASELINE  
 **Purpose:** Prevent architecture drift and provide a single source of truth for implementation.  
@@ -21,7 +21,7 @@ The baseline stack is:
 - **PaddleOCR PP-OCRv5 mobile** — primary OCR/text-recognition engine.
 - **RapidFuzz** — tolerant comparison for fields where capitalization/punctuation differences can still represent the same value.
 - **Python deterministic validation rules** — final compliance comparison logic.
-- **Google Gemini image API** — optional last-resort text-extraction fallback only.
+- **External generative-AI fallback** — not implemented in the submitted prototype; any future use requires federal cybersecurity/privacy/network/authorization review.
 
 Primary open-source OCR project:
 - https://github.com/PaddlePaddle/PaddleOCR
@@ -30,7 +30,7 @@ Primary open-source OCR project:
 
 > AI extracts evidence. Python rules determine the prototype result. Ambiguous cases go to a human reviewer.
 
-Neither PaddleOCR nor Gemini is allowed to independently decide whether a label is compliant.
+No OCR or external AI service is allowed to independently decide whether a label is compliant.
 
 ## 4A. Dual User Workflows
 
@@ -80,7 +80,7 @@ Field extraction + OCR confidence
 usable    uncertain
    |         |
    |         v
-   |   optional Gemini fallback
+   |   unresolved evidence -> human review
    |   image -> visible text/fields only
    |         |
    |     +---+---+
@@ -113,48 +113,19 @@ The implementation must not promise recovery of text that is genuinely unreadabl
 
 Unreadable evidence routes to **REVIEW**, not a guessed answer.
 
-## 6. Gemini Fallback Rules
+## 6. External Generative-AI Fallback — Deferred
 
-Gemini is optional and must never be a hard dependency.
+The submitted prototype does not call Google Gemini or any other external generative-AI service.
 
-Gemini may be invoked only when the local pipeline cannot produce sufficiently trustworthy evidence, for example:
+Reason:
 
-- a required field is missing after local OCR;
-- OCR confidence for an important field falls below the configured threshold;
-- the government-warning text is incomplete or unreadable;
-- image quality remains difficult after preprocessing.
+- the working local OCR path is sufficient for the proof of concept;
+- unresolved cases can safely route to human review;
+- sending label images or extracted information to an external AI service would require additional cybersecurity, privacy, network, data-handling, vendor, and authorization review in a federal environment;
+- the take-home schedule did not provide enough time to validate those controls responsibly.
 
-The final numerical confidence threshold is **TBD and must be chosen from testing**, not invented in advance.
+A future production team could evaluate an external fallback only after the permitted data boundary, approved service, authentication/secrets approach, logging, failure behavior, and authorization requirements are defined.
 
-Gemini's job is limited to extracting visible text/structured fields. A conceptual request is:
-
-```text
-Extract only text visibly present on this alcohol label.
-
-Return these fields when visible:
-- brand_name
-- class_type
-- alcohol_content
-- net_contents
-- producer
-- country_of_origin
-- government_warning
-
-Do not infer missing information.
-Return null when a field cannot be read.
-Do not determine regulatory compliance.
-```
-
-### Fallback safety rules
-
-1. Gemini does not approve or reject labels.
-2. Gemini does not replace deterministic validation.
-3. If PaddleOCR and Gemini materially disagree on an important field, result = **REVIEW**.
-4. If Gemini is unavailable, times out, reaches quota, or is not configured, the application must continue functioning.
-5. If both recognition paths remain uncertain, result = **REVIEW**.
-6. The API key must never be committed to GitHub.
-7. Prototype images sent through the optional external service must be non-sensitive demonstration data only.
-8. Production federal use would require separate security, privacy, retention, network, and approved-service review.
 
 ## 7. Field Comparison Philosophy
 
@@ -247,7 +218,7 @@ Reason:      Warning capitalization is not trusted from one OCR read in the firs
 The UI should also show:
 
 - which OCR path was used;
-- whether Gemini fallback was required;
+- whether external generative-AI fallback was required;
 - relevant recognition confidence;
 - processing time;
 - reasons for PASS / REVIEW / FAIL.
@@ -276,7 +247,7 @@ The application should measure actual elapsed processing time.
 
 Do not claim the five-second target is achieved until deployment benchmarks confirm it.
 
-Gemini fallback may exceed the local-only path and should be treated as an exception path rather than the normal processing path.
+external generative-AI fallback may exceed the local-only path and should be treated as an exception path rather than the normal processing path.
 
 ## 12. MVP Scope
 
@@ -338,13 +309,13 @@ Examples:
 PaddleOCR succeeds
 -> validate normally
 
-PaddleOCR uncertain + Gemini succeeds
+Local OCR uncertain + external AI (future, not implemented)
 -> validate extracted evidence, indicate fallback used
 
-PaddleOCR uncertain + Gemini unavailable
+Local OCR uncertain
 -> REVIEW
 
-PaddleOCR and Gemini disagree materially
+Conflicting automated evidence (future case)
 -> REVIEW
 
 Image unreadable
@@ -394,7 +365,7 @@ Unexpected internal error
 │   │       ├── country_origin.py
 │   │       └── warning.py
 │   └── fallback/
-│       └── gemini.py
+│       └── external_ai.py (future / not implemented)
 ├── tests/
 │   ├── unit/
 │   ├── regression/
@@ -423,7 +394,7 @@ Do not silently change architecture based only on remembered chat context.
 
 A concise explanation of the design:
 
-> The prototype uses OpenCV to prepare label images and one local OCR backend selected for the deployment runtime. PaddleOCR remains the preferred path on compatible Python versions; RapidOCR with ONNX Runtime is the tested Python 3.14 deployment contingency. The application never runs both OCR engines simultaneously. Extracted fields are evaluated by deterministic Python rules, and uncertain evidence goes to human review. Gemini remains an optional future extraction-only fallback and never determines compliance.
+> The prototype uses OpenCV to prepare label images and one local OCR backend selected for the deployment runtime. PaddleOCR remains the preferred path on compatible Python versions; RapidOCR with ONNX Runtime is the tested Python 3.14 deployment contingency. The application never runs both OCR engines simultaneously. Extracted fields are evaluated by deterministic Python rules, and uncertain evidence goes to human review. External generative-AI fallback is intentionally deferred; unresolved evidence routes to human review.
 
 ## 18. Accepted v0.2 Refinements
 
