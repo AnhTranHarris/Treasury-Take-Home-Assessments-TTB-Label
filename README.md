@@ -2,6 +2,24 @@
 
 Prototype repository for the **AI-Powered Alcohol Label Verification App** take-home assessment.
 
+## Try the Live Prototype — No Installation Required
+
+**[▶ Open the live TTB Label Verification prototype](https://treasury-take-home-assessments-ttb-label-2wondh9piczdzjdlmp4cc.streamlit.app/)**
+
+The deployed application runs in your browser. **No GitHub clone, Python installation, account creation, or test-image download is needed** to try the built-in examples.
+
+1. Open the live application using the link above. Allow a moment for Streamlit to start if the app has been idle.
+2. Keep **Quick Label Review** selected. From the **Built-in sample labels** dropdown on the left, choose any of the seven included synthetic examples.
+3. Wait for the image to be read. Check the label preview against the automatically filled fields, paying attention to **yellow HUMAN REVIEW** notices.
+4. Correct any uncertain fields using the image as evidence and confirm the highlighted core fields after reviewing them.
+5. Select **Run TTB label checks** and read the supported **PASS / REVIEW / FAIL** screening result, explanations, and human-review advisories.
+
+**Test your own label:** Instead of a built-in sample, use the adjacent JPG/PNG upload area. An uploaded file takes precedence if a sample is also selected. Live camera capture is intentionally disabled.
+
+**Independent comparison:** Switch to **Compare to Reference** to enter expected application values separately and compare those with the label evidence. The built-in samples are development/test fixtures, not approved alcohol labels. A PASS indicates only that the checks implemented in this proof of concept passed; it is **not** an official TTB compliance determination.
+
+If you prefer to inspect or run the source locally, follow **Developer Quick Start (Local Installation)** below.
+
 ## Current Status
 
 **Requirements gate complete. The distilled-spirits prototype now supports two user workflows, including a label-first auto-fill path designed for low-friction human review.**
@@ -12,7 +30,7 @@ Prototype repository for the **AI-Powered Alcohol Label Verification App** take-
 
 PASS means the implemented automated checks passed. It is **not** a complete legal-compliance determination.
 
-## Quick Start
+## Developer Quick Start (Local Installation)
 
 **Python 3.11 is the preferred local-development/PaddleOCR target.** The runtime dependency set is now interpreter-aware: Python 3.11–3.13 use PaddleOCR/PaddlePaddle, while Python 3.14 uses the tested RapidOCR/ONNX Runtime deployment contingency.
 
