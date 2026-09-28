@@ -191,7 +191,8 @@ No material rule should exist only because it was discussed in chat.
 | Streamlit deployment selects Python 3.14 where PaddlePaddle is unavailable | High (observed) | High | Runtime-conditioned dependencies; Paddle on Python 3.11–3.13, RapidOCR/ONNX on Python 3.14; dual-runtime CI | Mitigated in code |
 | Community Cloud lacks native OpenCV shared libraries | High (observed) | High | Root `packages.txt` installs `libgl1` and `libglib2.0-0`; app catches native OCR startup failures without fabricating a result | Mitigated |
 | Label-derived auto-fill confused with independent application data | Medium | High | Separate Quick Label Review from Compare to Reference; never reuse label-derived values as independent expected data | Controlled |
-| Auto-fill silently accepts wrong OCR | Medium | High | Editable fields beside image preview; yellow review notices for low-confidence/missing/ambiguous extraction; benchmark tuning | Active QC |
+| Auto-fill silently accepts wrong OCR | Medium | High | Editable fields beside image preview; yellow review notices; unresolved core fields propagate to REVIEW | Mitigated / ongoing benchmark QC |
+| Blind-label overfitting | Medium | High | Keep two labels as untouched holdouts; capture both first-run outputs before any tuning; accept only generalizable fixes | Active control |
 | Simple-label latency exceeds stakeholder target | Medium | High | Adaptive preprocessing; bounded retries; measure deployed latency | Open |
 | OCR confidently reads incorrect text | Medium | High | Evidence display, conservative automation boundaries, targeted retry, REVIEW on conflict; real integration showed warning case instability, so capitalization is now advisory | Active / demonstrated |
 | Gemini/network unavailable | Medium | Medium | Local-first architecture; Gemini optional; REVIEW on fallback failure | Controlled |
@@ -329,7 +330,7 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 
 ### Current work
 
-Validate the new label-first Quick Label Review workflow on Streamlit Community Cloud using the fixed benchmark set and real TTB sample evidence.
+Run the two-label blind holdout test against the frozen, green label-first extraction build. Preserve both untouched first-run outputs before making any further extraction changes.
 
 The application now preserves two separate missions:
 
@@ -344,7 +345,7 @@ The subsequent Community Cloud run reached the RapidOCR path but failed at `impo
 
 The current build has:
 
-- 42 fast tests passing;
+- 52 fast tests passing;
 - successful Python 3.11 Streamlit startup and real PaddleOCR/full-pipeline integration;
 - successful Python 3.14 dependency installation, Streamlit startup, real RapidOCR/ONNX inference, and full controlled label-to-result pipeline;
 - runtime backend factory and explicit override tests;
@@ -454,6 +455,23 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
   https://www.usajobs.gov/job/858700600
 
 ## 20. Change History
+
+### 2026-09-27 — Five-label extraction refinement
+
+Evidence and implementation:
+
+- five deployed development labels completed on RapidOCR in 2.55–4.09 seconds (mean approximately 3.15 seconds);
+- benchmark failures localized primarily to field association rather than OCR recognition;
+- community research supported separating OCR from key-information extraction and using normalized bounding-box geometry;
+- explicit SPIRIT TYPE / ORIGIN anchors now outrank free-form guesses;
+- address extraction stops at section headings/URLs;
+- ABV/net contents return exact matched sub-values;
+- spatial street-address fallback added;
+- uncertain highlighted core fields propagate to REVIEW until human confirmation;
+- absent conditional disclosures no longer create automatic yellow warnings;
+- 52 fast tests pass;
+- both Python 3.11/Paddle and Python 3.14/RapidOCR integration paths pass;
+- two additional labels are reserved as blind holdouts.
 
 ### 2026-09-27 — Label-first intake UX
 
