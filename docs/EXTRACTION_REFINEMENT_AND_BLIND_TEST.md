@@ -115,3 +115,76 @@ A correct REVIEW is preferable to a confident wrong extraction.
 A blind-test defect should produce a new code change only if it represents a generalizable failure mode.
 
 > Generalize from the failure, not from the filename.
+
+## Blind-test results — completed
+
+The two holdout labels were run on the frozen build before further extraction tuning.
+
+### Blind label 1 — Liberty Creek
+
+Observed deployed result:
+
+- processing time: 5.51 seconds;
+- brand auto-fill: `LIBERTY CEK` — incorrect/partial, correctly routed to REVIEW because OCR confidence was 0.61;
+- class/type: `AMERICAN WHITE WHISKEY` — correct;
+- alcohol content: `50% ALC/VOL` — correct;
+- net contents: `750 mL` — correct candidate but routed to REVIEW because decoy values in a separate stress-test panel created multiple plausible candidates;
+- name/address: correct;
+- domestic/origin context: reasonable;
+- government warning: correct;
+- overall result: REVIEW.
+
+Important evidence: OCR also detected a separate `LIBERTY CREEK` instance at 0.888 confidence, showing that brand candidate selection favored a visually larger but lower-confidence damaged rendering.
+
+### Blind label 2 — Raven Creek
+
+Observed deployed result:
+
+- processing time: 3.49 seconds;
+- brand auto-fill: `RAVEN CREK` — incorrect/partial, correctly routed to REVIEW at 0.889 confidence;
+- class/type: `DISTILLED SPIRIT` — incorrect and incorrectly passed;
+- alcohol content: `50% ALC/VOL` — correct;
+- net contents: `750 mL` — correct candidate but routed to REVIEW because decoy values in a separate stress-test panel created multiple plausible candidates;
+- name/address: correct;
+- domestic/origin context: correct;
+- government warning: correct;
+- overall result: REVIEW.
+
+Critical evidence: OCR detected the structured pair `SPIRIT TYPE:` / `MOONSHINE` at 1.000 confidence. The current class extractor nevertheless ignored that structured value because its controlled class vocabulary did not include `moonshine`, then selected `DISTILLED SPIRIT`. This is a generalizable extraction defect, not an OCR failure.
+
+### New generalizable failure modes
+
+1. **Structured-key vocabulary rejection**
+   - An explicit key such as `SPIRIT TYPE:` should not discard a bounded, high-confidence value merely because that value is absent from a local class keyword list.
+   - Structured key/value evidence should outrank the fallback vocabulary heuristic.
+
+2. **Explicit non-product-region contamination**
+   - Both holdouts contain a separate panel explicitly labeled `NOT PART OF PRODUCT LABEL`.
+   - Decoy quantities in that panel caused false net-content ambiguity.
+   - Extraction should exclude OCR evidence spatially associated with an explicit non-product marker while retaining it in raw OCR evidence for auditability.
+
+3. **Brand salience versus OCR reliability**
+   - The current brand heuristic can prefer the physically largest text even when that OCR candidate is materially less reliable than a smaller duplicate/corroborating brand rendering.
+   - A future refinement should combine salience, OCR confidence, and corroborating candidates rather than selecting primarily by text-box size.
+   - On severely damaged brand artwork, REVIEW remains an acceptable outcome; the system must not guess merely to avoid human review.
+
+4. **Conditional commodity over-capture**
+   - Liberty auto-filled an incomplete marketing fragment ending in `distilled from` as a commodity statement.
+   - Conditional commodity extraction should require an actual commodity/object, not merely the trigger phrase.
+
+### Blind-test interpretation
+
+The blind test did **not** justify replacing the OCR engine or adding a large layout/VLM stack.
+
+The strongest new defects are deterministic extraction-policy issues:
+
+- trust explicit structured values more appropriately;
+- exclude explicitly marked non-product regions from regulatory field candidate generation;
+- improve brand candidate ranking without forcing uncertain damaged text to PASS;
+- tighten the optional commodity extractor.
+
+The human-review design performed as intended for damaged brand text and ambiguous net contents: uncertain fields stayed REVIEW rather than silently passing.
+
+### Post-blind change-control gate
+
+The holdout restriction is now satisfied. Further code changes are permitted, but each change must address one of the generalizable failure modes above and must be protected by regression tests representing the behavior rather than the label filename.
