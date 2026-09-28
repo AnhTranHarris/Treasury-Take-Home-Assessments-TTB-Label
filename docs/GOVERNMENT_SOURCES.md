@@ -301,3 +301,28 @@ Other files answer different questions:
 - `docs/REQUIREMENTS_MATRIX.md` — which individual government requirements are automated, conditional, or human-review items.
 
 This separation is intentional so regulatory sources can be reviewed or updated without rewriting the development protocol or application architecture.
+
+
+## Presentation / submission design references
+
+These official government sources inform presentation only; they do not create regulatory validation rules.
+
+### TTB.gov current site and 2024 redesign
+
+- **Agency:** Alcohol and Tobacco Tax and Trade Bureau
+- **Source:** https://www.ttb.gov/
+- **Supporting redesign note:** https://www.ttb.gov/ttbgov-has-new-look-and-feel
+- **Use in project:** visual hierarchy and presentation inspiration only — dark-blue agency-style header treatment, blue action hierarchy, light content areas, green accents, scan-friendly topic sections.
+- **Authority classification:** AGENCY WEBSITE / PRESENTATION REFERENCE
+- **Project dependency:** Streamlit visual presentation only.
+- **Important boundary:** the prototype does not use the TTB seal and is explicitly labeled as an unofficial take-home prototype.
+
+### OPM / USAJOBS federal résumé formatting guidance
+
+- **Agency:** U.S. Office of Personnel Management / USAJOBS
+- **OPM source:** https://www.opm.gov/policy-data-oversight/hiring-information/merit-hiring-plan-resources/agency-guidance-on-the-two-page-limit-on-resume-length.pdf
+- **USAJOBS source:** https://help.usajobs.gov/faq/application/documents/resume/what-to-include
+- **Use in project:** presentation baseline for restrained typography and spacing — sans-serif fonts, approximately 14-point title/heading scale, approximately 10-point body scale, and 0.5-inch document margins.
+- **Authority classification:** FEDERAL HIRING GUIDANCE / PRESENTATION REFERENCE
+- **Project dependency:** browser typography/spacing only.
+- **Important boundary:** résumé formatting recommendations are adapted for browser readability; they are not treated as web-accessibility requirements.
