@@ -39,7 +39,7 @@ The prototype must:
 | Stakeholder | Mission need | Project response |
 |---|---|---|
 | Sarah Chen — Deputy Director | Faster review, simple UX, eventual batch capability | Five-second target for simple labels, minimal UI, measured latency, batch deferred until core works |
-| Marcus Williams — IT Systems Administrator | Standalone prototype, network/firewall awareness, security/privacy discipline | Local-first OCR, no COLA integration, no persistent document store, Gemini optional only |
+| Marcus Williams — IT Systems Administrator | Standalone prototype, network/firewall awareness, security/privacy discipline | Local-first OCR, no COLA integration, no persistent document store, no external generative-AI runtime |
 | Dave Morrison — Senior Compliance Agent | Preserve regulatory judgment and avoid literal false mismatches | Tolerant comparison only where appropriate, explainable evidence, PASS / REVIEW / FAIL |
 | Jenny Park — Junior Compliance Agent | Exact warning checks and better handling of poor images | Deterministic warning rules, image-quality triage, targeted OCR retries, human review for unsupported visual requirements |
 
@@ -90,7 +90,7 @@ Current implementation state:
 - PASS / REVIEW / FAIL outcomes;
 - targeted evidence crops;
 - bounded OCR retries;
-- optional Gemini extraction fallback;
+- external generative-AI fallback deferred;
 - synthetic test labels;
 - automated tests;
 - deployed prototype.
@@ -145,7 +145,7 @@ Planned delivery sequence:
    - bounded retry behavior.
 
 5. **Vertical Slice 5 — External fallback**
-   - Gemini extraction only after local failure;
+   - external generative-AI fallback only after future federal security review;
    - no AI-generated compliance decision;
    - network/API failure routes safely to REVIEW.
 
@@ -177,7 +177,7 @@ No material rule should exist only because it was discussed in chat.
 | Local-first OCR | Cloud-first vision API | Marcus's network concern, resilience, privacy, explainability | Approved |
 | PaddleOCR PP-OCRv5 mobile preferred | Tesseract, EasyOCR, RapidOCR, cloud OCR | Strong modern OCR capability with local deployment path | Benchmark pending |
 | RapidOCR contingency | Run two OCR engines simultaneously | Lower-resource deployment option if PaddleOCR does not fit free hosting | Contingency only |
-| Gemini fallback | Gemini-first processing, multiple cloud LLMs | Useful for difficult images but should not become hard dependency | Approved as last resort |
+| External generative-AI fallback | Cloud AI backup for difficult images | Potentially useful, but requires federal cybersecurity/privacy/network/authorization review | Deferred / not implemented |
 | PASS / REVIEW / FAIL | Binary pass/fail | Preserves human judgment and handles uncertainty explicitly | Approved |
 | Bounded multi-pass OCR | Repeat same image indefinitely | Targeted retry improves evidence without uncontrolled latency | Approved |
 | Distilled spirits first | Beer + wine + spirits together | Matches assignment sample and controls regulatory scope | Approved |
@@ -193,9 +193,10 @@ No material rule should exist only because it was discussed in chat.
 | Label-derived auto-fill confused with independent application data | Medium | High | Separate Quick Label Review from Compare to Reference; never reuse label-derived values as independent expected data | Controlled |
 | Auto-fill silently accepts wrong OCR | Medium | High | Editable fields beside image preview; yellow review notices; unresolved core fields propagate to REVIEW | Mitigated / ongoing benchmark QC |
 | Blind-label overfitting | Medium | High | Keep two labels as untouched holdouts; capture both first-run outputs before any tuning; accept only generalizable fixes | Active control |
+| Live camera capture not sufficiently cross-device tested | High | Medium | Disable camera in submission; retain tested JPG/PNG upload path; document mobile/browser/device test needs | Scope-controlled |
 | Simple-label latency exceeds stakeholder target | Medium | High | Adaptive preprocessing; bounded retries; measure deployed latency | Open |
 | OCR confidently reads incorrect text | Medium | High | Evidence display, conservative automation boundaries, targeted retry, REVIEW on conflict; real integration showed warning case instability, so capitalization is now advisory | Active / demonstrated |
-| Gemini/network unavailable | Medium | Medium | Local-first architecture; Gemini optional; REVIEW on fallback failure | Controlled |
+| External AI service risk | Medium | High | No external generative-AI runtime in submission; local OCR + human REVIEW only | Avoided in current scope |
 | Regulatory rule implemented incorrectly | Low/Medium | High | Government-source registry, requirements matrix, test coverage, source hierarchy | Open until matrix complete |
 | Prototype scope expands beyond time budget | Medium | High | Vertical-slice rule, explicit non-goals, deferred feature list | Controlled |
 | Visual label requirements cannot be reliably inferred from pixels | High | Medium | Mark unsupported physical/typographic checks for human REVIEW | Controlled |
