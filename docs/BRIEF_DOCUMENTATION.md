@@ -58,6 +58,17 @@ Testing showed that OCR usually recognized the text well enough; many remaining 
 
 Exactly one OCR backend is active in a running process.
 
+### Open-source OCR foundations — GitHub project acknowledgments
+
+To complete a working prototype within the take-home schedule, I **integrated existing open-source OCR libraries instead of attempting to develop or train a new OCR engine**. The two upstream GitHub projects are:
+
+1. **[PaddleOCR — PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)**. Used as the preferred local text-detection and text-recognition engine, configured with PP-OCRv5 mobile models for the supported Python 3.11–3.13 path. PaddlePaddle provides the inference framework.
+2. **[RapidOCR — RapidAI/RapidOCR](https://github.com/RapidAI/RapidOCR)**. Used as the alternative local OCR engine with ONNX Runtime for the Python 3.14 deployment path, where the pinned PaddlePaddle dependency does not have a compatible wheel.
+
+Using these established projects saved the time and complexity of creating OCR detection/recognition models from scratch and let me focus the limited assignment window on **TTB-specific field extraction, spatial grouping, deterministic checks, the reviewer interface, human-review safeguards, and testing**. I wrote project-specific provider adapters to convert each engine's outputs into a shared representation of detected text, OCR confidence, and bounding boxes; those adapters are in `src/ocr/`. The two engines are **runtime alternatives**, not a combined two-model voting system; one is selected per run.
+
+**Attribution and scope:** PaddleOCR and RapidOCR are independent open-source projects, not code or models authored by me or ChatGPT. The prototype uses their existing OCR capabilities through Python dependencies and does not train or fine-tune either engine on the seven synthetic labels. The custom work in this repository is the surrounding application and its extraction/validation workflow.
+
 ### AI-assisted development
 
 ChatGPT was used as a development collaborator for research, architecture discussion, coding assistance, test design, debugging, documentation, and review.
