@@ -35,36 +35,15 @@ I am still developing my programming skills and do not have deep formal software
 
 For quality control, I applied project-management practices I am learning from **PMI's CPMAI approach to AI projects**; this was a learning framework, not a certification or a claim of professional project-manager experience. I broke the work into small, usable stages, documented assumptions and risks, checked code changes with automated tests, and compared actual label results against expected behavior before accepting improvements. When testing exposed unreliable extraction, I kept uncertain fields available for human review rather than claiming the AI was always correct. This approach helped me complete and explain a bounded proof of concept while identifying what would require more training, testing, and federal security review before production use.
 
-## 3. Tools used
+## 3. Tools used and why I chose them
 
-### Application
+**ChatGPT** was my most natural development interface because I am still learning to program. I used it to discuss requirements, research options, help write and debug Python, and develop tests. I remained responsible for scope decisions, inspecting results, and deciding whether the work met the assignment.
 
-- **Python** — orchestration, extraction, validation, tests.
-- **Streamlit** — browser interface and prototype deployment.
-- **OpenCV** — image decode/resize preparation.
-- **PaddleOCR / PaddlePaddle** — preferred local OCR path on Python 3.11–3.13.
-- **RapidOCR / ONNX Runtime** — tested deployment contingency on Python 3.14.
-- **GitHub / GitHub Actions** — source control, change history, fast tests, and real-OCR integration checks.
-- **pytest** — deterministic regression tests.
+**GitHub** gave me a shared coding workspace, access to established open-source projects, version history, and automated testing through GitHub Actions. **Streamlit** let me turn Python code into a working browser application deployed from the GitHub repository without building a separate front-end system. I used **Python** for the application and rules, **OpenCV** for image preparation, and **pytest** for regression checks.
 
-Exactly one OCR backend is active in a running process.
+Instead of building an OCR engine, I integrated two independently maintained GitHub projects: [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR), used with PaddlePaddle on Python 3.11–3.13, and [RapidOCR](https://github.com/RapidAI/RapidOCR), used with ONNX Runtime on Python 3.14. One engine runs at a time. Neither OCR project is my own, and no custom OCR model was trained on the sample labels.
 
-### Open-source OCR foundations — GitHub project acknowledgments
-
-To complete a working prototype within the take-home schedule, I **integrated existing open-source OCR libraries instead of attempting to develop or train a new OCR engine**. The two upstream GitHub projects are:
-
-1. **[PaddleOCR — PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR)**. Used as the preferred local text-detection and text-recognition engine, configured with PP-OCRv5 mobile models for the supported Python 3.11–3.13 path. PaddlePaddle provides the inference framework.
-2. **[RapidOCR — RapidAI/RapidOCR](https://github.com/RapidAI/RapidOCR)**. Used as the alternative local OCR engine with ONNX Runtime for the Python 3.14 deployment path, where the pinned PaddlePaddle dependency does not have a compatible wheel.
-
-Using these established projects saved the time and complexity of creating OCR detection/recognition models from scratch and let me focus the limited assignment window on **TTB-specific field extraction, spatial grouping, deterministic checks, the reviewer interface, human-review safeguards, and testing**. I wrote project-specific provider adapters to convert each engine's outputs into a shared representation of detected text, OCR confidence, and bounding boxes; those adapters are in `src/ocr/`. The two engines are **runtime alternatives**, not a combined two-model voting system; one is selected per run.
-
-**Attribution and scope:** PaddleOCR and RapidOCR are independent open-source projects, not code or models authored by me or ChatGPT. The prototype uses their existing OCR capabilities through Python dependencies and does not train or fine-tune either engine on the seven synthetic labels. The custom work in this repository is the surrounding application and its extraction/validation workflow.
-
-### AI-assisted development
-
-ChatGPT was used as a development collaborator for research, architecture discussion, coding assistance, test design, debugging, documentation, and review.
-
-I retained human control over scope, acceptance, regulatory assumptions, and submission decisions. Source documents, tests, deployment evidence, and reproducible behavior are treated as stronger authority than an AI-generated suggestion.
+I deliberately avoided custom model training, complicated AI orchestration, and external AI services. Given the short deadline and my AI-assisted development process, those choices would add integration, security, and testing risks I could not responsibly validate. A smaller, explainable system with automated checks and human review was more useful for this proof of concept; advanced capabilities would need a separate, properly resourced evaluation.
 
 ## 4. Assumptions
 
