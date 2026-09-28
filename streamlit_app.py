@@ -142,10 +142,38 @@ def _render_quick_review() -> None:
             _review_marker("Commodity statement", draft.commodity_statement)
             commodity_statement = st.text_input("Commodity statement (if applicable)", key="intake_commodity")
 
+    core_review_fields = {
+        "brand": draft.brand,
+        "class_type": draft.class_type,
+        "alcohol_content": draft.alcohol_content,
+        "net_contents": draft.net_contents,
+        "name_address": draft.name_address,
+        "imported": draft.imported,
+        "government_warning": draft.government_warning,
+    }
+    if imported:
+        core_review_fields["country_origin"] = draft.country_origin
+
+    highlighted_fields = tuple(
+        key for key, field_draft in core_review_fields.items() if field_draft.review_required
+    )
+
     st.caption(
         "Yellow review notices mean OCR/extraction confidence is insufficient for silent acceptance. "
         "Visually inspect the uploaded label and edit the field before running the TTB checks."
     )
+
+    review_confirmed = True
+    if highlighted_fields:
+        review_confirmed = st.checkbox(
+            "I visually reviewed the highlighted core fields against the uploaded label.",
+            value=False,
+            key="intake_review_confirmed",
+        )
+        if not review_confirmed:
+            st.info(
+                "You can run the checks now, but highlighted core fields will remain REVIEW until you confirm them."
+            )
 
     if not st.button("Run TTB label checks", type="primary", key="quick_run_checks"):
         with st.expander("OCR evidence"):
@@ -167,6 +195,7 @@ def _render_quick_review() -> None:
             age_statement=age_statement,
             color_disclosure=color_disclosure,
             commodity_statement=commodity_statement,
+            unresolved_review_fields=() if review_confirmed else highlighted_fields,
         )
     )
 
