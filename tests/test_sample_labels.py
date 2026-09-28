@@ -27,7 +27,7 @@ def test_all_seven_repository_samples_are_present_and_valid_jpegs():
         path = SAMPLE_LABEL_DIR / filename
         assert path.is_file(), name
         contents = path.read_bytes()
-        assert contents[:2] == b"\\xff\\xd8".decode("unicode_escape").encode("latin1")
+        assert contents[:2] == bytes([0xFF, 0xD8])
         assert len(contents) > 100_000, name
 
 
