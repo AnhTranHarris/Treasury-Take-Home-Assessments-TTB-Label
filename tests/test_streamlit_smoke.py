@@ -28,7 +28,7 @@ class FakeStreamlit(types.ModuleType):
     def caption(self, value):
         self.calls.append(("caption", value))
 
-    def markdown(self, value):
+    def markdown(self, value, **kwargs):
         self.calls.append(("markdown", value))
 
     def radio(self, label, options, **kwargs):
