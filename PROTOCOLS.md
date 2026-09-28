@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.10  
+**Protocol version:** 1.11  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -211,6 +211,12 @@ For the submitted prototype:
 - a future external-AI design requires explicit cybersecurity, privacy, network, data-handling, vendor/service, and authorization review for the target federal environment.
 
 Submission readiness takes priority over additional feature breadth.
+
+### Built-in reviewer fixture rule
+
+The application may expose the seven ChatGPT-generated benchmark/stress labels from the repository in a built-in selector. They are synthetic test fixtures, not TTB-approved labels, and their use for testing is not model training. The existing OCR engines remain pretrained; deterministic Python extraction logic was informed by development testing. Two examples were initially blind holdouts, and their original evaluation outputs must remain independently documented.
+
+Reviewer-uploaded files take precedence over selected samples, and label-derived intake data must never be treated as independent application data. Preserve the reviewer-upload workflow for testing novel labels. Do not silently alter the frozen extraction logic when adding demo conveniences.
 
 ## 9. Architecture Change Protocol
 
@@ -777,9 +783,9 @@ The repository should make that process auditable without requiring a reviewer t
 
 ## 22. Current Handoff Snapshot
 
-**Date:** 2026-09-27  
-**Protocol version:** 1.9  
-**Architecture version:** v0.3  
+**Date:** 2026-09-28  
+**Protocol version:** 1.11  
+**Architecture version:** v0.4  
 **Latest relevant implementation/test commit before this snapshot update:** `a627eeb7e01ffef6b43728ede93e70a8bf2b5b50`
 
 ### Current phase
@@ -819,7 +825,7 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - rapid interview-preparation window established through approximately September 30;
 - TTB requirements matrix completed and first implementation slice locked;
 - first runnable Streamlit → PaddleOCR → extraction → deterministic validation slice implemented;
-- 52 fast tests passing on the current main head;
+- 57 fast tests passing on the current main head;
 - real PaddleOCR/full-pipeline integration passing on the current main head;
 - Paddle 3.3 CPU oneDNN incompatibility identified and controlled by disabling MKL-DNN for the OCR engine;
 - OCR warning-heading capitalization instability identified from integration evidence and moved to human-review advisory rather than false FAIL;
@@ -860,6 +866,16 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.11 — 2026-09-28
+
+Added:
+
+- seven built-in AI-generated demo labels stored in GitHub;
+- optional selector beside reviewer upload, with upload precedence;
+- explicit non-training and non-certification disclosures;
+- initial blind-holdout provenance for two damaged-label examples;
+- sample-selection tests and submission reviewer-friction reduction.
 
 ### 1.10 — 2026-09-28
 
