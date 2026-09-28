@@ -27,6 +27,7 @@ def _apply_federal_theme() -> None:
             --ttb-navy: #16365C;
             --ttb-blue: #005EA8;
             --ttb-green: #2E8540;
+            --ttb-gold: #8A6500;
             --ttb-light-blue: #E7F3F8;
             --ttb-light-gray: #F4F5F6;
             --ttb-border: #AEB0B5;
@@ -111,6 +112,40 @@ def _apply_federal_theme() -> None:
             background: var(--ttb-light-gray) !important;
             border: 1px solid var(--ttb-border) !important;
             border-radius: 2px !important;
+            color: var(--ttb-gold) !important;
+        }
+
+        div[data-testid="stFileUploaderDropzone"] *,
+        div[data-testid="stFileUploaderDropzone"] button,
+        div[data-testid="stFileUploaderDropzone"] small,
+        div[data-testid="stFileUploaderDropzone"] span,
+        div[data-testid="stFileUploaderDropzone"] p {
+            color: var(--ttb-gold) !important;
+        }
+
+        div[data-testid="stFileUploaderDropzone"] svg {
+            color: var(--ttb-gold) !important;
+            fill: currentColor !important;
+        }
+
+        .stButton > button:disabled,
+        .stButton > button:disabled *,
+        button[disabled],
+        button[disabled] * {
+            color: var(--ttb-gold) !important;
+            -webkit-text-fill-color: var(--ttb-gold) !important;
+        }
+
+        input:disabled,
+        textarea:disabled,
+        [aria-disabled="true"] {
+            color: var(--ttb-gold) !important;
+            -webkit-text-fill-color: var(--ttb-gold) !important;
+        }
+
+        [data-baseweb="input"] input,
+        [data-baseweb="textarea"] textarea {
+            color: var(--ttb-text) !important;
         }
 
         .stButton > button,
@@ -242,11 +277,11 @@ def _label_image_input(key_prefix: str):
             min-height: 68px !important;
             height: 68px !important;
             background: var(--st-secondary-background-color) !important;
-            color: var(--st-text-color) !important;
+            color: var(--ttb-gold) !important;
             border: 1px solid var(--st-border-color) !important;
             border-radius: var(--st-base-radius) !important;
             font-weight: 600 !important;
-            opacity: 0.45 !important;
+            opacity: 0.72 !important;
             cursor: not-allowed !important;
             justify-content: center !important;
         }}
