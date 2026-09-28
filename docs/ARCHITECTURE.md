@@ -1,4 +1,4 @@
-# TTB Label Verification Prototype — Architecture v0.2
+# TTB Label Verification Prototype — Architecture v0.3
 
 **Status:** LOCKED DESIGN BASELINE  
 **Purpose:** Prevent architecture drift and provide a single source of truth for implementation.  
@@ -8,7 +8,7 @@
 
 Build a small, working proof-of-concept for the Treasury/TTB take-home assignment.
 
-The prototype should help a compliance reviewer compare information visible on an alcohol label against application data, return an explainable result, and route uncertain cases to a human reviewer.
+The prototype should support both a low-friction label-first screening workflow and an independent application/reference comparison workflow, return explainable results, and route uncertain cases to a human reviewer.
 
 This is **not** a production COLA replacement and should not attempt production-scale federal integration.
 
@@ -31,6 +31,34 @@ Primary open-source OCR project:
 > AI extracts evidence. Python rules determine the prototype result. Ambiguous cases go to a human reviewer.
 
 Neither PaddleOCR nor Gemini is allowed to independently decide whether a label is compliant.
+
+## 4A. Dual User Workflows
+
+### Quick Label Review — default low-friction path
+
+```text
+upload / photograph label
+        ↓
+one local OCR pass
+        ↓
+spatial grouping from OCR boxes
+        ↓
+auto-fill TTB-oriented fields
+        ↓
+image preview + editable fields
+        ↓
+uncertain/missing field => yellow human-review notice
+        ↓
+human confirm/edit
+        ↓
+deterministic label presence/format screening
+```
+
+This workflow uses the label as the evidence source. It does **not** claim independent agreement with a COLA/application record.
+
+### Compare to Reference — independent consistency path
+
+The original application/reference workflow remains available separately. It compares supplied expected values against label evidence and must never silently seed expected values from the same label.
 
 ## 4. Processing Pipeline
 
@@ -428,3 +456,27 @@ Streamlit
 The dual-provider code is a deployment compatibility strategy, not an ensemble. Exactly one local OCR provider is instantiated in a running process.
 
 No application code should contradict this architecture unless this document is deliberately revised first.
+
+
+## 20. Auto-fill field scope — v0.3
+
+Current TTB-oriented Quick Label Review fields:
+
+- brand name;
+- class/type designation;
+- alcohol content statement;
+- net contents;
+- name/address;
+- imported yes/no;
+- country/origin when applicable;
+- government warning.
+
+Conditional review fields:
+
+- age statement;
+- specified color ingredient disclosure;
+- commodity statement.
+
+TTB requires brand name, class/type designation, and alcohol content in the same field of vision. The prototype may use bounding boxes as review evidence but does not claim that a flattened image proves legal physical-container geometry.
+
+Low OCR confidence is a routing signal for human review, not a legal/compliance probability. The initial 0.90 review threshold is provisional and must be benchmark-tuned.
