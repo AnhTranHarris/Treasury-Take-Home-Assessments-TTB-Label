@@ -2,7 +2,7 @@
 
 **Status:** MVP regulatory implementation gate  
 **Scope:** Distilled spirits only  
-**Reviewed:** 2026-09-23  
+**Reviewed:** 2026-09-27  
 **Source basis:** Current official TTB distilled-spirits labeling guidance, TTB Mandatory Label Information Checklist, 27 CFR references identified by TTB, and CBP country-of-origin dependency where applicable.
 
 ## 1. Purpose
@@ -279,3 +279,57 @@ It does **not** authorize:
 - allowing Gemini to make PASS/FAIL decisions.
 
 Any material expansion should follow the repository change-control protocol.
+
+
+## 13. Quick Label Review — Label-Derived Intake
+
+This mode is separate from application consistency.
+
+The uploaded distilled-spirits label is OCR'd once and used to populate editable intake fields. The human visually confirms uncertain extraction beside the uploaded image before running supported label-screening rules.
+
+### Core extracted fields
+
+| Intake field | TTB basis | Quick-review behavior |
+|---|---|---|
+| Brand name | Mandatory; same field of vision with class/type and alcohol content | Auto-fill candidate; missing/ambiguous => human review |
+| Class/type designation | Mandatory; same field of vision with brand and alcohol content | Auto-fill candidate using spatial/keyword evidence |
+| Alcohol content | Mandatory percent alcohol by volume | Auto-fill visible statement; deterministic format check |
+| Net contents | Mandatory; may appear on any label or container in permitted forms | Auto-fill visible metric statement |
+| Name/address | Mandatory bottler/distiller/processor/importer statement | Auto-fill candidate; human review if grouping is uncertain |
+| Imported? | Derived intake context, not itself a TTB label field | Infer from explicit import/origin language; ambiguous => human review |
+| Country/origin | Required for imports | Auto-fill origin phrase; evaluate only when import status applies |
+| Government health warning | Mandatory | Spatially isolate warning region; compare supported textual content after human review |
+
+### Conditional extracted fields
+
+- Age statement;
+- specified color ingredient disclosure;
+- commodity statement.
+
+These fields remain CONDITIONAL because product age/composition facts may be required to know whether the disclosure is mandatory. Absence from OCR must not be interpreted as NOT APPLICABLE.
+
+### Confidence/review behavior
+
+The current implementation uses OCR confidence plus extraction ambiguity to decide whether a field receives a visible human-review warning. The initial OCR-score threshold is 0.90.
+
+This threshold:
+
+- is provisional;
+- is intended only for UI triage;
+- is not a regulatory threshold;
+- is not a probability of compliance;
+- must be tuned using the fixed benchmark-label set and real-label evidence.
+
+### Non-circularity rule
+
+Label-derived auto-fill values must never be silently treated as independent application/reference values.
+
+Quick Label Review answers:
+
+> What required/conditional label information can we detect and screen from this image?
+
+Compare to Reference answers:
+
+> Does the detected label evidence agree with separately supplied expected/application data?
+
+The two questions remain separate in code and UI.
