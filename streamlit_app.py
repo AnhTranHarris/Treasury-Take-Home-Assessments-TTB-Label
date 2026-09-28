@@ -36,12 +36,12 @@ def _review_marker(label: str, draft: FieldDraft) -> None:
 
 
 def _label_image_input(key_prefix: str):
-    popover_key = f"{key_prefix}_camera_popover"
+    camera_key = f"{key_prefix}_camera_disabled"
 
     st.markdown(
         f"""
         <style>
-        .st-key-{popover_key} button {{
+        .st-key-{camera_key} button {{
             width: 100% !important;
             min-height: 68px !important;
             height: 68px !important;
@@ -50,13 +50,9 @@ def _label_image_input(key_prefix: str):
             border: 1px solid var(--st-border-color) !important;
             border-radius: var(--st-base-radius) !important;
             font-weight: 600 !important;
+            opacity: 0.45 !important;
+            cursor: not-allowed !important;
             justify-content: center !important;
-        }}
-
-        .st-key-{popover_key} button:hover {{
-            background: var(--st-secondary-background-color) !important;
-            border-color: var(--st-primary-color) !important;
-            color: var(--st-text-color) !important;
         }}
 
         [data-testid="stFileUploaderDropzone"] {{
@@ -82,19 +78,16 @@ def _label_image_input(key_prefix: str):
         )
 
     with photo_col:
-        with st.popover(
+        st.button(
             "Take a photo",
             icon=":material/photo_camera:",
+            disabled=True,
             width="stretch",
-            key=popover_key,
-        ):
-            camera = st.camera_input(
-                "Camera",
-                key=f"{key_prefix}_camera",
-                label_visibility="collapsed",
-            )
+            key=camera_key,
+            help="Live camera capture is disabled in this prototype pending broader mobile/browser/camera-device testing.",
+        )
 
-    return uploaded or camera
+    return uploaded
 
 
 def _seed_intake_state(image_digest: str, draft) -> None:
@@ -124,7 +117,7 @@ def _render_quick_review() -> None:
     selected_image = _label_image_input("quick_label")
 
     if selected_image is None:
-        st.info("Upload or photograph one distilled-spirits label to begin.")
+        st.info("Upload one distilled-spirits label image to begin. Live camera capture is intentionally disabled in this prototype.")
         return
 
     image_bytes = selected_image.getvalue()
