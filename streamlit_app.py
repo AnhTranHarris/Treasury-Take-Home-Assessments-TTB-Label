@@ -34,8 +34,25 @@ def _apply_federal_theme() -> None:
             --ttb-muted: #5C5C5C;
         }
 
+        html, body, .stApp, [data-testid="stAppViewContainer"], section[data-testid="stMain"] {
+            background: #FFFFFF !important;
+            color: var(--ttb-text) !important;
+        }
+
         .stApp {
             font-family: "Source Sans 3", "Source Sans Pro", Arial, Helvetica, sans-serif;
+        }
+
+        [data-testid="stHeader"] {
+            background: rgba(255, 255, 255, 0.96) !important;
+        }
+
+        [data-testid="stWidgetLabel"],
+        [data-testid="stMarkdownContainer"],
+        [data-testid="stText"],
+        div[role="radiogroup"] label,
+        .stCheckbox label {
+            color: var(--ttb-text) !important;
         }
 
         .block-container {
