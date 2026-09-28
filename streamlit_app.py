@@ -10,6 +10,7 @@ from src.ocr.interface import OCRProvider
 from src.orchestration.intake import analyze_label_intake
 from src.orchestration.verifier import VerificationExecutionError, verify_label
 from src.presentation import overall_message, result_rows
+from src.sample_labels import NO_SAMPLE, SAMPLE_LABELS, select_label_image
 from src.validation.label_screening import LabelScreeningInput, screen_label
 from src.validation.models import ApplicationReference, Status
 
@@ -297,8 +298,17 @@ def _label_image_input(key_prefix: str):
         unsafe_allow_html=True,
     )
 
-    st.markdown("**Upload a JPG or PNG label image**")
-    upload_col, photo_col = st.columns([4, 1], gap="small")
+    st.markdown("**Choose a built-in sample label or upload your own JPG/PNG image**")
+    sample_col, upload_col, photo_col = st.columns([1.6, 3.2, 1.2], gap="small")
+
+    with sample_col:
+        sample_name = st.selectbox(
+            "Built-in sample labels",
+            options=[NO_SAMPLE, *SAMPLE_LABELS.keys()],
+            key=f"{key_prefix}_sample",
+            label_visibility="collapsed",
+            help="Seven AI-generated development and stress-test labels are included in this repository.",
+        )
 
     with upload_col:
         uploaded = st.file_uploader(
@@ -318,7 +328,14 @@ def _label_image_input(key_prefix: str):
             help="Live camera capture is disabled in this prototype pending broader mobile/browser/camera-device testing.",
         )
 
-    return uploaded
+    st.caption(
+        "Samples were AI-generated with ChatGPT for development/testing and are not certified TTB labels. "
+        "They were not used to train a custom model. You can upload your own label instead."
+    )
+    if uploaded is not None and sample_name != NO_SAMPLE:
+        st.info("Your uploaded file is being used instead of the selected built-in sample.")
+
+    return select_label_image(sample_name, uploaded)
 
 
 def _seed_intake_state(image_digest: str, draft) -> None:
@@ -326,6 +343,7 @@ def _seed_intake_state(image_digest: str, draft) -> None:
         return
 
     st.session_state["intake_image_digest"] = image_digest
+    st.session_state["intake_review_confirmed"] = False
     st.session_state["intake_brand"] = draft.brand.value or ""
     st.session_state["intake_class_type"] = draft.class_type.value or ""
     st.session_state["intake_alcohol_content"] = draft.alcohol_content.value or ""
@@ -348,7 +366,7 @@ def _render_quick_review() -> None:
     selected_image = _label_image_input("quick_label")
 
     if selected_image is None:
-        st.info("Upload one distilled-spirits label image to begin. Live camera capture is intentionally disabled in this prototype.")
+        st.info("Select a built-in sample or upload your own distilled-spirits label to begin. Live camera capture is disabled.")
         return
 
     image_bytes = selected_image.getvalue()
@@ -372,7 +390,12 @@ def _render_quick_review() -> None:
     left, right = st.columns([1.0, 1.15], gap="large")
 
     with left:
-        st.image(image_bytes, caption="Uploaded label — visually confirm any yellow review fields.", use_container_width=True)
+        st.image(
+            image_bytes,
+            caption=f"{'Built-in sample' if selected_image.source == 'sample' else 'Uploaded file'}: "
+                    f"{selected_image.name} — visually confirm any yellow review fields.",
+            use_container_width=True,
+        )
         st.metric("OCR extraction time", f"{intake_run.elapsed_seconds:.2f} seconds")
         st.caption(f"Local OCR backend: {choose_ocr_backend().upper()}")
 
