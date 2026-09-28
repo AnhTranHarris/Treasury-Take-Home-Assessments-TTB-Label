@@ -8,6 +8,12 @@ class FakeStreamlit(types.ModuleType):
         super().__init__("streamlit")
         self.calls = []
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        return False
+
     def cache_resource(self, *args, **kwargs):
         def decorator(func):
             return func
@@ -44,6 +50,14 @@ class FakeStreamlit(types.ModuleType):
         self.calls.append(("checkbox", label))
         return value
 
+    def columns(self, spec, **kwargs):
+        self.calls.append(("columns", spec))
+        return [self for _ in spec]
+
+    def popover(self, label, **kwargs):
+        self.calls.append(("popover", label))
+        return self
+
     def file_uploader(self, *args, **kwargs):
         self.calls.append(("file_uploader", args[0]))
         return None
@@ -67,6 +81,8 @@ def test_streamlit_entrypoint_renders_initial_path_without_starting_ocr():
     called = [name for name, _ in fake.calls]
     assert "set_page_config" in called
     assert "radio" in called
+    assert "columns" in called
     assert "file_uploader" in called
+    assert "popover" in called
     assert "camera_input" in called
     assert "info" in called
