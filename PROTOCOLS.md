@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.7  
+**Protocol version:** 1.8  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -162,6 +162,25 @@ PaddleOCR/RapidOCR provide local recognition.
 Gemini is optional and last-resort only.
 
 Deterministic Python rules produce the supported PASS / REVIEW / FAIL result.
+
+### Label-first intake boundary
+
+The default low-friction workflow may auto-fill TTB-oriented fields from the uploaded alcohol label.
+
+This is a **label-screening/intake workflow**, not an independent application-consistency comparison.
+
+Rules:
+
+- extracted label values may populate editable intake fields;
+- uncertain, missing, or ambiguous extraction must be visibly routed to human review beside the label preview;
+- a provisional OCR-score threshold may trigger a review indicator, but must never be represented as a compliance probability;
+- the current provisional review threshold is 0.90 and must be tuned from benchmark evidence rather than treated as a regulatory threshold;
+- human edits/confirmation may be used for label-screening checks;
+- label-derived values must not be silently reused as the independent expected/reference values in the Compare to Reference workflow;
+- Compare to Reference remains separate whenever the assignment/application data is available;
+- conditional requirements such as age, color, and commodity disclosures remain REVIEW/CONDITIONAL unless product facts establish applicability.
+
+The UI should prefer one obvious label upload action, image preview, auto-filled editable fields, and visible yellow review notices over forcing a nontechnical user to type every field manually.
 
 ## 9. Architecture Change Protocol
 
@@ -729,13 +748,13 @@ The repository should make that process auditable without requiring a reviewer t
 ## 22. Current Handoff Snapshot
 
 **Date:** 2026-09-23  
-**Protocol version:** 1.7  
-**Architecture version:** v0.2  
+**Protocol version:** 1.8  
+**Architecture version:** v0.3  
 **Latest relevant implementation/test commit before this snapshot update:** `46d6f03a6d488ad7aba7a06ebe9ad3b93f3ba925`
 
 ### Current phase
 
-Compressed prototype stabilization and deployment: the first vertical slice is implemented; the Python 3.14 RapidOCR path reached Community Cloud but exposed a native OpenCV shared-library dependency. The repository now declares the required Debian libraries in `packages.txt`, and the Python 3.14 CI path passes with the same system-package installation. The next gate is a fresh Community Cloud redeploy and real deployed latency/resource validation.
+User-experience and spatial-extraction refinement: Community Cloud is operational on the RapidOCR path, a real TTB sample was processed successfully, and the repository now implements a default label-first auto-fill review workflow while preserving the independent reference-comparison path. Next gate: redeploy current main, exercise the benchmark labels, and tune extraction/review heuristics from measured results.
 
 ### Locked decisions
 
@@ -770,7 +789,7 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 - rapid interview-preparation window established through approximately September 30;
 - TTB requirements matrix completed and first implementation slice locked;
 - first runnable Streamlit → PaddleOCR → extraction → deterministic validation slice implemented;
-- 32 fast tests passing on the current main head;
+- 42 fast tests passing on the current main head;
 - real PaddleOCR/full-pipeline integration passing on the current main head;
 - Paddle 3.3 CPU oneDNN incompatibility identified and controlled by disabling MKL-DNN for the OCR engine;
 - OCR warning-heading capitalization instability identified from integration evidence and moved to human-review advisory rather than false FAIL;
@@ -782,11 +801,19 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 - Community Cloud reached the RapidOCR path and failed at `import cv2`, exposing a native Linux dependency layer;
 - root `packages.txt` now installs `libgl1` and `libglib2.0-0`;
 - Python 3.14 CI successfully installs those same native packages before Streamlit/RapidOCR integration testing;
-- the Streamlit UI now catches OCR-provider ImportError/OSError and refuses to fabricate a compliance result.
+- the Streamlit UI now catches OCR-provider ImportError/OSError and refuses to fabricate a compliance result;
+- spatial label intake extraction implemented for brand/class grouping, warning-region isolation, origin phrases, ABV, net contents, and name/address candidates;
+- Quick Label Review implemented with image preview + editable auto-filled TTB-oriented fields + yellow human-review notices;
+- label-only screening added without replacing the original Compare to Reference workflow.
 
 ### Unresolved / next research
 
-- redeploy current main to Streamlit Community Cloud and capture a fresh deployment log;
+- redeploy/refresh current main on Streamlit Community Cloud and confirm the new Quick Label Review UI;
+- run the fixed five-label synthetic benchmark plus the real TTB Canada sample through Quick Label Review and record field-level extraction outcomes;
+- tune spatial grouping and the provisional 0.90 review threshold only from benchmark evidence;
+- verify that low-confidence/missing fields remain easy for a nontechnical user to identify and edit;
+- preserve Compare to Reference as a separate independent-consistency workflow;
+- capture deployed latency for the new label-first flow;
 - verify the platform-selected backend starts successfully and measure deployed warm latency/resource behavior;
 - OpenCV native-library failure observed on Community Cloud; `packages.txt` now installs `libgl1` and `libglib2.0-0`; verify the next redeploy before adding any further system packages;
 - if the next failure is memory/resource exhaustion, evaluate the minimum resource reduction before changing hosts or architecture;
@@ -804,6 +831,19 @@ Compressed prototype stabilization and deployment: the first vertical slice is i
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.8 — 2026-09-27
+
+Added:
+
+- default Quick Label Review workflow for label-derived TTB field auto-fill;
+- mandatory separation between label-screening intake and independent application/reference comparison;
+- image-preview + editable-field human review design;
+- yellow review notices for uncertain/missing extraction;
+- provisional 0.90 OCR-score triage threshold explicitly classified as UX review logic, not compliance confidence;
+- spatial extraction for multi-panel/multi-line evidence;
+- label-only deterministic presence/format screening;
+- 42-test fast regression baseline.
 
 ### 1.7 — 2026-09-23
 
