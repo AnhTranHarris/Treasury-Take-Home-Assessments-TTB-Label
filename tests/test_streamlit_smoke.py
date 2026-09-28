@@ -54,16 +54,8 @@ class FakeStreamlit(types.ModuleType):
         self.calls.append(("columns", spec))
         return [self for _ in spec]
 
-    def popover(self, label, **kwargs):
-        self.calls.append(("popover", label))
-        return self
-
     def file_uploader(self, *args, **kwargs):
         self.calls.append(("file_uploader", args[0]))
-        return None
-
-    def camera_input(self, *args, **kwargs):
-        self.calls.append(("camera_input", args[0]))
         return None
 
     def button(self, *args, **kwargs):
@@ -83,7 +75,6 @@ def test_streamlit_entrypoint_renders_initial_path_without_starting_ocr():
     assert "radio" in called
     assert "columns" in called
     assert "file_uploader" in called
-    assert "popover" in called
-    assert any(name == "popover" and value == "Take a photo" for name, value in fake.calls)
-    assert "camera_input" in called
+    assert "button" in called
+    assert any(name == "button" and value == "Take a photo" for name, value in fake.calls)
     assert "info" in called
