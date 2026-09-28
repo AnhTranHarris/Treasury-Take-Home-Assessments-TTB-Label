@@ -335,8 +335,8 @@ def _render_reference_compare() -> None:
 def main() -> None:
     st.set_page_config(page_title="TTB Label Verification Prototype", page_icon="🔎", layout="wide")
     st.title("AI-Powered Alcohol Label Verification")
+    st.markdown("**Made by Anh Tran (Harris) using vibe coding with ChatGPT**")
     st.markdown(
-        "**Made by Anh Tran (Harris) using vibe coding with ChatGPT**  \\n"
         "[GitHub source](https://github.com/AnhTranHarris/Treasury-Take-Home-Assessments-TTB-Label)"
     )
     st.caption(
