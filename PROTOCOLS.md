@@ -747,10 +747,10 @@ The repository should make that process auditable without requiring a reviewer t
 
 ## 22. Current Handoff Snapshot
 
-**Date:** 2026-09-23  
+**Date:** 2026-09-27  
 **Protocol version:** 1.8  
 **Architecture version:** v0.3  
-**Latest relevant implementation/test commit before this snapshot update:** `46d6f03a6d488ad7aba7a06ebe9ad3b93f3ba925`
+**Latest relevant implementation/test commit before this snapshot update:** `a627eeb7e01ffef6b43728ede93e70a8bf2b5b50`
 
 ### Current phase
 
@@ -814,10 +814,8 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - verify that low-confidence/missing fields remain easy for a nontechnical user to identify and edit;
 - preserve Compare to Reference as a separate independent-consistency workflow;
 - capture deployed latency for the new label-first flow;
-- verify the platform-selected backend starts successfully and measure deployed warm latency/resource behavior;
-- OpenCV native-library failure observed on Community Cloud; `packages.txt` now installs `libgl1` and `libglib2.0-0`; verify the next redeploy before adding any further system packages;
-- if the next failure is memory/resource exhaustion, evaluate the minimum resource reduction before changing hosts or architecture;
-- preserve targeted retry, Gemini rescue, batch processing, and extra conditional rules as deferred until deployment is stable;
+- if a new deployment failure appears, follow the concrete log rather than changing architecture speculatively;
+- preserve targeted retry, Gemini rescue, batch processing, and extra conditional rules as deferred until the new label-first workflow is benchmarked;
 - run mandatory post-write QC after every coherent code-change batch.
 
 ### Governing files for the next session
