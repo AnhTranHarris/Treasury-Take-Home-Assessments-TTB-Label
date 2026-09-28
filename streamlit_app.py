@@ -35,6 +35,27 @@ def _review_marker(label: str, draft: FieldDraft) -> None:
         st.warning(f"⚠ Review {label}: {draft.reason}")
 
 
+def _label_image_input(key_prefix: str):
+    upload_col, photo_col = st.columns([4, 1], gap="small")
+
+    with upload_col:
+        uploaded = st.file_uploader(
+            "Upload a JPG or PNG label image",
+            type=["jpg", "jpeg", "png"],
+            key=f"{key_prefix}_upload",
+        )
+
+    with photo_col:
+        with st.popover("📷 Take a photo", use_container_width=True):
+            camera = st.camera_input(
+                "Camera",
+                key=f"{key_prefix}_camera",
+                label_visibility="collapsed",
+            )
+
+    return uploaded or camera
+
+
 def _seed_intake_state(image_digest: str, draft) -> None:
     if st.session_state.get("intake_image_digest") == image_digest:
         return
@@ -59,13 +80,7 @@ def _render_quick_review() -> None:
         "The prototype reads the label, auto-fills TTB-oriented fields, and flags uncertain extraction for human review."
     )
 
-    uploaded = st.file_uploader(
-        "Upload a JPG or PNG label image",
-        type=["jpg", "jpeg", "png"],
-        key="quick_label_upload",
-    )
-    camera = st.camera_input("Or take a photo", key="quick_label_camera")
-    selected_image = uploaded or camera
+    selected_image = _label_image_input("quick_label")
 
     if selected_image is None:
         st.info("Upload or photograph one distilled-spirits label to begin.")
@@ -240,13 +255,7 @@ def _render_reference_compare() -> None:
     )
 
     st.markdown("### Label image")
-    uploaded = st.file_uploader(
-        "Upload a JPG or PNG label image",
-        type=["jpg", "jpeg", "png"],
-        key="compare_label_upload",
-    )
-    camera = st.camera_input("Or take a photo", key="compare_label_camera")
-    selected_image = uploaded or camera
+    selected_image = _label_image_input("compare_label")
 
     if not st.button("Verify against reference", type="primary", key="compare_verify"):
         return
