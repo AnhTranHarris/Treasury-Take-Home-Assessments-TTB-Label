@@ -29,20 +29,11 @@ These are synthetic **development and stress-test fixtures**, not examples of TT
 
 **Training disclosure:** The project did not train or fine-tune a custom machine-learning model on the seven images. Existing OCR models extract text; the Python extraction rules were implemented and revised using the known development labels. Liberty Creek and Raven Creek were initially blind holdouts and were added as built-in examples only after the untouched first-run evaluations were recorded. Reviewers can use their own independent label to test generalization.
 
-## 2. Why I chose this approach
+## 2. My approach to the Treasury problem
 
-The take-home assignment emphasized a working core, usability, speed, explainability, and safe handling of uncertainty.
+I am still developing my programming skills and do not have deep formal software-engineering experience. To deliver a working prototype within Treasury's short take-home schedule, I relied on **vibe coding with ChatGPT** to help research technical options, write and troubleshoot Python code, and integrate existing open-source OCR tools. My role was to interpret the stakeholder needs, decide what the prototype should and should not attempt, review what the software actually produced, and keep the design focused on an easy-to-use label-review workflow.
 
-I therefore favored a small vertical slice over a large platform:
-
-- one browser UI;
-- one image at a time, selected from the built-in sample-label dropdown or uploaded independently;
-- one local OCR engine per runtime;
-- deterministic validation rules;
-- visible evidence and reasons;
-- human review when the software is uncertain.
-
-Testing showed that OCR usually recognized the text well enough; many remaining problems came from deciding which OCR text belonged to which field. I improved that layer with spatial grouping, structured anchors such as `SPIRIT TYPE:` and `ORIGIN:`, section boundaries, and regression tests rather than adding a larger AI model.
+For quality control, I applied project-management practices I am learning from **PMI's CPMAI approach to AI projects**; this was a learning framework, not a certification or a claim of professional project-manager experience. I broke the work into small, usable stages, documented assumptions and risks, checked code changes with automated tests, and compared actual label results against expected behavior before accepting improvements. When testing exposed unreliable extraction, I kept uncertain fields available for human review rather than claiming the AI was always correct. This approach helped me complete and explain a bounded proof of concept while identifying what would require more training, testing, and federal security review before production use.
 
 ## 3. Tools used
 
