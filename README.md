@@ -100,7 +100,7 @@ The submission architecture and supporting decisions are documented here:
 
 - [Brief Documentation — Approach, Tools, Assumptions & Maturation Path](docs/BRIEF_DOCUMENTATION.md)
 - [Project Management & Delivery Record](PROJECT_MANAGEMENT.md)
-- [Architecture v0.3](docs/ARCHITECTURE.md)
+- [Architecture v0.4](docs/ARCHITECTURE.md)
 - [Performance Architecture](docs/PERFORMANCE_ARCHITECTURE.md)
 - [TTB Rule Scope](docs/TTB_RULE_SCOPE.md)
 - [TTB Requirements Matrix](docs/REQUIREMENTS_MATRIX.md)
