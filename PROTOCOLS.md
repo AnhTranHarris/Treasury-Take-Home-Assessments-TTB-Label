@@ -1,6 +1,6 @@
 # Human + ChatGPT Development Protocol
 
-**Protocol version:** 1.9  
+**Protocol version:** 1.10  
 **Effective date:** 2026-09-23  
 **Applies to:** Treasury Take-Home Assessment — TTB Label Verification Prototype
 
@@ -159,7 +159,7 @@ AI systems may not:
 
 PaddleOCR/RapidOCR provide local recognition.
 
-Gemini is optional and last-resort only.
+External generative-AI fallback is not part of the submitted runtime.
 
 Deterministic Python rules produce the supported PASS / REVIEW / FAIL result.
 
@@ -199,6 +199,18 @@ The sequence is:
 Any post-blind fix must address a generalizable failure mode rather than memorizing a particular label.
 
 See `docs/EXTRACTION_REFINEMENT_AND_BLIND_TEST.md`.
+
+### Submission scope-freeze rule
+
+For the submitted prototype:
+
+- JPG/PNG file upload is the supported image-input path;
+- live camera capture is intentionally disabled until cross-device/mobile/browser testing is completed;
+- no Google Gemini or other external generative-AI fallback is permitted in the runtime;
+- unresolved OCR/extraction evidence routes to human review;
+- a future external-AI design requires explicit cybersecurity, privacy, network, data-handling, vendor/service, and authorization review for the target federal environment.
+
+Submission readiness takes priority over additional feature breadth.
 
 ## 9. Architecture Change Protocol
 
@@ -334,7 +346,7 @@ After that path works, additional capability should be added in vertical increme
 2. clear deterministic mismatch;
 3. unreadable/uncertain evidence routed to REVIEW;
 4. targeted OCR retry;
-5. optional Gemini fallback;
+5. unresolved evidence routes to human review; external generative-AI fallback remains deferred;
 6. additional TTB rules;
 7. conditional requirements;
 8. batch workflow.
@@ -515,7 +527,7 @@ ChatGPT should refresh the private interview guide when any of the following occ
 - the first runnable vertical slice is completed;
 - meaningful automated tests pass;
 - measured latency/memory results become available;
-- Gemini fallback is implemented/tested;
+- any external generative-AI fallback has completed required federal security/privacy/network/authorization review and dedicated testing;
 - the app is deployed;
 - a major architecture decision changes;
 - a new verified portfolio artifact materially improves an interview example;
@@ -625,7 +637,7 @@ In particular:
 - one warm OCR model is preferred;
 - multiple OCR model instances are not created merely for parallelism;
 - adaptive local retries are bounded;
-- Gemini is not raced against local OCR on every request;
+- external generative AI is not called by the submitted prototype;
 - deployment performance must be measured rather than assumed.
 
 ## 16. Git and Commit Discipline
@@ -782,7 +794,7 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - RapidOCR + ONNX Runtime is the activated Python 3.14 deployment contingency; exactly one OCR engine is active.
 - RapidFuzz only for fields where tolerant comparison is appropriate.
 - Deterministic Python rules decide supported compliance outcomes.
-- Gemini image extraction is optional, last-resort only.
+- external generative-AI extraction is deferred and excluded from the submitted runtime.
 - PASS / REVIEW / FAIL are separate result states.
 - One warm OCR engine and bounded adaptive local retries.
 - One full local OCR pass, one targeted retry by default, optional additional narrow retry only if benchmark evidence justifies it.
@@ -834,7 +846,7 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - five-label deployed benchmark captured at 2.55–4.09 seconds per label (mean approximately 3.15 seconds) on the RapidOCR path;
 - capture untouched first-run outputs for both blind holdout labels before any further extraction tuning;
 - if a new deployment failure appears, follow the concrete log rather than changing architecture speculatively;
-- preserve targeted retry, Gemini rescue, batch processing, and extra conditional rules as deferred until the new label-first workflow is benchmarked;
+- preserve targeted retry, batch processing, extra conditional rules, live camera capture, and external generative-AI fallback as deferred submission-scope items;
 - run mandatory post-write QC after every coherent code-change batch.
 
 ### Governing files for the next session
@@ -848,6 +860,15 @@ User-experience and spatial-extraction refinement: Community Cloud is operationa
 - `docs/GOVERNMENT_SOURCES.md`
 
 ## 23. Protocol Changelog
+
+### 1.10 — 2026-09-28
+
+Added:
+
+- submission scope freeze;
+- live camera disabled pending cross-device/mobile/browser testing;
+- external generative-AI fallback removed from submitted runtime and deferred pending federal cybersecurity/privacy/network/authorization review;
+- public brief-documentation deliverable covering approach, tools, assumptions, limitations, and maturation path.
 
 ### 1.9 — 2026-09-27
 
