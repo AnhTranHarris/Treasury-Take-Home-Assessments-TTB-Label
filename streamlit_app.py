@@ -36,19 +36,41 @@ def _review_marker(label: str, draft: FieldDraft) -> None:
 
 
 def _label_image_input(key_prefix: str):
+    popover_key = f"{key_prefix}_camera_popover"
+
     st.markdown(
-        """
+        f"""
         <style>
-        div[data-testid="stPopover"] > button {
-            min-height: 68px;
-            height: 68px;
-            font-weight: 600;
-        }
+        .st-key-{popover_key} button {{
+            width: 100% !important;
+            min-height: 68px !important;
+            height: 68px !important;
+            background: var(--st-secondary-background-color) !important;
+            color: var(--st-text-color) !important;
+            border: 1px solid var(--st-border-color) !important;
+            border-radius: var(--st-base-radius) !important;
+            font-weight: 600 !important;
+            justify-content: center !important;
+        }}
+
+        .st-key-{popover_key} button:hover {{
+            background: var(--st-secondary-background-color) !important;
+            border-color: var(--st-primary-color) !important;
+            color: var(--st-text-color) !important;
+        }}
+
+        [data-testid="stFileUploaderDropzone"] {{
+            min-height: 68px !important;
+            background: var(--st-secondary-background-color) !important;
+            border-color: var(--st-border-color) !important;
+            border-radius: var(--st-base-radius) !important;
+        }}
         </style>
         """,
         unsafe_allow_html=True,
     )
 
+    st.markdown("**Upload a JPG or PNG label image**")
     upload_col, photo_col = st.columns([4, 1], gap="small")
 
     with upload_col:
@@ -56,10 +78,16 @@ def _label_image_input(key_prefix: str):
             "Upload a JPG or PNG label image",
             type=["jpg", "jpeg", "png"],
             key=f"{key_prefix}_upload",
+            label_visibility="collapsed",
         )
 
     with photo_col:
-        with st.popover("📷 Take a photo", use_container_width=True):
+        with st.popover(
+            "Take a photo",
+            icon=":material/photo_camera:",
+            width="stretch",
+            key=popover_key,
+        ):
             camera = st.camera_input(
                 "Camera",
                 key=f"{key_prefix}_camera",
