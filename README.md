@@ -58,6 +58,16 @@ On Python 3.11–3.13, the application selects PaddleOCR PP-OCRv5 mobile. A mach
 
 On Python 3.14, where PaddlePaddle 3.3.1 has no compatible wheel, the application selects RapidOCR with ONNX Runtime instead. Exactly one local OCR backend is active in a process.
 
+## Built-in Sample Labels
+
+The Streamlit application includes **seven repository-hosted sample labels** in [`assets/sample_labels/`](assets/sample_labels/), so a reviewer can start testing without downloading or saving images on a personal or government device.
+
+In **Quick Label Review**, use the left-hand **Built-in sample labels** dropdown, or upload your own JPG/PNG in the adjacent upload field. The disabled camera control remains visible at the right. When both a sample and an upload are selected, **the uploaded file takes precedence**. The image preview identifies its source. The same input control is available in **Compare to Reference**, where expected application values must still be entered independently.
+
+All seven artwork examples were **AI-generated with ChatGPT**. They are synthetic test fixtures, **not TTB-certified labels**; some deliberately include damaged text, ambiguous numbers, misleading extra panels, or inconsistent statements to exercise REVIEW/FAIL behavior. They were used for prototype development, benchmark evaluation, and stress testing. **No custom OCR/ML model was trained or fine-tuned on these images.** The OCR engines use pre-existing models, while application extraction rules were refined based on observed development tests. The final two stress labels were initially held out for blind testing before being added to the reviewer demo set.
+
+For an independent assessment, upload a label **not** included in the built-in samples. Quick Label Review is not a substitute for comparing independently supplied application records.
+
 ## Reproducible Demo Label
 
 Generate a synthetic distilled-spirits label:
@@ -92,7 +102,7 @@ A separate **OCR integration** workflow verifies both supported runtime paths:
 - Python 3.11 + PaddleOCR/PaddlePaddle;
 - Python 3.14 + RapidOCR/ONNX Runtime.
 
-The current fast suite has **52 tests**, and both real-OCR integration jobs pass.
+The current fast suite has **57 tests**, and both real-OCR integration jobs pass.
 
 ## Architecture
 
@@ -128,7 +138,7 @@ Core principle:
 The default user workflow is:
 
 ```text
-upload label image
+select built-in sample **or** upload own label
         ↓
 one local OCR pass
         ↓
@@ -243,7 +253,7 @@ The stakeholder target is approximately five seconds for a simple label. Current
 - Python 3.11/PaddleOCR: 18.093 seconds for the first OCR call and 5.368 seconds for the warm full pipeline;
 - Python 3.14/RapidOCR: 1.200 seconds for the controlled full demo-label pipeline.
 
-The five-label deployed benchmark on Streamlit Community Cloud completed in 2.55–4.09 seconds per label (mean approximately 3.15 seconds) on the RapidOCR path. This is a small benchmark set, not a universal latency guarantee. The blind holdout labels will provide additional evidence.
+The five-label deployed benchmark on Streamlit Community Cloud completed in 2.55–4.09 seconds per label (mean approximately 3.15 seconds) on the RapidOCR path. This is a small benchmark set, not a universal latency guarantee. The two stress-test labels were held out for their initial blind runs before being added to the convenience selector.
 
 ## Development Approach
 
