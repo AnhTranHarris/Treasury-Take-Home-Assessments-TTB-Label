@@ -39,3 +39,40 @@ def test_warning_text_mismatch_fails_after_human_confirmation():
     result = screen_label(valid_input(government_warning="GOVERNMENT WARNING: incomplete"))
     by_rule = {item.rule_id: item for item in result.field_results}
     assert by_rule["DS-WARN-TEXT"].status == Status.FAIL
+
+
+
+def test_unconfirmed_highlighted_core_field_returns_review_not_pass():
+    result = screen_label(valid_input(unresolved_review_fields=("brand",)))
+    by_rule = {item.rule_id: item for item in result.field_results}
+    assert by_rule["DS-BRAND-PRESENCE"].status == Status.REVIEW
+    assert result.overall_status == Status.REVIEW
+
+
+def test_confirmed_highlighted_field_can_pass_normal_rules():
+    result = screen_label(valid_input(unresolved_review_fields=()))
+    by_rule = {item.rule_id: item for item in result.field_results}
+    assert by_rule["DS-BRAND-PRESENCE"].status == Status.PASS
+
+
+def test_unconfirmed_warning_stays_review_instead_of_false_fail():
+    result = screen_label(
+        valid_input(
+            government_warning="GOVERNMENT WARNING: incomplete",
+            unresolved_review_fields=("government_warning",),
+        )
+    )
+    by_rule = {item.rule_id: item for item in result.field_results}
+    assert by_rule["DS-WARN-TEXT"].status == Status.REVIEW
+
+
+def test_unconfirmed_import_origin_stays_review():
+    result = screen_label(
+        valid_input(
+            imported=True,
+            country_origin="England",
+            unresolved_review_fields=("country_origin",),
+        )
+    )
+    by_rule = {item.rule_id: item for item in result.field_results}
+    assert by_rule["DS-IMPORT-PRESENCE"].status == Status.REVIEW
