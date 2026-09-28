@@ -73,6 +73,10 @@ def test_streamlit_entrypoint_renders_initial_path_without_starting_ocr():
     called = [name for name, _ in fake.calls]
     assert "set_page_config" in called
     assert any(
+        name == "markdown" and "--ttb-gold" in value
+        for name, value in fake.calls
+    )
+    assert any(
         name == "markdown" and "Unofficial take-home prototype" in value
         for name, value in fake.calls
     )
