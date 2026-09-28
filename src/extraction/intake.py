@@ -175,7 +175,7 @@ def _extract_brand(lines: Sequence[OCRLine]) -> FieldDraft:
     anchor_height = max(1.0, _height(anchor))
     cluster = [
         line for line in _spatial_cluster(candidates, anchor)
-        if _height(line) >= anchor_height * 0.48
+        if _height(line) >= anchor_height * 0.25
     ]
     if not cluster:
         cluster = [anchor]
