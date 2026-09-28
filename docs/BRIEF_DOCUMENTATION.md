@@ -1,0 +1,186 @@
+# Brief Documentation — Approach, Tools, Assumptions, and Maturation Path
+
+**Project:** AI-Powered Alcohol Label Verification Prototype  
+**Author:** Anh Tran (Harris), developed through vibe coding with ChatGPT  
+**Status:** Take-home prototype / proof of concept
+
+## 1. What I built
+
+This prototype helps a reviewer examine a distilled-spirits label image without requiring every field to be typed manually.
+
+The default workflow is intentionally simple:
+
+1. upload a JPG/PNG label image;
+2. local OCR extracts visible text and bounding boxes;
+3. deterministic Python logic groups likely TTB-oriented fields;
+4. the application auto-fills editable review fields beside the uploaded image;
+5. uncertain or ambiguous extraction is highlighted for human review;
+6. supported label checks return PASS / REVIEW / FAIL with reasons.
+
+A second **Compare to Reference** workflow preserves independent comparison against separately supplied expected/application values.
+
+The prototype does **not** claim complete legal or regulatory compliance.
+
+## 2. Why I chose this approach
+
+The take-home assignment emphasized a working core, usability, speed, explainability, and safe handling of uncertainty.
+
+I therefore favored a small vertical slice over a large platform:
+
+- one browser UI;
+- one image at a time;
+- one local OCR engine per runtime;
+- deterministic validation rules;
+- visible evidence and reasons;
+- human review when the software is uncertain.
+
+Testing showed that OCR usually recognized the text well enough; many remaining problems came from deciding which OCR text belonged to which field. I improved that layer with spatial grouping, structured anchors such as `SPIRIT TYPE:` and `ORIGIN:`, section boundaries, and regression tests rather than adding a larger AI model.
+
+## 3. Tools used
+
+### Application
+
+- **Python** — orchestration, extraction, validation, tests.
+- **Streamlit** — browser interface and prototype deployment.
+- **OpenCV** — image decode/resize preparation.
+- **PaddleOCR / PaddlePaddle** — preferred local OCR path on Python 3.11–3.13.
+- **RapidOCR / ONNX Runtime** — tested deployment contingency on Python 3.14.
+- **GitHub / GitHub Actions** — source control, change history, fast tests, and real-OCR integration checks.
+- **pytest** — deterministic regression tests.
+
+Exactly one OCR backend is active in a running process.
+
+### AI-assisted development
+
+ChatGPT was used as a development collaborator for research, architecture discussion, coding assistance, test design, debugging, documentation, and review.
+
+I retained human control over scope, acceptance, regulatory assumptions, and submission decisions. Source documents, tests, deployment evidence, and reproducible behavior are treated as stronger authority than an AI-generated suggestion.
+
+## 4. Assumptions
+
+- Initial regulatory scope is **distilled spirits**.
+- Input is a readable JPG/PNG label image.
+- This prototype evaluates only the explicitly implemented rules.
+- OCR confidence is an extraction-quality signal, not a compliance probability.
+- A yellow field means a human should verify the extracted value against the image.
+- Conditional disclosures may depend on product facts that are not visible in the label artwork.
+- The prototype has no COLA database integration, permit database, production identity system, or federal authorization to operate.
+- A submitted image cannot reliably prove all physical-container requirements such as actual print size or full same-field-of-vision geometry.
+
+## 5. Deliberate scope decisions
+
+### Live camera capture — disabled for submission
+
+A live camera path is visible but disabled.
+
+I did not have enough test time to verify camera capture across a representative range of:
+
+- iOS and Android devices;
+- mobile browsers;
+- desktop/laptop webcams;
+- camera permissions;
+- image orientation metadata;
+- compression/resolution behavior;
+- glare, focus, and low-light conditions.
+
+File upload is the tested submission path. Camera capture should be enabled only after cross-device testing demonstrates that it does not reduce reliability or create unnecessary support burden.
+
+### External generative-AI fallback — not implemented
+
+No Google Gemini or other external generative-AI backup is enabled in the submitted prototype.
+
+A cloud AI fallback could potentially help with difficult images, but a federal production path would first require security, privacy, network, data-handling, authorization, and vendor/service review. The prototype therefore remains local-OCR-first and routes unresolved evidence to a human rather than sending label images to an external AI service.
+
+This is a deliberate safety and deployment decision, not a missing runtime dependency.
+
+## 6. Testing and evidence
+
+The repository uses a layered test approach:
+
+- fast unit/regression tests for extraction and validation;
+- synthetic label fixtures;
+- real OCR integration tests on both supported runtime paths;
+- deployed benchmark labels;
+- two blind holdout labels that were not used for tuning before their first run.
+
+At the current submission state:
+
+- **52 fast tests pass**;
+- Python 3.11 + PaddleOCR integration passes;
+- Python 3.14 + RapidOCR/ONNX integration passes;
+- a five-label deployed benchmark completed in approximately 2.55–4.09 seconds per label on the RapidOCR deployment path;
+- blind testing confirmed that uncertain damaged fields route to REVIEW, while also identifying several future extraction refinements.
+
+The goal was not to make every damaged label pass automatically. A correct REVIEW is safer than a confident wrong answer.
+
+## 7. Known limitations
+
+- distilled spirits only;
+- one image at a time;
+- live camera disabled;
+- no batch processing;
+- no external generative-AI fallback;
+- no production authentication/authorization;
+- no database or COLA integration;
+- no federal ATO/FedRAMP claim;
+- physical typography and container-geometry requirements remain human-review items;
+- very damaged/ambiguous artwork can still require manual correction;
+- conditional requirements are not fully automated without product/formulation context.
+
+## 8. How I would mature this system
+
+### Near-term prototype hardening
+
+My next technical steps would be practical and measurable:
+
+- expand the benchmark set with real-world image conditions;
+- test mobile/camera capture across representative devices;
+- improve generalized field extraction from blind-test findings;
+- add batch upload only after the single-label path remains stable;
+- strengthen accessibility and user-error handling;
+- add structured operational logging and repeatable performance tests.
+
+### Production engineering / security path
+
+Before a federal deployment, I would involve security, infrastructure, privacy, records-management, accessibility, and application owners rather than treating the prototype as production-ready.
+
+Work would include:
+
+- authentication and role-based authorization;
+- data-retention and records rules;
+- encryption and secrets management;
+- audit logging;
+- dependency and vulnerability management;
+- threat modeling;
+- approved network/service boundaries;
+- formal testing in the target government environment;
+- deployment/rollback procedures;
+- incident and operational support planning;
+- authorization processes applicable to the hosting/services selected.
+
+Any external generative-AI fallback would enter only after that review establishes what data can leave the application boundary, which service is permitted, and how failures are safely handled.
+
+### Enterprise / program maturation
+
+At larger scale, the problem becomes more than OCR code.
+
+A mature program would need:
+
+- product ownership and measurable service-level objectives;
+- integration strategy with authoritative systems such as COLA;
+- versioned regulatory rule management;
+- governance for model/service changes;
+- quality monitoring and reviewer feedback loops;
+- accessibility and training;
+- change management across compliance teams;
+- cost/capacity planning;
+- acquisition/vendor and federal cloud considerations where applicable;
+- executive risk/benefit decisions about where AI should and should not automate judgment.
+
+I can describe that path and identify the stakeholders and controls it would require. I would still seek experienced federal security, legal/regulatory, infrastructure, and enterprise-architecture guidance before making production decisions outside the prototype scope.
+
+## 9. Main design principle
+
+> **Automate the obvious evidence, expose uncertainty, and keep consequential judgment reviewable by a human.**
+
+That principle guided the implementation and the decisions about what **not** to add before submission.
