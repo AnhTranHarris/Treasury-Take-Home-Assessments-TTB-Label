@@ -330,7 +330,7 @@ Do not defer the working core, reproducible setup instructions, safe uncertainty
 
 ### Current work
 
-Run the two-label blind holdout test against the frozen, green label-first extraction build. Preserve both untouched first-run outputs before making any further extraction changes.
+Blind holdout testing is complete. Analyze and remediate only the generalizable defects exposed by the untouched Liberty Creek and Raven Creek first-run outputs, then rerun the full development benchmark plus both holdouts as regression evidence.
 
 The application now preserves two separate missions:
 
@@ -455,6 +455,18 @@ The stakeholder-centered, explainable, source-traceable design is intended to ma
   https://www.usajobs.gov/job/858700600
 
 ## 20. Change History
+
+### 2026-09-28 — Blind holdout completed
+
+Two unseen stress labels were run before further tuning.
+
+Key findings:
+
+- Liberty Creek: 5.51 s; damaged brand correctly REVIEW; class/ABV/address/warning correct; net contents falsely REVIEW because an explicitly non-product stress panel contributed decoy quantities.
+- Raven Creek: 3.49 s; damaged brand correctly REVIEW; ABV/address/origin/warning correct; net contents falsely REVIEW from the same decoy-panel pattern.
+- Raven exposed a critical semantic extraction defect: OCR read `SPIRIT TYPE: MOONSHINE` at high confidence, but the class extractor ignored `MOONSHINE` because the fallback vocabulary did not contain that term and incorrectly passed `DISTILLED SPIRIT`.
+- Both holdouts support targeted deterministic extraction changes rather than a larger OCR/layout model.
+- Holdout protection is now satisfied; post-blind fixes must remain generalizable and regression-tested.
 
 ### 2026-09-27 — Five-label extraction refinement
 
