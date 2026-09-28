@@ -84,5 +84,6 @@ def test_streamlit_entrypoint_renders_initial_path_without_starting_ocr():
     assert "columns" in called
     assert "file_uploader" in called
     assert "popover" in called
+    assert any(name == "popover" and value == "Take a photo" for name, value in fake.calls)
     assert "camera_input" in called
     assert "info" in called
