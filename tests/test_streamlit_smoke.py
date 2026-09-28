@@ -54,6 +54,10 @@ class FakeStreamlit(types.ModuleType):
         self.calls.append(("columns", spec))
         return [self for _ in spec]
 
+    def selectbox(self, label, options, **kwargs):
+        self.calls.append(("selectbox", label))
+        return options[0]
+
     def file_uploader(self, *args, **kwargs):
         self.calls.append(("file_uploader", args[0]))
         return None
@@ -82,6 +86,7 @@ def test_streamlit_entrypoint_renders_initial_path_without_starting_ocr():
     )
     assert "radio" in called
     assert "columns" in called
+    assert "selectbox" in called
     assert "file_uploader" in called
     assert "button" in called
     assert any(name == "button" and value == "Take a photo" for name, value in fake.calls)
