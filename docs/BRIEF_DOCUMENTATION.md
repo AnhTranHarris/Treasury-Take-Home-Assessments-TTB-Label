@@ -184,3 +184,18 @@ I can describe that path and identify the stakeholders and controls it would req
 > **Automate the obvious evidence, expose uncertainty, and keep consequential judgment reviewable by a human.**
 
 That principle guided the implementation and the decisions about what **not** to add before submission.
+
+
+## 10. Capability posture
+
+This project is intended to show what I can currently do and where I would still need training.
+
+At the hands-on level, I can define a bounded problem, research requirements, build and test a working prototype with AI assistance, inspect failures, preserve evidence, and explain why the code behaves the way it does.
+
+At the next level of responsibility, I can structure work around stakeholder needs, scope control, risk, testing, rollback, documentation, and measurable acceptance criteria. I am still developing deeper formal experience in production software engineering, federal cybersecurity, enterprise integration, and large-team delivery, so I would expect to learn from experienced specialists in those areas.
+
+Looking forward, I can identify the major workstreams that would be required to move this proof of concept toward production: security and privacy review, authorization, infrastructure, identity/access management, records handling, accessibility, operational monitoring, integration with authoritative systems, governance of rule/model changes, and user adoption.
+
+At an enterprise level, I understand that the decision is no longer simply “can the OCR work?” It becomes a program question involving mission value, risk tolerance, policy, acquisition, architecture, workforce impact, funding, governance, accountability, and measurable outcomes across organizations.
+
+I would not present myself as the final authority for those higher-level decisions. I can recognize the path, frame the questions, document the dependencies, and work with the appropriate technical, security, regulatory, and leadership stakeholders to mature the system responsibly.
